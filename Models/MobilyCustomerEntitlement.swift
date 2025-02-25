@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-class MobilyCustomerEntitlement {
+public class MobilyCustomerEntitlement {
     let type: ProductType
     let product: MobilyProduct
     let platformOriginalTransactionId: String?

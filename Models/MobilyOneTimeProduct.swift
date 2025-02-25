@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-class MobilyOneTimeProduct {
+public class MobilyOneTimeProduct {
     public let price: Decimal
     public let currencyCode: String
     public let priceFormatted: String

@@ -5,18 +5,18 @@
 //  Created by Gregoire Taja on 08/01/2025.
 //
 
-class PurchaseOptions {
+public class PurchaseOptions {
     var offer: MobilySubscriptionOffer?
     var quantity: Int?
 
-    init() {}
+    public init() {}
 
-    func setOffer(_ offer: MobilySubscriptionOffer?) -> PurchaseOptions {
+    public func setOffer(_ offer: MobilySubscriptionOffer?) -> PurchaseOptions {
         self.offer = offer
         return self
     }
 
-    func setQuantity(_ quantity: Int?) -> PurchaseOptions {
+    public func setQuantity(_ quantity: Int?) -> PurchaseOptions {
         self.quantity = quantity
         return self
     }

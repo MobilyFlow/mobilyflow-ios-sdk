@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-class MobilySubscriptionGroup {
+public class MobilySubscriptionGroup {
     public let id: String
     public let identifier: String
 

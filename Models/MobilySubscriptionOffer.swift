@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-class MobilySubscriptionOffer {
+public class MobilySubscriptionOffer {
     public let id: String?
     public let name: String?
     public let price: Decimal

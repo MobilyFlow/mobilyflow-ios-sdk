@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MobilyPurchaseError: Error {
+public enum MobilyPurchaseError: Error {
     case purchase_already_pending
 
     case product_unavailable

@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MobilyError: Error {
+public enum MobilyError: Error {
     case store_unavailable
     case server_unavailable
     case no_customer_logged

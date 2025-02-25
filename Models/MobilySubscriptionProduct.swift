@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-class MobilySubscriptionProduct {
+public class MobilySubscriptionProduct {
     public let baseOffer: MobilySubscriptionOffer
     public let freeTrial: MobilySubscriptionOffer?
     public let promotionalOffers: [MobilySubscriptionOffer]

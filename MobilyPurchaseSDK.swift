@@ -24,7 +24,7 @@ public class MobilyPurchaseSDK {
 
     private let lifecycleManager = AppLifecycleManager()
 
-    init(
+    public init(
         appId: String,
         apiKey: String,
         environment: MobilyEnvironment,
@@ -90,11 +90,11 @@ public class MobilyPurchaseSDK {
     /* **************************** PRODUCTS ***************************** */
     /* ******************************************************************* */
 
-    func getProducts(identifiers: [String]?) async throws -> [MobilyProduct] {
+    public func getProducts(identifiers: [String]?) async throws -> [MobilyProduct] {
         return try await syncer.getProducts(identifiers: identifiers)
     }
 
-    func getSubscriptionGroups(identifiers: [String]?) async throws -> [MobilySubscriptionGroup] {
+    public func getSubscriptionGroups(identifiers: [String]?) async throws -> [MobilySubscriptionGroup] {
         return try await syncer.getSubscriptionGroups(identifiers: identifiers)
     }
 
@@ -102,15 +102,15 @@ public class MobilyPurchaseSDK {
     /* ************************** ENTITLEMENTS *************************** */
     /* ******************************************************************* */
 
-    func getEntitlementForSubscription(subscriptionGroupId: String) throws -> MobilyCustomerEntitlement? {
+    public func getEntitlementForSubscription(subscriptionGroupId: String) throws -> MobilyCustomerEntitlement? {
         return try syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId)
     }
 
-    func getEntitlement(productId: String) throws -> MobilyCustomerEntitlement? {
+    public func getEntitlement(productId: String) throws -> MobilyCustomerEntitlement? {
         return try syncer.getEntitlement(forProductId: productId)
     }
 
-    func getEntitlements(productIds: [String]) throws -> [MobilyCustomerEntitlement] {
+    public func getEntitlements(productIds: [String]) throws -> [MobilyCustomerEntitlement] {
         return try syncer.getEntitlements(forProductIds: productIds)
     }
 
@@ -141,7 +141,7 @@ public class MobilyPurchaseSDK {
     /**
      * Open the manage subscription dialog
      */
-    func openManageSubscription() async {
+    public func openManageSubscription() async {
         try! await AppStore.showManageSubscriptions(in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
     }
 
@@ -150,7 +150,7 @@ public class MobilyPurchaseSDK {
      *
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
-    func openRefundDialog(transactionId: UInt64) async -> Bool {
+    public func openRefundDialog(transactionId: UInt64) async -> Bool {
         let result = try? await Transaction.beginRefundRequest(for: transactionId, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
         return (result ?? .userCancelled) == .success
     }
@@ -159,7 +159,7 @@ public class MobilyPurchaseSDK {
     /* **************************** PURCHASE ***************************** */
     /* ******************************************************************* */
 
-    func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
+    public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
         var resultStatus: WebhookStatus = .error
 
         try await purchaseExecutor.executeOrFallback({
@@ -288,7 +288,7 @@ public class MobilyPurchaseSDK {
     /* *********************** DIAGNOSTICS *********************** */
     /* *********************************************************** */
 
-    func sendDiagnotic() {
+    public func sendDiagnotic() {
         diagnostics.sendDiagnostic()
     }
 
@@ -297,7 +297,7 @@ public class MobilyPurchaseSDK {
     /* ************************************************************** */
 
     // TODO: onStorefrontChange
-    func getStoreCountry() async -> String? {
+    public func getStoreCountry() async -> String? {
         return (await Storefront.current)?.countryCode
     }
 }

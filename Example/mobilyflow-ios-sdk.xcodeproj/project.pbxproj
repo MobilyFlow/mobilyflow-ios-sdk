@@ -9,12 +9,12 @@
 /* Begin PBXBuildFile section */
 		0761D691D0B5C959A6F7ED33 /* Pods_mobilyflow_ios_sdk_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2906939FF77DC879DA6BD57B /* Pods_mobilyflow_ios_sdk_Tests.framework */; };
 		4AB1594CFB17F687C1BB9469 /* Pods_mobilyflow_ios_sdk_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A66A205F121AD7DBD6915D7B /* Pods_mobilyflow_ios_sdk_Example.framework */; };
-		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
-		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
+		E0292C032D6DD5E10093A94B /* AppForgeTestAppleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0292C012D6DD5E10093A94B /* AppForgeTestAppleApp.swift */; };
+		E0292C042D6DD5E10093A94B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0292C022D6DD5E10093A94B /* ContentView.swift */; };
+		E0292C052D6DD5E10093A94B /* ProductButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0292C002D6DD5E10093A94B /* ProductButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,9 +34,6 @@
 		56D9CCF9B1AE0CD1E6AC163B /* Pods-mobilyflow-ios-sdk_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mobilyflow-ios-sdk_Tests.release.xcconfig"; path = "Target Support Files/Pods-mobilyflow-ios-sdk_Tests/Pods-mobilyflow-ios-sdk_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* mobilyflow-ios-sdk_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mobilyflow-ios-sdk_Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* mobilyflow-ios-sdk_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "mobilyflow-ios-sdk_Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,6 +43,9 @@
 		96D95BC45C9BEF43B5E2375B /* Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig"; path = "Target Support Files/Pods-mobilyflow-ios-sdk_Tests/Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		A2A264123EEE7B97E6B145CA /* mobilyflow-ios-sdk.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = "mobilyflow-ios-sdk.podspec"; path = "../mobilyflow-ios-sdk.podspec"; sourceTree = "<group>"; };
 		A66A205F121AD7DBD6915D7B /* Pods_mobilyflow_ios_sdk_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mobilyflow_ios_sdk_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0292C002D6DD5E10093A94B /* ProductButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductButton.swift; sourceTree = "<group>"; };
+		E0292C012D6DD5E10093A94B /* AppForgeTestAppleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppForgeTestAppleApp.swift; sourceTree = "<group>"; };
+		E0292C022D6DD5E10093A94B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		E3A3E225D5D99FE32078B6E2 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,9 +102,9 @@
 		607FACD21AFB9204008FA782 /* Example for mobilyflow-ios-sdk */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
-				607FACD91AFB9204008FA782 /* Main.storyboard */,
+				E0292C002D6DD5E10093A94B /* ProductButton.swift */,
+				E0292C012D6DD5E10093A94B /* AppForgeTestAppleApp.swift */,
+				E0292C022D6DD5E10093A94B /* ContentView.swift */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
@@ -248,7 +248,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
 				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
 			);
@@ -333,8 +332,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
-				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				E0292C032D6DD5E10093A94B /* AppForgeTestAppleApp.swift in Sources */,
+				E0292C042D6DD5E10093A94B /* ContentView.swift in Sources */,
+				E0292C052D6DD5E10093A94B /* ProductButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,14 +357,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		607FACD91AFB9204008FA782 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607FACDA1AFB9204008FA782 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		607FACDE1AFB9204008FA782 /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (

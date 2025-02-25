@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-class MobilyProduct {
+public class MobilyProduct {
     public let id: String
     public let createdAt: Date
     public let updatedAt: Date

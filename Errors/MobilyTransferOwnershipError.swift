@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum MobilyTransferOwnershipError: Error {
+public enum MobilyTransferOwnershipError: Error {
     case nothing_to_transfer
     case transfer_to_same_customer
 

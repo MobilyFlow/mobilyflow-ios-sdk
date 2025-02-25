@@ -5,7 +5,7 @@
 //  Created by Gregoire Taja on 25/02/2025.
 //
 
-struct MobilyPurchaseSDKOptions {
+public struct MobilyPurchaseSDKOptions {
     let languages: [String]?
     let debug: Bool?
     let apiURL: String?
