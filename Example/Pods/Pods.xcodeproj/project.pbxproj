@@ -1,0 +1,989 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		06B0DBAEB897E7930F3D18D66705441F /* mobilyflow-ios-sdk-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 86838C6D2CE070CC53E0C25B52E78E5F /* mobilyflow-ios-sdk-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3D5898909A821C0FDF04F92BE28B7FD8 /* Pods-mobilyflow-ios-sdk_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D3832C52B6EEF7CD05E547977605703 /* Pods-mobilyflow-ios-sdk_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		438F42A93CC964CB7029457F8E536C16 /* Pods-mobilyflow-ios-sdk_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 6240CCCAC374B4EFBDDF01518FF6FCE2 /* Pods-mobilyflow-ios-sdk_Tests-dummy.m */; };
+		44323E46A98DAB9558FF0B238AB552F8 /* mobilyflow-ios-sdk-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A39C69543F77B8054A64D3CB969B7766 /* mobilyflow-ios-sdk-dummy.m */; };
+		5FA97096B1EADD6F57A13D57996D0004 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		7863F6D1F05E0C117ED2BE2493B023E7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		7959FFEE00975662BEDC07BD1678DB47 /* Pods-mobilyflow-ios-sdk_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D68EA6F19D30AA0CE551DFCA7D980546 /* Pods-mobilyflow-ios-sdk_Example-dummy.m */; };
+		A647BA6E3419DC0246C4C42C63C5B4D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
+		D90C7E30F4F49A5E7247E5E776B15C16 /* Pods-mobilyflow-ios-sdk_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 59CD4DCAD4D7C5BFB9C192F3380FB456 /* Pods-mobilyflow-ios-sdk_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		E0B2FB8C2D6DB85200D55EC9 /* StorekitUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB5E2D6DB85200D55EC9 /* StorekitUtils.swift */; };
+		E0B2FB8D2D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB842D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift */; };
+		E0B2FB8E2D6DB85200D55EC9 /* MobilySubscriptionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB762D6DB85200D55EC9 /* MobilySubscriptionGroup.swift */; };
+		E0B2FB8F2D6DB85200D55EC9 /* WebhookStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6D2D6DB85200D55EC9 /* WebhookStatus.swift */; };
+		E0B2FB902D6DB85200D55EC9 /* MobilySubscriptionProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB772D6DB85200D55EC9 /* MobilySubscriptionProduct.swift */; };
+		E0B2FB912D6DB85200D55EC9 /* MobilyProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB752D6DB85200D55EC9 /* MobilyProduct.swift */; };
+		E0B2FB922D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB872D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift */; };
+		E0B2FB932D6DB85200D55EC9 /* ApiHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB802D6DB85200D55EC9 /* ApiHelper.swift */; };
+		E0B2FB942D6DB85200D55EC9 /* MobilyPurchaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB7E2D6DB85200D55EC9 /* MobilyPurchaseError.swift */; };
+		E0B2FB952D6DB85200D55EC9 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB672D6DB85200D55EC9 /* Logger.swift */; };
+		E0B2FB962D6DB85200D55EC9 /* AppLifecycleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB642D6DB85200D55EC9 /* AppLifecycleManager.swift */; };
+		E0B2FB972D6DB85200D55EC9 /* MobilyEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB722D6DB85200D55EC9 /* MobilyEnvironment.swift */; };
+		E0B2FB982D6DB85200D55EC9 /* MobilyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB7D2D6DB85200D55EC9 /* MobilyError.swift */; };
+		E0B2FB992D6DB85200D55EC9 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB612D6DB85200D55EC9 /* utils.swift */; };
+		E0B2FB9A2D6DB85200D55EC9 /* ProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB712D6DB85200D55EC9 /* ProductType.swift */; };
+		E0B2FB9B2D6DB85200D55EC9 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6E2D6DB85200D55EC9 /* Platform.swift */; };
+		E0B2FB9C2D6DB85200D55EC9 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB662D6DB85200D55EC9 /* LogLevel.swift */; };
+		E0B2FB9D2D6DB85200D55EC9 /* PeriodUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB702D6DB85200D55EC9 /* PeriodUnit.swift */; };
+		E0B2FB9E2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB8A2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift */; };
+		E0B2FB9F2D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB862D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift */; };
+		E0B2FBA02D6DB85200D55EC9 /* MobilySubscriptionOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB792D6DB85200D55EC9 /* MobilySubscriptionOffer.swift */; };
+		E0B2FBA12D6DB85200D55EC9 /* BufferedFileHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB652D6DB85200D55EC9 /* BufferedFileHandle.swift */; };
+		E0B2FBA22D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB8B2D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift */; };
+		E0B2FBA32D6DB85200D55EC9 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB5F2D6DB85200D55EC9 /* DateExtension.swift */; };
+		E0B2FBA42D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB852D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift */; };
+		E0B2FBA52D6DB85200D55EC9 /* PurchaseOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB7A2D6DB85200D55EC9 /* PurchaseOptions.swift */; };
+		E0B2FBA62D6DB85200D55EC9 /* MobilyOneTimeProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB782D6DB85200D55EC9 /* MobilyOneTimeProduct.swift */; };
+		E0B2FBA72D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB7C2D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift */; };
+		E0B2FBA82D6DB85200D55EC9 /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB822D6DB85200D55EC9 /* ApiResponse.swift */; };
+		E0B2FBA92D6DB85200D55EC9 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB812D6DB85200D55EC9 /* ApiRequest.swift */; };
+		E0B2FBAA2D6DB85200D55EC9 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB692D6DB85200D55EC9 /* LoginResponse.swift */; };
+		E0B2FBAB2D6DB85200D55EC9 /* AsyncDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB602D6DB85200D55EC9 /* AsyncDispatchQueue.swift */; };
+		E0B2FBAC2D6DB85200D55EC9 /* TransferOwnershipStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6F2D6DB85200D55EC9 /* TransferOwnershipStatus.swift */; };
+		E0B2FBAD2D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB882D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift */; };
+		E0B2FBAE2D6DB85200D55EC9 /* ProductStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6C2D6DB85200D55EC9 /* ProductStatus.swift */; };
+		E0B2FBAF2D6DB85200D55EC9 /* Monitoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB632D6DB85200D55EC9 /* Monitoring.swift */; };
+		E0B2FBB02D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB742D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift */; };
+		E0B2FBB12D6DB85200D55EC9 /* MobilyPurchaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6A2D6DB85200D55EC9 /* MobilyPurchaseAPI.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		38F5CCB257EFA61F32D7A8AA6A18D85E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 474391C7DA38894324250756F20CBD25;
+			remoteInfo = "Pods-mobilyflow-ios-sdk_Example";
+		};
+		C92FDFDB151B9FA958230AAD79332195 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0731F9029F9EB7EA2F72A3D4208BD883;
+			remoteInfo = "mobilyflow-ios-sdk";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		071631342E8D821AB4AED3DD3B4928D2 /* Pods-mobilyflow-ios-sdk_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-mobilyflow-ios-sdk_Tests.modulemap"; sourceTree = "<group>"; };
+		13A5ED3F53E378811994B01BE05E1AE9 /* Pods-mobilyflow-ios-sdk_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-mobilyflow-ios-sdk_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
+		2400DE04BDA81AFBD86E65EA79718D49 /* Pods-mobilyflow-ios-sdk_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-mobilyflow-ios-sdk_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		253DC4CFF06B3902F8610113D70CE295 /* mobilyflow-ios-sdk.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "mobilyflow-ios-sdk.modulemap"; sourceTree = "<group>"; };
+		2D3832C52B6EEF7CD05E547977605703 /* Pods-mobilyflow-ios-sdk_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-mobilyflow-ios-sdk_Tests-umbrella.h"; sourceTree = "<group>"; };
+		436A0818FC45D4E0BCC6C365185E3C6E /* Pods-mobilyflow-ios-sdk_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-mobilyflow-ios-sdk_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		467390ACB8F8DA18EA6C1CF2F98C22CB /* Pods-mobilyflow-ios-sdk_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-mobilyflow-ios-sdk_Example.release.xcconfig"; sourceTree = "<group>"; };
+		59CD4DCAD4D7C5BFB9C192F3380FB456 /* Pods-mobilyflow-ios-sdk_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-mobilyflow-ios-sdk_Example-umbrella.h"; sourceTree = "<group>"; };
+		6240CCCAC374B4EFBDDF01518FF6FCE2 /* Pods-mobilyflow-ios-sdk_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-mobilyflow-ios-sdk_Tests-dummy.m"; sourceTree = "<group>"; };
+		65C105FCD2EB6DFDEBA5F3E907F1A820 /* Pods-mobilyflow-ios-sdk_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-mobilyflow-ios-sdk_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		71CF3D1A45B3408619F928A70203DE3B /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		757F2EC7EA04D2D79B05C4672CFBB557 /* mobilyflow-ios-sdk.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = "mobilyflow-ios-sdk.podspec"; sourceTree = "<group>"; tabWidth = 2; };
+		7678318177A969E2E48C12B098A5D891 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		7BEF5406D3B4E98A3782B6A5BCF5F818 /* Pods-mobilyflow-ios-sdk_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-mobilyflow-ios-sdk_Example-Info.plist"; sourceTree = "<group>"; };
+		86838C6D2CE070CC53E0C25B52E78E5F /* mobilyflow-ios-sdk-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "mobilyflow-ios-sdk-umbrella.h"; sourceTree = "<group>"; };
+		87DF6CEB183145D63F5511597A5B82CC /* Pods-mobilyflow-ios-sdk_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-mobilyflow-ios-sdk_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		883454DF9B8CF1220BF79E0BDE4B445E /* mobilyflow-ios-sdk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "mobilyflow-ios-sdk.debug.xcconfig"; sourceTree = "<group>"; };
+		97D2357730C16B5599D36329775ACE83 /* mobilyflow-ios-sdk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "mobilyflow-ios-sdk.release.xcconfig"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A39C69543F77B8054A64D3CB969B7766 /* mobilyflow-ios-sdk-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "mobilyflow-ios-sdk-dummy.m"; sourceTree = "<group>"; };
+		ABF23C933777186C25F782B8D70B701C /* Pods-mobilyflow-ios-sdk_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-mobilyflow-ios-sdk_Tests-Info.plist"; sourceTree = "<group>"; };
+		B26C2291966123CCD3C677F81976F981 /* Pods_mobilyflow_ios_sdk_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mobilyflow_ios_sdk_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3CF6595D23A9828F8D6FEBD81AB9F98 /* Pods_mobilyflow_ios_sdk_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_mobilyflow_ios_sdk_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B5FB093FDEB0C4BA1DD01E23A8D47FC8 /* Pods-mobilyflow-ios-sdk_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-mobilyflow-ios-sdk_Example-frameworks.sh"; sourceTree = "<group>"; };
+		B866CBC39E8D888933AC1602A22AF9D9 /* Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		C1B85158D0105C8789C48BF89AA32908 /* Pods-mobilyflow-ios-sdk_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-mobilyflow-ios-sdk_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		D68EA6F19D30AA0CE551DFCA7D980546 /* Pods-mobilyflow-ios-sdk_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-mobilyflow-ios-sdk_Example-dummy.m"; sourceTree = "<group>"; };
+		E0B2FB5E2D6DB85200D55EC9 /* StorekitUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorekitUtils.swift; sourceTree = "<group>"; };
+		E0B2FB5F2D6DB85200D55EC9 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		E0B2FB602D6DB85200D55EC9 /* AsyncDispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncDispatchQueue.swift; sourceTree = "<group>"; };
+		E0B2FB612D6DB85200D55EC9 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
+		E0B2FB632D6DB85200D55EC9 /* Monitoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitoring.swift; sourceTree = "<group>"; };
+		E0B2FB642D6DB85200D55EC9 /* AppLifecycleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleManager.swift; sourceTree = "<group>"; };
+		E0B2FB652D6DB85200D55EC9 /* BufferedFileHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferedFileHandle.swift; sourceTree = "<group>"; };
+		E0B2FB662D6DB85200D55EC9 /* LogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
+		E0B2FB672D6DB85200D55EC9 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		E0B2FB692D6DB85200D55EC9 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		E0B2FB6A2D6DB85200D55EC9 /* MobilyPurchaseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseAPI.swift; sourceTree = "<group>"; };
+		E0B2FB6C2D6DB85200D55EC9 /* ProductStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatus.swift; sourceTree = "<group>"; };
+		E0B2FB6D2D6DB85200D55EC9 /* WebhookStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebhookStatus.swift; sourceTree = "<group>"; };
+		E0B2FB6E2D6DB85200D55EC9 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
+		E0B2FB6F2D6DB85200D55EC9 /* TransferOwnershipStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferOwnershipStatus.swift; sourceTree = "<group>"; };
+		E0B2FB702D6DB85200D55EC9 /* PeriodUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodUnit.swift; sourceTree = "<group>"; };
+		E0B2FB712D6DB85200D55EC9 /* ProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductType.swift; sourceTree = "<group>"; };
+		E0B2FB722D6DB85200D55EC9 /* MobilyEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyEnvironment.swift; sourceTree = "<group>"; };
+		E0B2FB742D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyCustomerEntitlement.swift; sourceTree = "<group>"; };
+		E0B2FB752D6DB85200D55EC9 /* MobilyProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyProduct.swift; sourceTree = "<group>"; };
+		E0B2FB762D6DB85200D55EC9 /* MobilySubscriptionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionGroup.swift; sourceTree = "<group>"; };
+		E0B2FB772D6DB85200D55EC9 /* MobilySubscriptionProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionProduct.swift; sourceTree = "<group>"; };
+		E0B2FB782D6DB85200D55EC9 /* MobilyOneTimeProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyOneTimeProduct.swift; sourceTree = "<group>"; };
+		E0B2FB792D6DB85200D55EC9 /* MobilySubscriptionOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionOffer.swift; sourceTree = "<group>"; };
+		E0B2FB7A2D6DB85200D55EC9 /* PurchaseOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseOptions.swift; sourceTree = "<group>"; };
+		E0B2FB7C2D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyTransferOwnershipError.swift; sourceTree = "<group>"; };
+		E0B2FB7D2D6DB85200D55EC9 /* MobilyError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyError.swift; sourceTree = "<group>"; };
+		E0B2FB7E2D6DB85200D55EC9 /* MobilyPurchaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseError.swift; sourceTree = "<group>"; };
+		E0B2FB802D6DB85200D55EC9 /* ApiHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiHelper.swift; sourceTree = "<group>"; };
+		E0B2FB812D6DB85200D55EC9 /* ApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
+		E0B2FB822D6DB85200D55EC9 /* ApiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
+		E0B2FB842D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKDiagnostics.swift; sourceTree = "<group>"; };
+		E0B2FB852D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseRegistry.swift; sourceTree = "<group>"; };
+		E0B2FB862D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKWaiter.swift; sourceTree = "<group>"; };
+		E0B2FB872D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKSyncer.swift; sourceTree = "<group>"; };
+		E0B2FB882D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKHelper.swift; sourceTree = "<group>"; };
+		E0B2FB8A2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDK.swift; sourceTree = "<group>"; };
+		E0B2FB8B2D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKOptions.swift; sourceTree = "<group>"; };
+		E31BCDFA9FC632CA6A2CBD3A421214AE /* Pods-mobilyflow-ios-sdk_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-mobilyflow-ios-sdk_Example.modulemap"; sourceTree = "<group>"; };
+		EA9215D342EE3CEC0656AFEF64F32884 /* mobilyflow-ios-sdk-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "mobilyflow-ios-sdk-Info.plist"; sourceTree = "<group>"; };
+		EBCA531B914A7CDAC02CFCCC2E71B32E /* mobilyflow-ios-sdk-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "mobilyflow-ios-sdk-prefix.pch"; sourceTree = "<group>"; };
+		F5EF7EBB4B8B0E6A7683FEA8504B1D12 /* mobilyflow_ios_sdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = mobilyflow_ios_sdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6DA112B823B11D02B9258C1CE78C85F2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A647BA6E3419DC0246C4C42C63C5B4D8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8F24A8F780593F07A9085CAD6E5EE17B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FA97096B1EADD6F57A13D57996D0004 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D09159AC6BC7DE0A50BA02892E48697F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7863F6D1F05E0C117ED2BE2493B023E7 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		024B09E6D9F3F2FE5FC2852583E80F24 /* Targets Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				2F231DE321DB88EDD77AD1AFBD507FD2 /* Pods-mobilyflow-ios-sdk_Example */,
+				D9B4B7CFCD9E3E125AA89432815E5731 /* Pods-mobilyflow-ios-sdk_Tests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		1D535B42DF129DFB05C9BFFC7C9BC0F8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F5EF7EBB4B8B0E6A7683FEA8504B1D12 /* mobilyflow_ios_sdk.framework */,
+				B3CF6595D23A9828F8D6FEBD81AB9F98 /* Pods_mobilyflow_ios_sdk_Example.framework */,
+				B26C2291966123CCD3C677F81976F981 /* Pods_mobilyflow_ios_sdk_Tests.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2CD6DC4F440B1F567F2F45560BEFB0A0 /* Pod */ = {
+			isa = PBXGroup;
+			children = (
+				71CF3D1A45B3408619F928A70203DE3B /* LICENSE */,
+				757F2EC7EA04D2D79B05C4672CFBB557 /* mobilyflow-ios-sdk.podspec */,
+				7678318177A969E2E48C12B098A5D891 /* README.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		2F231DE321DB88EDD77AD1AFBD507FD2 /* Pods-mobilyflow-ios-sdk_Example */ = {
+			isa = PBXGroup;
+			children = (
+				E31BCDFA9FC632CA6A2CBD3A421214AE /* Pods-mobilyflow-ios-sdk_Example.modulemap */,
+				C1B85158D0105C8789C48BF89AA32908 /* Pods-mobilyflow-ios-sdk_Example-acknowledgements.markdown */,
+				436A0818FC45D4E0BCC6C365185E3C6E /* Pods-mobilyflow-ios-sdk_Example-acknowledgements.plist */,
+				D68EA6F19D30AA0CE551DFCA7D980546 /* Pods-mobilyflow-ios-sdk_Example-dummy.m */,
+				B5FB093FDEB0C4BA1DD01E23A8D47FC8 /* Pods-mobilyflow-ios-sdk_Example-frameworks.sh */,
+				7BEF5406D3B4E98A3782B6A5BCF5F818 /* Pods-mobilyflow-ios-sdk_Example-Info.plist */,
+				59CD4DCAD4D7C5BFB9C192F3380FB456 /* Pods-mobilyflow-ios-sdk_Example-umbrella.h */,
+				65C105FCD2EB6DFDEBA5F3E907F1A820 /* Pods-mobilyflow-ios-sdk_Example.debug.xcconfig */,
+				467390ACB8F8DA18EA6C1CF2F98C22CB /* Pods-mobilyflow-ios-sdk_Example.release.xcconfig */,
+			);
+			name = "Pods-mobilyflow-ios-sdk_Example";
+			path = "Target Support Files/Pods-mobilyflow-ios-sdk_Example";
+			sourceTree = "<group>";
+		};
+		578452D2E740E91742655AC8F1636D1F /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		8FAF14ED47677510D377E785E1E87823 /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				AECB4F3BD48BB89B18685BD8F8698D2A /* mobilyflow-ios-sdk */,
+			);
+			name = "Development Pods";
+			sourceTree = "<group>";
+		};
+		AECB4F3BD48BB89B18685BD8F8698D2A /* mobilyflow-ios-sdk */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB622D6DB85200D55EC9 /* Utils */,
+				E0B2FB682D6DB85200D55EC9 /* Monitoring */,
+				E0B2FB6B2D6DB85200D55EC9 /* MobilyPurchaseAPI */,
+				E0B2FB732D6DB85200D55EC9 /* Enums */,
+				E0B2FB7B2D6DB85200D55EC9 /* Models */,
+				E0B2FB7F2D6DB85200D55EC9 /* Errors */,
+				E0B2FB832D6DB85200D55EC9 /* ApiHelper */,
+				E0B2FB892D6DB85200D55EC9 /* SDKHelpers */,
+				E0B2FB8A2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift */,
+				E0B2FB8B2D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift */,
+				2CD6DC4F440B1F567F2F45560BEFB0A0 /* Pod */,
+				C8FFBB5503362C06A3EBB7E2C65A52EE /* Support Files */,
+			);
+			name = "mobilyflow-ios-sdk";
+			path = ../..;
+			sourceTree = "<group>";
+		};
+		C8FFBB5503362C06A3EBB7E2C65A52EE /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				253DC4CFF06B3902F8610113D70CE295 /* mobilyflow-ios-sdk.modulemap */,
+				A39C69543F77B8054A64D3CB969B7766 /* mobilyflow-ios-sdk-dummy.m */,
+				EA9215D342EE3CEC0656AFEF64F32884 /* mobilyflow-ios-sdk-Info.plist */,
+				EBCA531B914A7CDAC02CFCCC2E71B32E /* mobilyflow-ios-sdk-prefix.pch */,
+				86838C6D2CE070CC53E0C25B52E78E5F /* mobilyflow-ios-sdk-umbrella.h */,
+				883454DF9B8CF1220BF79E0BDE4B445E /* mobilyflow-ios-sdk.debug.xcconfig */,
+				97D2357730C16B5599D36329775ACE83 /* mobilyflow-ios-sdk.release.xcconfig */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/mobilyflow-ios-sdk";
+			sourceTree = "<group>";
+		};
+		CF1408CF629C7361332E53B88F7BD30C = {
+			isa = PBXGroup;
+			children = (
+				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
+				8FAF14ED47677510D377E785E1E87823 /* Development Pods */,
+				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
+				1D535B42DF129DFB05C9BFFC7C9BC0F8 /* Products */,
+				024B09E6D9F3F2FE5FC2852583E80F24 /* Targets Support Files */,
+			);
+			sourceTree = "<group>";
+		};
+		D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				578452D2E740E91742655AC8F1636D1F /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D9B4B7CFCD9E3E125AA89432815E5731 /* Pods-mobilyflow-ios-sdk_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				071631342E8D821AB4AED3DD3B4928D2 /* Pods-mobilyflow-ios-sdk_Tests.modulemap */,
+				87DF6CEB183145D63F5511597A5B82CC /* Pods-mobilyflow-ios-sdk_Tests-acknowledgements.markdown */,
+				13A5ED3F53E378811994B01BE05E1AE9 /* Pods-mobilyflow-ios-sdk_Tests-acknowledgements.plist */,
+				6240CCCAC374B4EFBDDF01518FF6FCE2 /* Pods-mobilyflow-ios-sdk_Tests-dummy.m */,
+				ABF23C933777186C25F782B8D70B701C /* Pods-mobilyflow-ios-sdk_Tests-Info.plist */,
+				2D3832C52B6EEF7CD05E547977605703 /* Pods-mobilyflow-ios-sdk_Tests-umbrella.h */,
+				B866CBC39E8D888933AC1602A22AF9D9 /* Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig */,
+				2400DE04BDA81AFBD86E65EA79718D49 /* Pods-mobilyflow-ios-sdk_Tests.release.xcconfig */,
+			);
+			name = "Pods-mobilyflow-ios-sdk_Tests";
+			path = "Target Support Files/Pods-mobilyflow-ios-sdk_Tests";
+			sourceTree = "<group>";
+		};
+		E0B2FB622D6DB85200D55EC9 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB5E2D6DB85200D55EC9 /* StorekitUtils.swift */,
+				E0B2FB5F2D6DB85200D55EC9 /* DateExtension.swift */,
+				E0B2FB602D6DB85200D55EC9 /* AsyncDispatchQueue.swift */,
+				E0B2FB612D6DB85200D55EC9 /* utils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		E0B2FB682D6DB85200D55EC9 /* Monitoring */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB632D6DB85200D55EC9 /* Monitoring.swift */,
+				E0B2FB642D6DB85200D55EC9 /* AppLifecycleManager.swift */,
+				E0B2FB652D6DB85200D55EC9 /* BufferedFileHandle.swift */,
+				E0B2FB662D6DB85200D55EC9 /* LogLevel.swift */,
+				E0B2FB672D6DB85200D55EC9 /* Logger.swift */,
+			);
+			path = Monitoring;
+			sourceTree = "<group>";
+		};
+		E0B2FB6B2D6DB85200D55EC9 /* MobilyPurchaseAPI */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB692D6DB85200D55EC9 /* LoginResponse.swift */,
+				E0B2FB6A2D6DB85200D55EC9 /* MobilyPurchaseAPI.swift */,
+			);
+			path = MobilyPurchaseAPI;
+			sourceTree = "<group>";
+		};
+		E0B2FB732D6DB85200D55EC9 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB6C2D6DB85200D55EC9 /* ProductStatus.swift */,
+				E0B2FB6D2D6DB85200D55EC9 /* WebhookStatus.swift */,
+				E0B2FB6E2D6DB85200D55EC9 /* Platform.swift */,
+				E0B2FB6F2D6DB85200D55EC9 /* TransferOwnershipStatus.swift */,
+				E0B2FB702D6DB85200D55EC9 /* PeriodUnit.swift */,
+				E0B2FB712D6DB85200D55EC9 /* ProductType.swift */,
+				E0B2FB722D6DB85200D55EC9 /* MobilyEnvironment.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		E0B2FB7B2D6DB85200D55EC9 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB742D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift */,
+				E0B2FB752D6DB85200D55EC9 /* MobilyProduct.swift */,
+				E0B2FB762D6DB85200D55EC9 /* MobilySubscriptionGroup.swift */,
+				E0B2FB772D6DB85200D55EC9 /* MobilySubscriptionProduct.swift */,
+				E0B2FB782D6DB85200D55EC9 /* MobilyOneTimeProduct.swift */,
+				E0B2FB792D6DB85200D55EC9 /* MobilySubscriptionOffer.swift */,
+				E0B2FB7A2D6DB85200D55EC9 /* PurchaseOptions.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E0B2FB7F2D6DB85200D55EC9 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB7C2D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift */,
+				E0B2FB7D2D6DB85200D55EC9 /* MobilyError.swift */,
+				E0B2FB7E2D6DB85200D55EC9 /* MobilyPurchaseError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		E0B2FB832D6DB85200D55EC9 /* ApiHelper */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB802D6DB85200D55EC9 /* ApiHelper.swift */,
+				E0B2FB812D6DB85200D55EC9 /* ApiRequest.swift */,
+				E0B2FB822D6DB85200D55EC9 /* ApiResponse.swift */,
+			);
+			path = ApiHelper;
+			sourceTree = "<group>";
+		};
+		E0B2FB892D6DB85200D55EC9 /* SDKHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				E0B2FB842D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift */,
+				E0B2FB852D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift */,
+				E0B2FB862D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift */,
+				E0B2FB872D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift */,
+				E0B2FB882D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift */,
+			);
+			path = SDKHelpers;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		0581575D5C350D90BF36C77A36931803 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D90C7E30F4F49A5E7247E5E776B15C16 /* Pods-mobilyflow-ios-sdk_Example-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		587448C7A9BBA691DB45A2BD7229B59E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D5898909A821C0FDF04F92BE28B7FD8 /* Pods-mobilyflow-ios-sdk_Tests-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FA9664C9E388DDCB7C3D83735F65E0DB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				06B0DBAEB897E7930F3D18D66705441F /* mobilyflow-ios-sdk-umbrella.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		0731F9029F9EB7EA2F72A3D4208BD883 /* mobilyflow-ios-sdk */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 603F16BD95AEC778F3D33FA739B2651E /* Build configuration list for PBXNativeTarget "mobilyflow-ios-sdk" */;
+			buildPhases = (
+				FA9664C9E388DDCB7C3D83735F65E0DB /* Headers */,
+				79FA4B2F2892E43C8E73974C2FEFD3E2 /* Sources */,
+				6DA112B823B11D02B9258C1CE78C85F2 /* Frameworks */,
+				B1FAA5BF30CDB825E973EA1DA44ACA65 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mobilyflow-ios-sdk";
+			productName = mobilyflow_ios_sdk;
+			productReference = F5EF7EBB4B8B0E6A7683FEA8504B1D12 /* mobilyflow_ios_sdk.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		474391C7DA38894324250756F20CBD25 /* Pods-mobilyflow-ios-sdk_Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E07A56CC9A296A960178DEFDF88E3766 /* Build configuration list for PBXNativeTarget "Pods-mobilyflow-ios-sdk_Example" */;
+			buildPhases = (
+				0581575D5C350D90BF36C77A36931803 /* Headers */,
+				D14E467A351F8533099D1D701F884312 /* Sources */,
+				8F24A8F780593F07A9085CAD6E5EE17B /* Frameworks */,
+				6C04E863479BC72BBA1EA0D25D861808 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A6674E22D2B1393A7C2787F60A628737 /* PBXTargetDependency */,
+			);
+			name = "Pods-mobilyflow-ios-sdk_Example";
+			productName = Pods_mobilyflow_ios_sdk_Example;
+			productReference = B3CF6595D23A9828F8D6FEBD81AB9F98 /* Pods_mobilyflow_ios_sdk_Example.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		73F1E84AFD418FCB27659094C489B36B /* Pods-mobilyflow-ios-sdk_Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B62BD1505B672E6EE2BD28BA499B0B89 /* Build configuration list for PBXNativeTarget "Pods-mobilyflow-ios-sdk_Tests" */;
+			buildPhases = (
+				587448C7A9BBA691DB45A2BD7229B59E /* Headers */,
+				0E041BA493EBA4DE884060BA59E4FA92 /* Sources */,
+				D09159AC6BC7DE0A50BA02892E48697F /* Frameworks */,
+				6FD6D244A42393BE058528D06F59EEB2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				D92FCF4DEB45BA33E4D6892219B5A9DF /* PBXTargetDependency */,
+			);
+			name = "Pods-mobilyflow-ios-sdk_Tests";
+			productName = Pods_mobilyflow_ios_sdk_Tests;
+			productReference = B26C2291966123CCD3C677F81976F981 /* Pods_mobilyflow_ios_sdk_Tests.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+			};
+			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
+			productRefGroup = 1D535B42DF129DFB05C9BFFC7C9BC0F8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0731F9029F9EB7EA2F72A3D4208BD883 /* mobilyflow-ios-sdk */,
+				474391C7DA38894324250756F20CBD25 /* Pods-mobilyflow-ios-sdk_Example */,
+				73F1E84AFD418FCB27659094C489B36B /* Pods-mobilyflow-ios-sdk_Tests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6C04E863479BC72BBA1EA0D25D861808 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6FD6D244A42393BE058528D06F59EEB2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1FAA5BF30CDB825E973EA1DA44ACA65 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0E041BA493EBA4DE884060BA59E4FA92 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				438F42A93CC964CB7029457F8E536C16 /* Pods-mobilyflow-ios-sdk_Tests-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		79FA4B2F2892E43C8E73974C2FEFD3E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				44323E46A98DAB9558FF0B238AB552F8 /* mobilyflow-ios-sdk-dummy.m in Sources */,
+				E0B2FB8C2D6DB85200D55EC9 /* StorekitUtils.swift in Sources */,
+				E0B2FB8D2D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift in Sources */,
+				E0B2FB8E2D6DB85200D55EC9 /* MobilySubscriptionGroup.swift in Sources */,
+				E0B2FB8F2D6DB85200D55EC9 /* WebhookStatus.swift in Sources */,
+				E0B2FB902D6DB85200D55EC9 /* MobilySubscriptionProduct.swift in Sources */,
+				E0B2FB912D6DB85200D55EC9 /* MobilyProduct.swift in Sources */,
+				E0B2FB922D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift in Sources */,
+				E0B2FB932D6DB85200D55EC9 /* ApiHelper.swift in Sources */,
+				E0B2FB942D6DB85200D55EC9 /* MobilyPurchaseError.swift in Sources */,
+				E0B2FB952D6DB85200D55EC9 /* Logger.swift in Sources */,
+				E0B2FB962D6DB85200D55EC9 /* AppLifecycleManager.swift in Sources */,
+				E0B2FB972D6DB85200D55EC9 /* MobilyEnvironment.swift in Sources */,
+				E0B2FB982D6DB85200D55EC9 /* MobilyError.swift in Sources */,
+				E0B2FB992D6DB85200D55EC9 /* utils.swift in Sources */,
+				E0B2FB9A2D6DB85200D55EC9 /* ProductType.swift in Sources */,
+				E0B2FB9B2D6DB85200D55EC9 /* Platform.swift in Sources */,
+				E0B2FB9C2D6DB85200D55EC9 /* LogLevel.swift in Sources */,
+				E0B2FB9D2D6DB85200D55EC9 /* PeriodUnit.swift in Sources */,
+				E0B2FB9E2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift in Sources */,
+				E0B2FB9F2D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift in Sources */,
+				E0B2FBA02D6DB85200D55EC9 /* MobilySubscriptionOffer.swift in Sources */,
+				E0B2FBA12D6DB85200D55EC9 /* BufferedFileHandle.swift in Sources */,
+				E0B2FBA22D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift in Sources */,
+				E0B2FBA32D6DB85200D55EC9 /* DateExtension.swift in Sources */,
+				E0B2FBA42D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift in Sources */,
+				E0B2FBA52D6DB85200D55EC9 /* PurchaseOptions.swift in Sources */,
+				E0B2FBA62D6DB85200D55EC9 /* MobilyOneTimeProduct.swift in Sources */,
+				E0B2FBA72D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift in Sources */,
+				E0B2FBA82D6DB85200D55EC9 /* ApiResponse.swift in Sources */,
+				E0B2FBA92D6DB85200D55EC9 /* ApiRequest.swift in Sources */,
+				E0B2FBAA2D6DB85200D55EC9 /* LoginResponse.swift in Sources */,
+				E0B2FBAB2D6DB85200D55EC9 /* AsyncDispatchQueue.swift in Sources */,
+				E0B2FBAC2D6DB85200D55EC9 /* TransferOwnershipStatus.swift in Sources */,
+				E0B2FBAD2D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift in Sources */,
+				E0B2FBAE2D6DB85200D55EC9 /* ProductStatus.swift in Sources */,
+				E0B2FBAF2D6DB85200D55EC9 /* Monitoring.swift in Sources */,
+				E0B2FBB02D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift in Sources */,
+				E0B2FBB12D6DB85200D55EC9 /* MobilyPurchaseAPI.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		D14E467A351F8533099D1D701F884312 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7959FFEE00975662BEDC07BD1678DB47 /* Pods-mobilyflow-ios-sdk_Example-dummy.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A6674E22D2B1393A7C2787F60A628737 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "mobilyflow-ios-sdk";
+			target = 0731F9029F9EB7EA2F72A3D4208BD883 /* mobilyflow-ios-sdk */;
+			targetProxy = C92FDFDB151B9FA958230AAD79332195 /* PBXContainerItemProxy */;
+		};
+		D92FCF4DEB45BA33E4D6892219B5A9DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Pods-mobilyflow-ios-sdk_Example";
+			target = 474391C7DA38894324250756F20CBD25 /* Pods-mobilyflow-ios-sdk_Example */;
+			targetProxy = 38F5CCB257EFA61F32D7A8AA6A18D85E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0DD0D4975721EF3CB12D0EBA20D146B1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 65C105FCD2EB6DFDEBA5F3E907F1A820 /* Pods-mobilyflow-ios-sdk_Example.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-mobilyflow-ios-sdk_Example/Pods-mobilyflow-ios-sdk_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-mobilyflow-ios-sdk_Example/Pods-mobilyflow-ios-sdk_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		14D324FE930A8BA94F9AE92ACE664D07 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 97D2357730C16B5599D36329775ACE83 /* mobilyflow-ios-sdk.release.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/mobilyflow-ios-sdk/mobilyflow-ios-sdk-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/mobilyflow-ios-sdk/mobilyflow-ios-sdk-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/mobilyflow-ios-sdk/mobilyflow-ios-sdk.modulemap";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mobilyflow.ios-sdk";
+				PRODUCT_MODULE_NAME = mobilyflow_ios_sdk;
+				PRODUCT_NAME = mobilyflow_ios_sdk;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		5B649DEA6FD30346820773627383CD13 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2400DE04BDA81AFBD86E65EA79718D49 /* Pods-mobilyflow-ios-sdk_Tests.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-mobilyflow-ios-sdk_Tests/Pods-mobilyflow-ios-sdk_Tests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-mobilyflow-ios-sdk_Tests/Pods-mobilyflow-ios-sdk_Tests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		7EE7A78859F657F6BEFC651185B43192 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_RELEASE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Release;
+		};
+		CE2D18C1DA6F83980993E1EF67FD8CCB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 883454DF9B8CF1220BF79E0BDE4B445E /* mobilyflow-ios-sdk.debug.xcconfig */;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/mobilyflow-ios-sdk/mobilyflow-ios-sdk-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/mobilyflow-ios-sdk/mobilyflow-ios-sdk-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/mobilyflow-ios-sdk/mobilyflow-ios-sdk.modulemap";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.mobilyflow.ios-sdk";
+				PRODUCT_MODULE_NAME = mobilyflow_ios_sdk;
+				PRODUCT_NAME = mobilyflow_ios_sdk;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		D299434AB35E7FD6F7921C8EF24742FF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"POD_CONFIGURATION_DEBUG=1",
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				SYMROOT = "${SRCROOT}/../build";
+			};
+			name = Debug;
+		};
+		E109192FD1654C10287B087223ADD067 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B866CBC39E8D888933AC1602A22AF9D9 /* Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-mobilyflow-ios-sdk_Tests/Pods-mobilyflow-ios-sdk_Tests-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-mobilyflow-ios-sdk_Tests/Pods-mobilyflow-ios-sdk_Tests.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		F2ED0B749FD2766588765C957316C628 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 467390ACB8F8DA18EA6C1CF2F98C22CB /* Pods-mobilyflow-ios-sdk_Example.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "Target Support Files/Pods-mobilyflow-ios-sdk_Example/Pods-mobilyflow-ios-sdk_Example-Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MACH_O_TYPE = staticlib;
+				MODULEMAP_FILE = "Target Support Files/Pods-mobilyflow-ios-sdk_Example/Pods-mobilyflow-ios-sdk_Example.modulemap";
+				OTHER_LDFLAGS = "";
+				OTHER_LIBTOOLFLAGS = "";
+				PODS_ROOT = "$(SRCROOT)";
+				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D299434AB35E7FD6F7921C8EF24742FF /* Debug */,
+				7EE7A78859F657F6BEFC651185B43192 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		603F16BD95AEC778F3D33FA739B2651E /* Build configuration list for PBXNativeTarget "mobilyflow-ios-sdk" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE2D18C1DA6F83980993E1EF67FD8CCB /* Debug */,
+				14D324FE930A8BA94F9AE92ACE664D07 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B62BD1505B672E6EE2BD28BA499B0B89 /* Build configuration list for PBXNativeTarget "Pods-mobilyflow-ios-sdk_Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E109192FD1654C10287B087223ADD067 /* Debug */,
+				5B649DEA6FD30346820773627383CD13 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		E07A56CC9A296A960178DEFDF88E3766 /* Build configuration list for PBXNativeTarget "Pods-mobilyflow-ios-sdk_Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0DD0D4975721EF3CB12D0EBA20D146B1 /* Debug */,
+				F2ED0B749FD2766588765C957316C628 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = BFDFE7DC352907FC980B868725387E98 /* Project object */;
+}
