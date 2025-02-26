@@ -16,44 +16,44 @@
 		7959FFEE00975662BEDC07BD1678DB47 /* Pods-mobilyflow-ios-sdk_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D68EA6F19D30AA0CE551DFCA7D980546 /* Pods-mobilyflow-ios-sdk_Example-dummy.m */; };
 		A647BA6E3419DC0246C4C42C63C5B4D8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73010CC983E3809BECEE5348DA1BB8C6 /* Foundation.framework */; };
 		D90C7E30F4F49A5E7247E5E776B15C16 /* Pods-mobilyflow-ios-sdk_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 59CD4DCAD4D7C5BFB9C192F3380FB456 /* Pods-mobilyflow-ios-sdk_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E0B2FB8C2D6DB85200D55EC9 /* StorekitUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB5E2D6DB85200D55EC9 /* StorekitUtils.swift */; };
-		E0B2FB8D2D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB842D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift */; };
-		E0B2FB8E2D6DB85200D55EC9 /* MobilySubscriptionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB762D6DB85200D55EC9 /* MobilySubscriptionGroup.swift */; };
-		E0B2FB8F2D6DB85200D55EC9 /* WebhookStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6D2D6DB85200D55EC9 /* WebhookStatus.swift */; };
-		E0B2FB902D6DB85200D55EC9 /* MobilySubscriptionProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB772D6DB85200D55EC9 /* MobilySubscriptionProduct.swift */; };
-		E0B2FB912D6DB85200D55EC9 /* MobilyProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB752D6DB85200D55EC9 /* MobilyProduct.swift */; };
-		E0B2FB922D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB872D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift */; };
-		E0B2FB932D6DB85200D55EC9 /* ApiHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB802D6DB85200D55EC9 /* ApiHelper.swift */; };
-		E0B2FB942D6DB85200D55EC9 /* MobilyPurchaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB7E2D6DB85200D55EC9 /* MobilyPurchaseError.swift */; };
-		E0B2FB952D6DB85200D55EC9 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB672D6DB85200D55EC9 /* Logger.swift */; };
-		E0B2FB962D6DB85200D55EC9 /* AppLifecycleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB642D6DB85200D55EC9 /* AppLifecycleManager.swift */; };
-		E0B2FB972D6DB85200D55EC9 /* MobilyEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB722D6DB85200D55EC9 /* MobilyEnvironment.swift */; };
-		E0B2FB982D6DB85200D55EC9 /* MobilyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB7D2D6DB85200D55EC9 /* MobilyError.swift */; };
-		E0B2FB992D6DB85200D55EC9 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB612D6DB85200D55EC9 /* utils.swift */; };
-		E0B2FB9A2D6DB85200D55EC9 /* ProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB712D6DB85200D55EC9 /* ProductType.swift */; };
-		E0B2FB9B2D6DB85200D55EC9 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6E2D6DB85200D55EC9 /* Platform.swift */; };
-		E0B2FB9C2D6DB85200D55EC9 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB662D6DB85200D55EC9 /* LogLevel.swift */; };
-		E0B2FB9D2D6DB85200D55EC9 /* PeriodUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB702D6DB85200D55EC9 /* PeriodUnit.swift */; };
-		E0B2FB9E2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB8A2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift */; };
-		E0B2FB9F2D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB862D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift */; };
-		E0B2FBA02D6DB85200D55EC9 /* MobilySubscriptionOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB792D6DB85200D55EC9 /* MobilySubscriptionOffer.swift */; };
-		E0B2FBA12D6DB85200D55EC9 /* BufferedFileHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB652D6DB85200D55EC9 /* BufferedFileHandle.swift */; };
-		E0B2FBA22D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB8B2D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift */; };
-		E0B2FBA32D6DB85200D55EC9 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB5F2D6DB85200D55EC9 /* DateExtension.swift */; };
-		E0B2FBA42D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB852D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift */; };
-		E0B2FBA52D6DB85200D55EC9 /* PurchaseOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB7A2D6DB85200D55EC9 /* PurchaseOptions.swift */; };
-		E0B2FBA62D6DB85200D55EC9 /* MobilyOneTimeProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB782D6DB85200D55EC9 /* MobilyOneTimeProduct.swift */; };
-		E0B2FBA72D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB7C2D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift */; };
-		E0B2FBA82D6DB85200D55EC9 /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB822D6DB85200D55EC9 /* ApiResponse.swift */; };
-		E0B2FBA92D6DB85200D55EC9 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB812D6DB85200D55EC9 /* ApiRequest.swift */; };
-		E0B2FBAA2D6DB85200D55EC9 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB692D6DB85200D55EC9 /* LoginResponse.swift */; };
-		E0B2FBAB2D6DB85200D55EC9 /* AsyncDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB602D6DB85200D55EC9 /* AsyncDispatchQueue.swift */; };
-		E0B2FBAC2D6DB85200D55EC9 /* TransferOwnershipStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6F2D6DB85200D55EC9 /* TransferOwnershipStatus.swift */; };
-		E0B2FBAD2D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB882D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift */; };
-		E0B2FBAE2D6DB85200D55EC9 /* ProductStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6C2D6DB85200D55EC9 /* ProductStatus.swift */; };
-		E0B2FBAF2D6DB85200D55EC9 /* Monitoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB632D6DB85200D55EC9 /* Monitoring.swift */; };
-		E0B2FBB02D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB742D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift */; };
-		E0B2FBB12D6DB85200D55EC9 /* MobilyPurchaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0B2FB6A2D6DB85200D55EC9 /* MobilyPurchaseAPI.swift */; };
+		E0974A562D6F1C9C002D0831 /* MobilyPurchaseRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A472D6F1C9C002D0831 /* MobilyPurchaseRegistry.swift */; };
+		E0974A572D6F1C9C002D0831 /* StorekitUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A4F2D6F1C9C002D0831 /* StorekitUtils.swift */; };
+		E0974A582D6F1C9C002D0831 /* MobilySubscriptionProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A3E2D6F1C9C002D0831 /* MobilySubscriptionProduct.swift */; };
+		E0974A592D6F1C9C002D0831 /* WebhookStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A302D6F1C9C002D0831 /* WebhookStatus.swift */; };
+		E0974A5A2D6F1C9C002D0831 /* MobilyOneTimeProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A3A2D6F1C9C002D0831 /* MobilyOneTimeProduct.swift */; };
+		E0974A5B2D6F1C9C002D0831 /* MobilyPurchaseSDKSyncer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A4A2D6F1C9C002D0831 /* MobilyPurchaseSDKSyncer.swift */; };
+		E0974A5C2D6F1C9C002D0831 /* AsyncDispatchQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A4D2D6F1C9C002D0831 /* AsyncDispatchQueue.swift */; };
+		E0974A5D2D6F1C9C002D0831 /* MobilyPurchaseAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A372D6F1C9C002D0831 /* MobilyPurchaseAPI.swift */; };
+		E0974A5E2D6F1C9C002D0831 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A502D6F1C9C002D0831 /* utils.swift */; };
+		E0974A5F2D6F1C9C002D0831 /* MobilySubscriptionGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A3C2D6F1C9C002D0831 /* MobilySubscriptionGroup.swift */; };
+		E0974A602D6F1C9C002D0831 /* MobilyPurchaseError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A332D6F1C9C002D0831 /* MobilyPurchaseError.swift */; };
+		E0974A612D6F1C9C002D0831 /* Monitoring.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A452D6F1C9C002D0831 /* Monitoring.swift */; };
+		E0974A622D6F1C9C002D0831 /* MobilyPurchaseSDKHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A492D6F1C9C002D0831 /* MobilyPurchaseSDKHelper.swift */; };
+		E0974A632D6F1C9C002D0831 /* ProductType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A2E2D6F1C9C002D0831 /* ProductType.swift */; };
+		E0974A642D6F1C9C002D0831 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A272D6F1C9C002D0831 /* ApiRequest.swift */; };
+		E0974A652D6F1C9C002D0831 /* MobilyEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A2A2D6F1C9C002D0831 /* MobilyEnvironment.swift */; };
+		E0974A662D6F1C9C002D0831 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A432D6F1C9C002D0831 /* Logger.swift */; };
+		E0974A672D6F1C9C002D0831 /* MobilyPurchaseSDKOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A542D6F1C9C002D0831 /* MobilyPurchaseSDKOptions.swift */; };
+		E0974A682D6F1C9C002D0831 /* AppLifecycleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A412D6F1C9C002D0831 /* AppLifecycleManager.swift */; };
+		E0974A692D6F1C9C002D0831 /* ApiHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A262D6F1C9C002D0831 /* ApiHelper.swift */; };
+		E0974A6A2D6F1C9C002D0831 /* TransferOwnershipStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A2F2D6F1C9C002D0831 /* TransferOwnershipStatus.swift */; };
+		E0974A6B2D6F1C9C002D0831 /* Platform.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A2C2D6F1C9C002D0831 /* Platform.swift */; };
+		E0974A6C2D6F1C9C002D0831 /* MobilyCustomerEntitlement.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A392D6F1C9C002D0831 /* MobilyCustomerEntitlement.swift */; };
+		E0974A6D2D6F1C9C002D0831 /* MobilyPurchaseSDKWaiter.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A4B2D6F1C9C002D0831 /* MobilyPurchaseSDKWaiter.swift */; };
+		E0974A6E2D6F1C9C002D0831 /* MobilyTransferOwnershipError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A342D6F1C9C002D0831 /* MobilyTransferOwnershipError.swift */; };
+		E0974A6F2D6F1C9C002D0831 /* LoginResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A362D6F1C9C002D0831 /* LoginResponse.swift */; };
+		E0974A702D6F1C9C002D0831 /* BufferedFileHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A422D6F1C9C002D0831 /* BufferedFileHandle.swift */; };
+		E0974A712D6F1C9C002D0831 /* MobilyProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A3B2D6F1C9C002D0831 /* MobilyProduct.swift */; };
+		E0974A722D6F1C9C002D0831 /* ProductStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A2D2D6F1C9C002D0831 /* ProductStatus.swift */; };
+		E0974A732D6F1C9C002D0831 /* MobilySubscriptionOffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A3D2D6F1C9C002D0831 /* MobilySubscriptionOffer.swift */; };
+		E0974A742D6F1C9C002D0831 /* MobilyPurchaseSDK.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A532D6F1C9C002D0831 /* MobilyPurchaseSDK.swift */; };
+		E0974A752D6F1C9C002D0831 /* PurchaseOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A3F2D6F1C9C002D0831 /* PurchaseOptions.swift */; };
+		E0974A762D6F1C9C002D0831 /* MobilyPurchaseSDKDiagnostics.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A482D6F1C9C002D0831 /* MobilyPurchaseSDKDiagnostics.swift */; };
+		E0974A772D6F1C9C002D0831 /* PeriodUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A2B2D6F1C9C002D0831 /* PeriodUnit.swift */; };
+		E0974A782D6F1C9C002D0831 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A442D6F1C9C002D0831 /* LogLevel.swift */; };
+		E0974A792D6F1C9C002D0831 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A4E2D6F1C9C002D0831 /* DateExtension.swift */; };
+		E0974A7A2D6F1C9C002D0831 /* MobilyError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A322D6F1C9C002D0831 /* MobilyError.swift */; };
+		E0974A7B2D6F1C9C002D0831 /* ApiResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0974A282D6F1C9C002D0831 /* ApiResponse.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,44 +102,44 @@
 		B866CBC39E8D888933AC1602A22AF9D9 /* Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		C1B85158D0105C8789C48BF89AA32908 /* Pods-mobilyflow-ios-sdk_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-mobilyflow-ios-sdk_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		D68EA6F19D30AA0CE551DFCA7D980546 /* Pods-mobilyflow-ios-sdk_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-mobilyflow-ios-sdk_Example-dummy.m"; sourceTree = "<group>"; };
-		E0B2FB5E2D6DB85200D55EC9 /* StorekitUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorekitUtils.swift; sourceTree = "<group>"; };
-		E0B2FB5F2D6DB85200D55EC9 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
-		E0B2FB602D6DB85200D55EC9 /* AsyncDispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncDispatchQueue.swift; sourceTree = "<group>"; };
-		E0B2FB612D6DB85200D55EC9 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
-		E0B2FB632D6DB85200D55EC9 /* Monitoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitoring.swift; sourceTree = "<group>"; };
-		E0B2FB642D6DB85200D55EC9 /* AppLifecycleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleManager.swift; sourceTree = "<group>"; };
-		E0B2FB652D6DB85200D55EC9 /* BufferedFileHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferedFileHandle.swift; sourceTree = "<group>"; };
-		E0B2FB662D6DB85200D55EC9 /* LogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
-		E0B2FB672D6DB85200D55EC9 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		E0B2FB692D6DB85200D55EC9 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
-		E0B2FB6A2D6DB85200D55EC9 /* MobilyPurchaseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseAPI.swift; sourceTree = "<group>"; };
-		E0B2FB6C2D6DB85200D55EC9 /* ProductStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatus.swift; sourceTree = "<group>"; };
-		E0B2FB6D2D6DB85200D55EC9 /* WebhookStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebhookStatus.swift; sourceTree = "<group>"; };
-		E0B2FB6E2D6DB85200D55EC9 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
-		E0B2FB6F2D6DB85200D55EC9 /* TransferOwnershipStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferOwnershipStatus.swift; sourceTree = "<group>"; };
-		E0B2FB702D6DB85200D55EC9 /* PeriodUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodUnit.swift; sourceTree = "<group>"; };
-		E0B2FB712D6DB85200D55EC9 /* ProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductType.swift; sourceTree = "<group>"; };
-		E0B2FB722D6DB85200D55EC9 /* MobilyEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyEnvironment.swift; sourceTree = "<group>"; };
-		E0B2FB742D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyCustomerEntitlement.swift; sourceTree = "<group>"; };
-		E0B2FB752D6DB85200D55EC9 /* MobilyProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyProduct.swift; sourceTree = "<group>"; };
-		E0B2FB762D6DB85200D55EC9 /* MobilySubscriptionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionGroup.swift; sourceTree = "<group>"; };
-		E0B2FB772D6DB85200D55EC9 /* MobilySubscriptionProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionProduct.swift; sourceTree = "<group>"; };
-		E0B2FB782D6DB85200D55EC9 /* MobilyOneTimeProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyOneTimeProduct.swift; sourceTree = "<group>"; };
-		E0B2FB792D6DB85200D55EC9 /* MobilySubscriptionOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionOffer.swift; sourceTree = "<group>"; };
-		E0B2FB7A2D6DB85200D55EC9 /* PurchaseOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseOptions.swift; sourceTree = "<group>"; };
-		E0B2FB7C2D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyTransferOwnershipError.swift; sourceTree = "<group>"; };
-		E0B2FB7D2D6DB85200D55EC9 /* MobilyError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyError.swift; sourceTree = "<group>"; };
-		E0B2FB7E2D6DB85200D55EC9 /* MobilyPurchaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseError.swift; sourceTree = "<group>"; };
-		E0B2FB802D6DB85200D55EC9 /* ApiHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiHelper.swift; sourceTree = "<group>"; };
-		E0B2FB812D6DB85200D55EC9 /* ApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
-		E0B2FB822D6DB85200D55EC9 /* ApiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
-		E0B2FB842D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKDiagnostics.swift; sourceTree = "<group>"; };
-		E0B2FB852D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseRegistry.swift; sourceTree = "<group>"; };
-		E0B2FB862D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKWaiter.swift; sourceTree = "<group>"; };
-		E0B2FB872D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKSyncer.swift; sourceTree = "<group>"; };
-		E0B2FB882D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKHelper.swift; sourceTree = "<group>"; };
-		E0B2FB8A2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDK.swift; sourceTree = "<group>"; };
-		E0B2FB8B2D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKOptions.swift; sourceTree = "<group>"; };
+		E0974A262D6F1C9C002D0831 /* ApiHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiHelper.swift; sourceTree = "<group>"; };
+		E0974A272D6F1C9C002D0831 /* ApiRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
+		E0974A282D6F1C9C002D0831 /* ApiResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiResponse.swift; sourceTree = "<group>"; };
+		E0974A2A2D6F1C9C002D0831 /* MobilyEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyEnvironment.swift; sourceTree = "<group>"; };
+		E0974A2B2D6F1C9C002D0831 /* PeriodUnit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodUnit.swift; sourceTree = "<group>"; };
+		E0974A2C2D6F1C9C002D0831 /* Platform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Platform.swift; sourceTree = "<group>"; };
+		E0974A2D2D6F1C9C002D0831 /* ProductStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductStatus.swift; sourceTree = "<group>"; };
+		E0974A2E2D6F1C9C002D0831 /* ProductType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductType.swift; sourceTree = "<group>"; };
+		E0974A2F2D6F1C9C002D0831 /* TransferOwnershipStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransferOwnershipStatus.swift; sourceTree = "<group>"; };
+		E0974A302D6F1C9C002D0831 /* WebhookStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebhookStatus.swift; sourceTree = "<group>"; };
+		E0974A322D6F1C9C002D0831 /* MobilyError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyError.swift; sourceTree = "<group>"; };
+		E0974A332D6F1C9C002D0831 /* MobilyPurchaseError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseError.swift; sourceTree = "<group>"; };
+		E0974A342D6F1C9C002D0831 /* MobilyTransferOwnershipError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyTransferOwnershipError.swift; sourceTree = "<group>"; };
+		E0974A362D6F1C9C002D0831 /* LoginResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginResponse.swift; sourceTree = "<group>"; };
+		E0974A372D6F1C9C002D0831 /* MobilyPurchaseAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseAPI.swift; sourceTree = "<group>"; };
+		E0974A392D6F1C9C002D0831 /* MobilyCustomerEntitlement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyCustomerEntitlement.swift; sourceTree = "<group>"; };
+		E0974A3A2D6F1C9C002D0831 /* MobilyOneTimeProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyOneTimeProduct.swift; sourceTree = "<group>"; };
+		E0974A3B2D6F1C9C002D0831 /* MobilyProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyProduct.swift; sourceTree = "<group>"; };
+		E0974A3C2D6F1C9C002D0831 /* MobilySubscriptionGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionGroup.swift; sourceTree = "<group>"; };
+		E0974A3D2D6F1C9C002D0831 /* MobilySubscriptionOffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionOffer.swift; sourceTree = "<group>"; };
+		E0974A3E2D6F1C9C002D0831 /* MobilySubscriptionProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilySubscriptionProduct.swift; sourceTree = "<group>"; };
+		E0974A3F2D6F1C9C002D0831 /* PurchaseOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseOptions.swift; sourceTree = "<group>"; };
+		E0974A412D6F1C9C002D0831 /* AppLifecycleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppLifecycleManager.swift; sourceTree = "<group>"; };
+		E0974A422D6F1C9C002D0831 /* BufferedFileHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BufferedFileHandle.swift; sourceTree = "<group>"; };
+		E0974A432D6F1C9C002D0831 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		E0974A442D6F1C9C002D0831 /* LogLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
+		E0974A452D6F1C9C002D0831 /* Monitoring.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitoring.swift; sourceTree = "<group>"; };
+		E0974A472D6F1C9C002D0831 /* MobilyPurchaseRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseRegistry.swift; sourceTree = "<group>"; };
+		E0974A482D6F1C9C002D0831 /* MobilyPurchaseSDKDiagnostics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKDiagnostics.swift; sourceTree = "<group>"; };
+		E0974A492D6F1C9C002D0831 /* MobilyPurchaseSDKHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKHelper.swift; sourceTree = "<group>"; };
+		E0974A4A2D6F1C9C002D0831 /* MobilyPurchaseSDKSyncer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKSyncer.swift; sourceTree = "<group>"; };
+		E0974A4B2D6F1C9C002D0831 /* MobilyPurchaseSDKWaiter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKWaiter.swift; sourceTree = "<group>"; };
+		E0974A4D2D6F1C9C002D0831 /* AsyncDispatchQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncDispatchQueue.swift; sourceTree = "<group>"; };
+		E0974A4E2D6F1C9C002D0831 /* DateExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
+		E0974A4F2D6F1C9C002D0831 /* StorekitUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorekitUtils.swift; sourceTree = "<group>"; };
+		E0974A502D6F1C9C002D0831 /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
+		E0974A532D6F1C9C002D0831 /* MobilyPurchaseSDK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDK.swift; sourceTree = "<group>"; };
+		E0974A542D6F1C9C002D0831 /* MobilyPurchaseSDKOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobilyPurchaseSDKOptions.swift; sourceTree = "<group>"; };
 		E31BCDFA9FC632CA6A2CBD3A421214AE /* Pods-mobilyflow-ios-sdk_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-mobilyflow-ios-sdk_Example.modulemap"; sourceTree = "<group>"; };
 		EA9215D342EE3CEC0656AFEF64F32884 /* mobilyflow-ios-sdk-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "mobilyflow-ios-sdk-Info.plist"; sourceTree = "<group>"; };
 		EBCA531B914A7CDAC02CFCCC2E71B32E /* mobilyflow-ios-sdk-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "mobilyflow-ios-sdk-prefix.pch"; sourceTree = "<group>"; };
@@ -239,16 +239,7 @@
 		AECB4F3BD48BB89B18685BD8F8698D2A /* mobilyflow-ios-sdk */ = {
 			isa = PBXGroup;
 			children = (
-				E0B2FB622D6DB85200D55EC9 /* Utils */,
-				E0B2FB682D6DB85200D55EC9 /* Monitoring */,
-				E0B2FB6B2D6DB85200D55EC9 /* MobilyPurchaseAPI */,
-				E0B2FB732D6DB85200D55EC9 /* Enums */,
-				E0B2FB7B2D6DB85200D55EC9 /* Models */,
-				E0B2FB7F2D6DB85200D55EC9 /* Errors */,
-				E0B2FB832D6DB85200D55EC9 /* ApiHelper */,
-				E0B2FB892D6DB85200D55EC9 /* SDKHelpers */,
-				E0B2FB8A2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift */,
-				E0B2FB8B2D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift */,
+				E0974A552D6F1C9C002D0831 /* Classes */,
 				2CD6DC4F440B1F567F2F45560BEFB0A0 /* Pod */,
 				C8FFBB5503362C06A3EBB7E2C65A52EE /* Support Files */,
 			);
@@ -306,96 +297,114 @@
 			path = "Target Support Files/Pods-mobilyflow-ios-sdk_Tests";
 			sourceTree = "<group>";
 		};
-		E0B2FB622D6DB85200D55EC9 /* Utils */ = {
+		E0974A292D6F1C9C002D0831 /* ApiHelper */ = {
 			isa = PBXGroup;
 			children = (
-				E0B2FB5E2D6DB85200D55EC9 /* StorekitUtils.swift */,
-				E0B2FB5F2D6DB85200D55EC9 /* DateExtension.swift */,
-				E0B2FB602D6DB85200D55EC9 /* AsyncDispatchQueue.swift */,
-				E0B2FB612D6DB85200D55EC9 /* utils.swift */,
-			);
-			path = Utils;
-			sourceTree = "<group>";
-		};
-		E0B2FB682D6DB85200D55EC9 /* Monitoring */ = {
-			isa = PBXGroup;
-			children = (
-				E0B2FB632D6DB85200D55EC9 /* Monitoring.swift */,
-				E0B2FB642D6DB85200D55EC9 /* AppLifecycleManager.swift */,
-				E0B2FB652D6DB85200D55EC9 /* BufferedFileHandle.swift */,
-				E0B2FB662D6DB85200D55EC9 /* LogLevel.swift */,
-				E0B2FB672D6DB85200D55EC9 /* Logger.swift */,
-			);
-			path = Monitoring;
-			sourceTree = "<group>";
-		};
-		E0B2FB6B2D6DB85200D55EC9 /* MobilyPurchaseAPI */ = {
-			isa = PBXGroup;
-			children = (
-				E0B2FB692D6DB85200D55EC9 /* LoginResponse.swift */,
-				E0B2FB6A2D6DB85200D55EC9 /* MobilyPurchaseAPI.swift */,
-			);
-			path = MobilyPurchaseAPI;
-			sourceTree = "<group>";
-		};
-		E0B2FB732D6DB85200D55EC9 /* Enums */ = {
-			isa = PBXGroup;
-			children = (
-				E0B2FB6C2D6DB85200D55EC9 /* ProductStatus.swift */,
-				E0B2FB6D2D6DB85200D55EC9 /* WebhookStatus.swift */,
-				E0B2FB6E2D6DB85200D55EC9 /* Platform.swift */,
-				E0B2FB6F2D6DB85200D55EC9 /* TransferOwnershipStatus.swift */,
-				E0B2FB702D6DB85200D55EC9 /* PeriodUnit.swift */,
-				E0B2FB712D6DB85200D55EC9 /* ProductType.swift */,
-				E0B2FB722D6DB85200D55EC9 /* MobilyEnvironment.swift */,
-			);
-			path = Enums;
-			sourceTree = "<group>";
-		};
-		E0B2FB7B2D6DB85200D55EC9 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				E0B2FB742D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift */,
-				E0B2FB752D6DB85200D55EC9 /* MobilyProduct.swift */,
-				E0B2FB762D6DB85200D55EC9 /* MobilySubscriptionGroup.swift */,
-				E0B2FB772D6DB85200D55EC9 /* MobilySubscriptionProduct.swift */,
-				E0B2FB782D6DB85200D55EC9 /* MobilyOneTimeProduct.swift */,
-				E0B2FB792D6DB85200D55EC9 /* MobilySubscriptionOffer.swift */,
-				E0B2FB7A2D6DB85200D55EC9 /* PurchaseOptions.swift */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		E0B2FB7F2D6DB85200D55EC9 /* Errors */ = {
-			isa = PBXGroup;
-			children = (
-				E0B2FB7C2D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift */,
-				E0B2FB7D2D6DB85200D55EC9 /* MobilyError.swift */,
-				E0B2FB7E2D6DB85200D55EC9 /* MobilyPurchaseError.swift */,
-			);
-			path = Errors;
-			sourceTree = "<group>";
-		};
-		E0B2FB832D6DB85200D55EC9 /* ApiHelper */ = {
-			isa = PBXGroup;
-			children = (
-				E0B2FB802D6DB85200D55EC9 /* ApiHelper.swift */,
-				E0B2FB812D6DB85200D55EC9 /* ApiRequest.swift */,
-				E0B2FB822D6DB85200D55EC9 /* ApiResponse.swift */,
+				E0974A262D6F1C9C002D0831 /* ApiHelper.swift */,
+				E0974A272D6F1C9C002D0831 /* ApiRequest.swift */,
+				E0974A282D6F1C9C002D0831 /* ApiResponse.swift */,
 			);
 			path = ApiHelper;
 			sourceTree = "<group>";
 		};
-		E0B2FB892D6DB85200D55EC9 /* SDKHelpers */ = {
+		E0974A312D6F1C9C002D0831 /* Enums */ = {
 			isa = PBXGroup;
 			children = (
-				E0B2FB842D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift */,
-				E0B2FB852D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift */,
-				E0B2FB862D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift */,
-				E0B2FB872D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift */,
-				E0B2FB882D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift */,
+				E0974A2A2D6F1C9C002D0831 /* MobilyEnvironment.swift */,
+				E0974A2B2D6F1C9C002D0831 /* PeriodUnit.swift */,
+				E0974A2C2D6F1C9C002D0831 /* Platform.swift */,
+				E0974A2D2D6F1C9C002D0831 /* ProductStatus.swift */,
+				E0974A2E2D6F1C9C002D0831 /* ProductType.swift */,
+				E0974A2F2D6F1C9C002D0831 /* TransferOwnershipStatus.swift */,
+				E0974A302D6F1C9C002D0831 /* WebhookStatus.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		E0974A352D6F1C9C002D0831 /* Errors */ = {
+			isa = PBXGroup;
+			children = (
+				E0974A322D6F1C9C002D0831 /* MobilyError.swift */,
+				E0974A332D6F1C9C002D0831 /* MobilyPurchaseError.swift */,
+				E0974A342D6F1C9C002D0831 /* MobilyTransferOwnershipError.swift */,
+			);
+			path = Errors;
+			sourceTree = "<group>";
+		};
+		E0974A382D6F1C9C002D0831 /* MobilyPurchaseAPI */ = {
+			isa = PBXGroup;
+			children = (
+				E0974A362D6F1C9C002D0831 /* LoginResponse.swift */,
+				E0974A372D6F1C9C002D0831 /* MobilyPurchaseAPI.swift */,
+			);
+			path = MobilyPurchaseAPI;
+			sourceTree = "<group>";
+		};
+		E0974A402D6F1C9C002D0831 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				E0974A392D6F1C9C002D0831 /* MobilyCustomerEntitlement.swift */,
+				E0974A3A2D6F1C9C002D0831 /* MobilyOneTimeProduct.swift */,
+				E0974A3B2D6F1C9C002D0831 /* MobilyProduct.swift */,
+				E0974A3C2D6F1C9C002D0831 /* MobilySubscriptionGroup.swift */,
+				E0974A3D2D6F1C9C002D0831 /* MobilySubscriptionOffer.swift */,
+				E0974A3E2D6F1C9C002D0831 /* MobilySubscriptionProduct.swift */,
+				E0974A3F2D6F1C9C002D0831 /* PurchaseOptions.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		E0974A462D6F1C9C002D0831 /* Monitoring */ = {
+			isa = PBXGroup;
+			children = (
+				E0974A412D6F1C9C002D0831 /* AppLifecycleManager.swift */,
+				E0974A422D6F1C9C002D0831 /* BufferedFileHandle.swift */,
+				E0974A432D6F1C9C002D0831 /* Logger.swift */,
+				E0974A442D6F1C9C002D0831 /* LogLevel.swift */,
+				E0974A452D6F1C9C002D0831 /* Monitoring.swift */,
+			);
+			path = Monitoring;
+			sourceTree = "<group>";
+		};
+		E0974A4C2D6F1C9C002D0831 /* SDKHelpers */ = {
+			isa = PBXGroup;
+			children = (
+				E0974A472D6F1C9C002D0831 /* MobilyPurchaseRegistry.swift */,
+				E0974A482D6F1C9C002D0831 /* MobilyPurchaseSDKDiagnostics.swift */,
+				E0974A492D6F1C9C002D0831 /* MobilyPurchaseSDKHelper.swift */,
+				E0974A4A2D6F1C9C002D0831 /* MobilyPurchaseSDKSyncer.swift */,
+				E0974A4B2D6F1C9C002D0831 /* MobilyPurchaseSDKWaiter.swift */,
 			);
 			path = SDKHelpers;
+			sourceTree = "<group>";
+		};
+		E0974A512D6F1C9C002D0831 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				E0974A4D2D6F1C9C002D0831 /* AsyncDispatchQueue.swift */,
+				E0974A4E2D6F1C9C002D0831 /* DateExtension.swift */,
+				E0974A4F2D6F1C9C002D0831 /* StorekitUtils.swift */,
+				E0974A502D6F1C9C002D0831 /* utils.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		E0974A552D6F1C9C002D0831 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				E0974A292D6F1C9C002D0831 /* ApiHelper */,
+				E0974A312D6F1C9C002D0831 /* Enums */,
+				E0974A352D6F1C9C002D0831 /* Errors */,
+				E0974A382D6F1C9C002D0831 /* MobilyPurchaseAPI */,
+				E0974A402D6F1C9C002D0831 /* Models */,
+				E0974A462D6F1C9C002D0831 /* Monitoring */,
+				E0974A4C2D6F1C9C002D0831 /* SDKHelpers */,
+				E0974A512D6F1C9C002D0831 /* Utils */,
+				E0974A532D6F1C9C002D0831 /* MobilyPurchaseSDK.swift */,
+				E0974A542D6F1C9C002D0831 /* MobilyPurchaseSDKOptions.swift */,
+			);
+			name = Classes;
+			path = "mobilyflow-ios-sdk/Classes";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -551,44 +560,44 @@
 			buildActionMask = 2147483647;
 			files = (
 				44323E46A98DAB9558FF0B238AB552F8 /* mobilyflow-ios-sdk-dummy.m in Sources */,
-				E0B2FB8C2D6DB85200D55EC9 /* StorekitUtils.swift in Sources */,
-				E0B2FB8D2D6DB85200D55EC9 /* MobilyPurchaseSDKDiagnostics.swift in Sources */,
-				E0B2FB8E2D6DB85200D55EC9 /* MobilySubscriptionGroup.swift in Sources */,
-				E0B2FB8F2D6DB85200D55EC9 /* WebhookStatus.swift in Sources */,
-				E0B2FB902D6DB85200D55EC9 /* MobilySubscriptionProduct.swift in Sources */,
-				E0B2FB912D6DB85200D55EC9 /* MobilyProduct.swift in Sources */,
-				E0B2FB922D6DB85200D55EC9 /* MobilyPurchaseSDKSyncer.swift in Sources */,
-				E0B2FB932D6DB85200D55EC9 /* ApiHelper.swift in Sources */,
-				E0B2FB942D6DB85200D55EC9 /* MobilyPurchaseError.swift in Sources */,
-				E0B2FB952D6DB85200D55EC9 /* Logger.swift in Sources */,
-				E0B2FB962D6DB85200D55EC9 /* AppLifecycleManager.swift in Sources */,
-				E0B2FB972D6DB85200D55EC9 /* MobilyEnvironment.swift in Sources */,
-				E0B2FB982D6DB85200D55EC9 /* MobilyError.swift in Sources */,
-				E0B2FB992D6DB85200D55EC9 /* utils.swift in Sources */,
-				E0B2FB9A2D6DB85200D55EC9 /* ProductType.swift in Sources */,
-				E0B2FB9B2D6DB85200D55EC9 /* Platform.swift in Sources */,
-				E0B2FB9C2D6DB85200D55EC9 /* LogLevel.swift in Sources */,
-				E0B2FB9D2D6DB85200D55EC9 /* PeriodUnit.swift in Sources */,
-				E0B2FB9E2D6DB85200D55EC9 /* MobilyPurchaseSDK.swift in Sources */,
-				E0B2FB9F2D6DB85200D55EC9 /* MobilyPurchaseSDKWaiter.swift in Sources */,
-				E0B2FBA02D6DB85200D55EC9 /* MobilySubscriptionOffer.swift in Sources */,
-				E0B2FBA12D6DB85200D55EC9 /* BufferedFileHandle.swift in Sources */,
-				E0B2FBA22D6DB85200D55EC9 /* MobilyPurchaseSDKOptions.swift in Sources */,
-				E0B2FBA32D6DB85200D55EC9 /* DateExtension.swift in Sources */,
-				E0B2FBA42D6DB85200D55EC9 /* MobilyPurchaseRegistry.swift in Sources */,
-				E0B2FBA52D6DB85200D55EC9 /* PurchaseOptions.swift in Sources */,
-				E0B2FBA62D6DB85200D55EC9 /* MobilyOneTimeProduct.swift in Sources */,
-				E0B2FBA72D6DB85200D55EC9 /* MobilyTransferOwnershipError.swift in Sources */,
-				E0B2FBA82D6DB85200D55EC9 /* ApiResponse.swift in Sources */,
-				E0B2FBA92D6DB85200D55EC9 /* ApiRequest.swift in Sources */,
-				E0B2FBAA2D6DB85200D55EC9 /* LoginResponse.swift in Sources */,
-				E0B2FBAB2D6DB85200D55EC9 /* AsyncDispatchQueue.swift in Sources */,
-				E0B2FBAC2D6DB85200D55EC9 /* TransferOwnershipStatus.swift in Sources */,
-				E0B2FBAD2D6DB85200D55EC9 /* MobilyPurchaseSDKHelper.swift in Sources */,
-				E0B2FBAE2D6DB85200D55EC9 /* ProductStatus.swift in Sources */,
-				E0B2FBAF2D6DB85200D55EC9 /* Monitoring.swift in Sources */,
-				E0B2FBB02D6DB85200D55EC9 /* MobilyCustomerEntitlement.swift in Sources */,
-				E0B2FBB12D6DB85200D55EC9 /* MobilyPurchaseAPI.swift in Sources */,
+				E0974A562D6F1C9C002D0831 /* MobilyPurchaseRegistry.swift in Sources */,
+				E0974A572D6F1C9C002D0831 /* StorekitUtils.swift in Sources */,
+				E0974A582D6F1C9C002D0831 /* MobilySubscriptionProduct.swift in Sources */,
+				E0974A592D6F1C9C002D0831 /* WebhookStatus.swift in Sources */,
+				E0974A5A2D6F1C9C002D0831 /* MobilyOneTimeProduct.swift in Sources */,
+				E0974A5B2D6F1C9C002D0831 /* MobilyPurchaseSDKSyncer.swift in Sources */,
+				E0974A5C2D6F1C9C002D0831 /* AsyncDispatchQueue.swift in Sources */,
+				E0974A5D2D6F1C9C002D0831 /* MobilyPurchaseAPI.swift in Sources */,
+				E0974A5E2D6F1C9C002D0831 /* utils.swift in Sources */,
+				E0974A5F2D6F1C9C002D0831 /* MobilySubscriptionGroup.swift in Sources */,
+				E0974A602D6F1C9C002D0831 /* MobilyPurchaseError.swift in Sources */,
+				E0974A612D6F1C9C002D0831 /* Monitoring.swift in Sources */,
+				E0974A622D6F1C9C002D0831 /* MobilyPurchaseSDKHelper.swift in Sources */,
+				E0974A632D6F1C9C002D0831 /* ProductType.swift in Sources */,
+				E0974A642D6F1C9C002D0831 /* ApiRequest.swift in Sources */,
+				E0974A652D6F1C9C002D0831 /* MobilyEnvironment.swift in Sources */,
+				E0974A662D6F1C9C002D0831 /* Logger.swift in Sources */,
+				E0974A672D6F1C9C002D0831 /* MobilyPurchaseSDKOptions.swift in Sources */,
+				E0974A682D6F1C9C002D0831 /* AppLifecycleManager.swift in Sources */,
+				E0974A692D6F1C9C002D0831 /* ApiHelper.swift in Sources */,
+				E0974A6A2D6F1C9C002D0831 /* TransferOwnershipStatus.swift in Sources */,
+				E0974A6B2D6F1C9C002D0831 /* Platform.swift in Sources */,
+				E0974A6C2D6F1C9C002D0831 /* MobilyCustomerEntitlement.swift in Sources */,
+				E0974A6D2D6F1C9C002D0831 /* MobilyPurchaseSDKWaiter.swift in Sources */,
+				E0974A6E2D6F1C9C002D0831 /* MobilyTransferOwnershipError.swift in Sources */,
+				E0974A6F2D6F1C9C002D0831 /* LoginResponse.swift in Sources */,
+				E0974A702D6F1C9C002D0831 /* BufferedFileHandle.swift in Sources */,
+				E0974A712D6F1C9C002D0831 /* MobilyProduct.swift in Sources */,
+				E0974A722D6F1C9C002D0831 /* ProductStatus.swift in Sources */,
+				E0974A732D6F1C9C002D0831 /* MobilySubscriptionOffer.swift in Sources */,
+				E0974A742D6F1C9C002D0831 /* MobilyPurchaseSDK.swift in Sources */,
+				E0974A752D6F1C9C002D0831 /* PurchaseOptions.swift in Sources */,
+				E0974A762D6F1C9C002D0831 /* MobilyPurchaseSDKDiagnostics.swift in Sources */,
+				E0974A772D6F1C9C002D0831 /* PeriodUnit.swift in Sources */,
+				E0974A782D6F1C9C002D0831 /* LogLevel.swift in Sources */,
+				E0974A792D6F1C9C002D0831 /* DateExtension.swift in Sources */,
+				E0974A7A2D6F1C9C002D0831 /* MobilyError.swift in Sources */,
+				E0974A7B2D6F1C9C002D0831 /* ApiResponse.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -622,7 +631,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 65C105FCD2EB6DFDEBA5F3E907F1A820 /* Pods-mobilyflow-ios-sdk_Example.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -688,7 +696,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 2400DE04BDA81AFBD86E65EA79718D49 /* Pods-mobilyflow-ios-sdk_Tests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -881,7 +888,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B866CBC39E8D888933AC1602A22AF9D9 /* Pods-mobilyflow-ios-sdk_Tests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
@@ -914,7 +920,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 467390ACB8F8DA18EA6C1CF2F98C22CB /* Pods-mobilyflow-ios-sdk_Example.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
