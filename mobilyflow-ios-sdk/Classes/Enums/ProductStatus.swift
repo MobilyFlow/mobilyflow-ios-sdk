@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ProductStatus: String {
+@objc public enum ProductStatus: Int {
     case available
     case invalid
     case unavailable

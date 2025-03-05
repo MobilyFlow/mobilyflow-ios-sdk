@@ -8,20 +8,20 @@
 import Foundation
 import StoreKit
 
-public class MobilySubscriptionOffer {
-    public let id: String?
-    public let name: String?
-    public let price: Decimal
-    public let currencyCode: String
-    public let priceFormatted: String
-    public let isFreeTrial: Bool
-    public let periodCount: Int
-    public let periodUnit: PeriodUnit
-    public let ios_offerId: String?
-    public let extras: [String: Any]?
-    public let status: ProductStatus
+@objc public class MobilySubscriptionOffer: NSObject {
+    @objc public let id: String?
+    @objc public let name: String?
+    @objc public let price: Decimal
+    @objc public let currencyCode: String
+    @objc public let priceFormatted: String
+    @objc public let isFreeTrial: Bool
+    @objc public let periodCount: Int
+    @objc public let periodUnit: PeriodUnit
+    @objc public let ios_offerId: String?
+    @objc public let extras: [String: Any]?
+    @objc public let status: ProductStatus
 
-    init(id: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, isFreeTrial: Bool, periodCount: Int, periodUnit: PeriodUnit, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
+    @objc init(id: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, isFreeTrial: Bool, periodCount: Int, periodUnit: PeriodUnit, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
         self.id = id
         self.name = name
         self.price = price
@@ -33,6 +33,8 @@ public class MobilySubscriptionOffer {
         self.ios_offerId = ios_offerId
         self.extras = extras
         self.status = status
+
+        super.init()
     }
 
     static func parse(jsonOffer: [String: Any], iosProduct: Product?, isBaseOffer: Bool) async -> MobilySubscriptionOffer {
@@ -83,7 +85,7 @@ public class MobilySubscriptionOffer {
             // If isBaseOffer, jsonOffer is the jsonProduct
             let periodPrefix = isBaseOffer ? "subscription" : "offer"
             periodCount = jsonOffer["\(periodPrefix)PeriodCount"] as! Int
-            periodUnit = PeriodUnit(rawValue: jsonOffer["\(periodPrefix)PeriodUnit"] as! String)!
+            periodUnit = PeriodUnit.parse(jsonOffer["\(periodPrefix)PeriodUnit"] as! String)!
         } else {
             status = .available
             currencyCode = iosProduct!.priceFormatStyle.currencyCode

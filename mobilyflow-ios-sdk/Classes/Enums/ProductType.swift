@@ -7,7 +7,18 @@
 
 import Foundation
 
-public enum ProductType: String {
+@objc public enum ProductType: Int {
     case one_time
     case subscription
+
+    static func parse(_ rawValue: String) -> ProductType? {
+        switch rawValue.lowercased() {
+        case "one_time":
+            return .one_time
+        case "subscription":
+            return .subscription
+        default:
+            return nil
+        }
+    }
 }

@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-public enum PeriodUnit: String {
+@objc public enum PeriodUnit: Int {
     case week
     case month
     case year
@@ -23,6 +23,19 @@ public enum PeriodUnit: String {
         case .month: return (period.value, .month)
         case .year: return (period.value, .month)
         default: fatalError("fromSubscriptionPeriodUnit -> Bad unit \(period.value) \(period.unit)")
+        }
+    }
+
+    static func parse(_ rawValue: String) -> PeriodUnit? {
+        switch rawValue.lowercased() {
+        case "week":
+            return .week
+        case "month":
+            return .month
+        case "year":
+            return .year
+        default:
+            return nil
         }
     }
 }

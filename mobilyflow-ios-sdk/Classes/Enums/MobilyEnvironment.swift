@@ -7,8 +7,19 @@
 
 import Foundation
 
-public enum MobilyEnvironment: String {
+@objc public enum MobilyEnvironment: Int {
     case development
     case staging
     case production
+
+    public func toString() -> String {
+        switch self {
+        case .development:
+            return "development"
+        case .staging:
+            return "staging"
+        case .production:
+            return "production"
+        }
+    }
 }

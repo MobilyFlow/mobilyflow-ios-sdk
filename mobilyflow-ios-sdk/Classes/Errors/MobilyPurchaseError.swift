@@ -24,4 +24,9 @@ public enum MobilyPurchaseError: Error {
     case user_canceled
     case failed
     case pending
+
+    static func toNSError(error: MobilyPurchaseError) -> NSError {
+        // TODO:
+        return NSError(domain: "MobilyPurchaseError", code: 0, userInfo: nil)
+    }
 }

@@ -8,16 +8,16 @@
 import Foundation
 import StoreKit
 
-public class MobilySubscriptionProduct {
-    public let baseOffer: MobilySubscriptionOffer
-    public let freeTrial: MobilySubscriptionOffer?
-    public let promotionalOffers: [MobilySubscriptionOffer]
-    public let status: ProductStatus
-    public let groupLevel: Int
-    public let subscriptionGroupId: String?
-    public let subscriptionGroup: MobilySubscriptionGroup?
+@objc public class MobilySubscriptionProduct: NSObject {
+    @objc public let baseOffer: MobilySubscriptionOffer
+    @objc public let freeTrial: MobilySubscriptionOffer?
+    @objc public let promotionalOffers: [MobilySubscriptionOffer]
+    @objc public let status: ProductStatus
+    @objc public let groupLevel: Int
+    @objc public let subscriptionGroupId: String?
+    @objc public let subscriptionGroup: MobilySubscriptionGroup?
 
-    init(baseOffer: MobilySubscriptionOffer, freeTrial: MobilySubscriptionOffer? = nil, promotionalOffers: [MobilySubscriptionOffer], status: ProductStatus, groupLevel: Int, subscriptionGroupId: String?, subscriptionGroup: MobilySubscriptionGroup?) {
+    @objc init(baseOffer: MobilySubscriptionOffer, freeTrial: MobilySubscriptionOffer? = nil, promotionalOffers: [MobilySubscriptionOffer], status: ProductStatus, groupLevel: Int, subscriptionGroupId: String?, subscriptionGroup: MobilySubscriptionGroup?) {
         self.baseOffer = baseOffer
         self.freeTrial = freeTrial
         self.promotionalOffers = promotionalOffers
@@ -25,6 +25,8 @@ public class MobilySubscriptionProduct {
         self.groupLevel = groupLevel
         self.subscriptionGroupId = subscriptionGroupId
         self.subscriptionGroup = subscriptionGroup
+
+        super.init()
     }
 
     static func parse(jsonProduct: [String: Any]) async -> MobilySubscriptionProduct {

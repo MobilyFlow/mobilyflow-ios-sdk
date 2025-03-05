@@ -8,23 +8,25 @@
 import Foundation
 import StoreKit
 
-public class MobilyCustomerEntitlement {
-    let type: ProductType
-    let product: MobilyProduct
-    let platformOriginalTransactionId: String?
-    let item: ItemEntitlement?
-    let subscription: SubscriptionEntitlement?
+@objc public class MobilyCustomerEntitlement: NSObject {
+    @objc let type: ProductType
+    @objc let product: MobilyProduct
+    @objc let platformOriginalTransactionId: String?
+    @objc let item: ItemEntitlement?
+    @objc let subscription: SubscriptionEntitlement?
 
-    init(type: ProductType, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?) {
+    @objc init(type: ProductType, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?) {
         self.type = type
         self.product = product
         self.platformOriginalTransactionId = platformOriginalTransactionId
         self.item = item
         self.subscription = subscription
+
+        super.init()
     }
 
     static func parse(jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyCustomerEntitlement {
-        let type = ProductType(rawValue: jsonEntitlement["type"]! as! String)!
+        let type = ProductType.parse(jsonEntitlement["type"]! as! String)!
         let jsonEntity = jsonEntitlement["entity"] as! [String: Any]
         let product = await MobilyProduct.parse(jsonProduct: jsonEntity["Product"] as! [String: Any])
         let platformOriginalTransactionId = jsonEntitlement["platformOriginalTransactionId"] as? String
@@ -38,7 +40,7 @@ public class MobilyCustomerEntitlement {
             let dateFormatter = ISO8601DateFormatter()
             dateFormatter.formatOptions = [.withFractionalSeconds]
 
-            let platform = Platform(rawValue: jsonEntity["platform"]! as! String)!
+            let platform = Platform.parse(jsonEntity["platform"]! as! String)!
 
             var storeAccountTx: Transaction? = nil
             var autoRenewEnable = jsonEntity["autoRenewEnable"]! as! Bool
@@ -58,7 +60,7 @@ public class MobilyCustomerEntitlement {
                 startDate: dateFormatter.date(from: jsonEntity["startDate"]! as! String)!,
                 expirationDate: dateFormatter.date(from: jsonEntity["expirationDate"]! as! String)!,
                 autoRenewEnable: autoRenewEnable,
-                platform: Platform(rawValue: jsonEntity["platform"]! as! String)!,
+                platform: Platform.parse(jsonEntity["platform"]! as! String)!,
                 isManagedByThisStoreAccount: storeAccountTx != nil
             )
         }
@@ -72,27 +74,30 @@ public class MobilyCustomerEntitlement {
         )
     }
 
-    class ItemEntitlement {
-        let quantity: Int
+    @objc class ItemEntitlement: NSObject {
+        @objc let quantity: Int
 
-        init(quantity: Int) {
+        @objc init(quantity: Int) {
             self.quantity = quantity
+            super.init()
         }
     }
 
-    class SubscriptionEntitlement {
-        let startDate: Date
-        let expirationDate: Date
-        let autoRenewEnable: Bool
-        let platform: Platform
-        let isManagedByThisStoreAccount: Bool
+    @objc class SubscriptionEntitlement: NSObject {
+        @objc let startDate: Date
+        @objc let expirationDate: Date
+        @objc let autoRenewEnable: Bool
+        @objc let platform: Platform
+        @objc let isManagedByThisStoreAccount: Bool
 
-        init(startDate: Date, expirationDate: Date, autoRenewEnable: Bool, platform: Platform, isManagedByThisStoreAccount: Bool) {
+        @objc init(startDate: Date, expirationDate: Date, autoRenewEnable: Bool, platform: Platform, isManagedByThisStoreAccount: Bool) {
             self.startDate = startDate
             self.expirationDate = expirationDate
             self.autoRenewEnable = autoRenewEnable
             self.platform = platform
             self.isManagedByThisStoreAccount = isManagedByThisStoreAccount
+
+            super.init()
         }
     }
 }

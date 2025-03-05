@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-public class MobilyPurchaseSDK {
+@objc public class MobilyPurchaseSDK: NSObject {
     let appId: String
     let API: MobilyPurchaseAPI
 
@@ -24,7 +24,7 @@ public class MobilyPurchaseSDK {
 
     private let lifecycleManager = AppLifecycleManager()
 
-    public init(
+    @objc public init(
         appId: String,
         apiKey: String,
         environment: MobilyEnvironment,
@@ -37,6 +37,8 @@ public class MobilyPurchaseSDK {
         self.waiter = MobilyPurchaseSDKWaiter(API: API, diagnostics: self.diagnostics)
         self.syncer = MobilyPurchaseSDKSyncer(API: self.API)
 
+        super.init()
+
         Monitoring.initialize(tag: "MobilyFlow", allowLogging: options?.debug ?? false) { logFile in
             try await self.API.uploadMonitoring(customerId: self.customerId, file: logFile)
         }
@@ -47,7 +49,7 @@ public class MobilyPurchaseSDK {
         }
     }
 
-    public func close() {
+    @objc public func close() {
         self.customerId = nil
         diagnostics.customerId = nil
         self.updateTxTask?.cancel()
@@ -110,6 +112,15 @@ public class MobilyPurchaseSDK {
         return try syncer.getEntitlement(forProductId: productId)
     }
 
+    public func getEntitlement(productId: String, error: NSErrorPointer) -> MobilyCustomerEntitlement? {
+        do {
+            return try self.getEntitlement(productId: productId)
+        } catch let err {
+            error?.pointee = err as NSError
+            return nil
+        }
+    }
+
     public func getEntitlements(productIds: [String]) throws -> [MobilyCustomerEntitlement] {
         return try syncer.getEntitlements(forProductIds: productIds)
     }
@@ -141,8 +152,8 @@ public class MobilyPurchaseSDK {
     /**
      * Open the manage subscription dialog
      */
-    public func openManageSubscription() async {
-        try! await AppStore.showManageSubscriptions(in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
+    @objc public func openManageSubscription() async {
+        try? await AppStore.showManageSubscriptions(in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
     }
 
     /**
@@ -150,7 +161,7 @@ public class MobilyPurchaseSDK {
      *
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
-    public func openRefundDialog(transactionId: UInt64) async -> Bool {
+    @objc public func openRefundDialog(transactionId: UInt64) async -> Bool {
         let result = try? await Transaction.beginRefundRequest(for: transactionId, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
         return (result ?? .userCancelled) == .success
     }
@@ -288,7 +299,7 @@ public class MobilyPurchaseSDK {
     /* *********************** DIAGNOSTICS *********************** */
     /* *********************************************************** */
 
-    public func sendDiagnotic() {
+    @objc public func sendDiagnotic() {
         diagnostics.sendDiagnostic()
     }
 
@@ -297,7 +308,72 @@ public class MobilyPurchaseSDK {
     /* ************************************************************** */
 
     // TODO: onStorefrontChange
-    public func getStoreCountry() async -> String? {
+    @objc public func getStoreCountry() async -> String? {
         return (await Storefront.current)?.countryCode
+    }
+
+    /* ************************************************************** */
+    /* ********************* OBJECTIVE-C BRIDGE ********************* */
+    /* ************************************************************** */
+    @objc func login(externalId: String, error: NSErrorPointer) async {
+        do {
+            return try await self.login(externalId: externalId)
+        } catch let err {
+            error?.pointee = err as NSError
+        }
+    }
+
+    @objc public func getProducts(identifiers: [String]?, error: NSErrorPointer) async -> [MobilyProduct]? {
+        do {
+            return try await self.getProducts(identifiers: identifiers)
+        } catch let err {
+            error?.pointee = err as NSError
+            return nil
+        }
+    }
+
+    @objc public func getSubscriptionGroups(identifiers: [String]?, error: NSErrorPointer) async -> [MobilySubscriptionGroup]? {
+        do {
+            return try await self.getSubscriptionGroups(identifiers: identifiers)
+        } catch let err {
+            error?.pointee = err as NSError
+            return nil
+        }
+    }
+
+    @objc public func getEntitlementForSubscription(subscriptionGroupId: String, error: NSErrorPointer) -> MobilyCustomerEntitlement? {
+        do {
+            return try self.getEntitlementForSubscription(subscriptionGroupId: subscriptionGroupId)
+        } catch let err {
+            error?.pointee = err as NSError
+            return nil
+        }
+    }
+
+    @objc public func getEntitlements(productIds: [String], error: NSErrorPointer) -> [MobilyCustomerEntitlement]? {
+        do {
+            return try self.getEntitlements(productIds: productIds)
+        } catch let err {
+            error?.pointee = err as NSError
+            return nil
+        }
+    }
+
+    @objc public func requestTransferOwnership(error: NSErrorPointer) async -> TransferOwnershipStatus {
+        do {
+            return try await self.requestTransferOwnership()
+        } catch let err {
+            error?.pointee = err as NSError
+            return .error
+        }
+    }
+
+    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil, error: NSErrorPointer) async -> WebhookStatus {
+        do {
+            return try await self.purchaseProduct(product, options: options)
+        } catch let err {
+            error?.pointee = err as NSError
+            return .error
+        }
     }
 }

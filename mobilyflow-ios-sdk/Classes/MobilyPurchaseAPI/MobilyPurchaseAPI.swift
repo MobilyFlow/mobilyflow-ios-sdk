@@ -39,7 +39,7 @@ class MobilyPurchaseAPI {
      */
     public func login(externalId: String) async throws -> LoginResponse {
         let request = ApiRequest(method: "POST", url: "/apps/me/customers/login/ios")
-        _ = request.setData(["externalId": externalId, "environment": environment.rawValue])
+        _ = request.setData(["externalId": externalId, "environment": environment.toString()])
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -62,7 +62,7 @@ class MobilyPurchaseAPI {
         }
 
         let request = ApiRequest(method: "GET", url: "/apps/me/products/")
-        _ = request.addParam("environment", environment.rawValue)
+        _ = request.addParam("environment", environment.toString())
         _ = request.addParam("lang", self.lang)
 
         if identifiers != nil {
@@ -180,7 +180,7 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()
-            return TransferOwnershipStatus(rawValue: jsonResponse["status"] as! String)!
+            return TransferOwnershipStatus.parse(jsonResponse["status"] as! String)!
         } else {
             throw MobilyError.unknown_error
         }
@@ -220,7 +220,7 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()
-            return WebhookStatus(rawValue: jsonResponse["status"] as! String)!
+            return WebhookStatus.parse(jsonResponse["status"] as! String)!
         } else {
             throw MobilyError.unknown_error
         }

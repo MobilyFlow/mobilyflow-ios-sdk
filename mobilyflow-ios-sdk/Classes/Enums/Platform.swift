@@ -7,7 +7,18 @@
 
 import Foundation
 
-public enum Platform: String {
+@objc public enum Platform: Int {
     case ios
     case android
+
+    static func parse(_ rawValue: String) -> Platform? {
+        switch rawValue.lowercased() {
+        case "ios":
+            return .ios
+        case "android":
+            return .android
+        default:
+            return nil
+        }
+    }
 }

@@ -8,16 +8,16 @@
 import Foundation
 import StoreKit
 
-public class MobilyOneTimeProduct {
-    public let price: Decimal
-    public let currencyCode: String
-    public let priceFormatted: String
-    public let isConsumable: Bool
-    public let isNonRenewableSub: Bool
-    public let isMultiQuantity: Bool
-    public let status: ProductStatus
+@objc public class MobilyOneTimeProduct: NSObject {
+    @objc public let price: Decimal
+    @objc public let currencyCode: String
+    @objc public let priceFormatted: String
+    @objc public let isConsumable: Bool
+    @objc public let isNonRenewableSub: Bool
+    @objc public let isMultiQuantity: Bool
+    @objc public let status: ProductStatus
 
-    init(price: Decimal, currencyCode: String, priceFormatted: String, isConsumable: Bool, isNonRenewableSub: Bool, isMultiQuantity: Bool, status: ProductStatus) {
+    @objc init(price: Decimal, currencyCode: String, priceFormatted: String, isConsumable: Bool, isNonRenewableSub: Bool, isMultiQuantity: Bool, status: ProductStatus) {
         self.price = price
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
@@ -25,6 +25,8 @@ public class MobilyOneTimeProduct {
         self.isNonRenewableSub = isNonRenewableSub
         self.isMultiQuantity = isMultiQuantity
         self.status = status
+
+        super.init()
     }
 
     static func parse(jsonProduct: [String: Any]) -> MobilyOneTimeProduct {

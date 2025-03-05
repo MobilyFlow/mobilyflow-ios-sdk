@@ -5,7 +5,7 @@
 //  Created by Gregoire Taja on 25/02/2025.
 //
 
-public struct MobilyPurchaseSDKOptions {
+@objc public class MobilyPurchaseSDKOptions: NSObject {
     let languages: [String]?
     let debug: Bool?
     let apiURL: String?
@@ -18,5 +18,6 @@ public struct MobilyPurchaseSDKOptions {
         self.languages = languages
         self.debug = debug
         self.apiURL = apiURL
+        super.init()
     }
 }

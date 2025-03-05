@@ -8,26 +8,26 @@
 import Foundation
 import StoreKit
 
-public class MobilyProduct {
-    public let id: String
-    public let createdAt: Date
-    public let updatedAt: Date
-    public let identifier: String
-    public let appId: String
+@objc public class MobilyProduct: NSObject {
+    @objc public let id: String
+    @objc public let createdAt: Date
+    @objc public let updatedAt: Date
+    @objc public let identifier: String
+    @objc public let appId: String
 
-    public let name: String
-    public let description: String
+    @objc public let name: String
+    @objc public let details: String
 
-    public let ios_sku: String
-    public let type: ProductType
-    public let extras: [String: Any]?
+    @objc public let ios_sku: String
+    @objc public let type: ProductType
+    @objc public let extras: [String: Any]?
 
-    public let status: ProductStatus
-    public let oneTimeProduct: MobilyOneTimeProduct?
-    public let subscriptionProduct: MobilySubscriptionProduct?
+    @objc public let status: ProductStatus
+    @objc public let oneTimeProduct: MobilyOneTimeProduct?
+    @objc public let subscriptionProduct: MobilySubscriptionProduct?
 
-    init(
-        id: String, createdAt: Date, updatedAt: Date, identifier: String, appId: String, name: String, description: String, ios_sku: String, type: ProductType, extras: [String: Any]? = nil, status: ProductStatus, oneTimeProduct: MobilyOneTimeProduct? = nil, subscriptionProduct: MobilySubscriptionProduct? = nil
+    @objc init(
+        id: String, createdAt: Date, updatedAt: Date, identifier: String, appId: String, name: String, details: String, ios_sku: String, type: ProductType, extras: [String: Any]? = nil, status: ProductStatus, oneTimeProduct: MobilyOneTimeProduct? = nil, subscriptionProduct: MobilySubscriptionProduct? = nil
     ) {
         self.id = id
         self.createdAt = createdAt
@@ -35,20 +35,21 @@ public class MobilyProduct {
         self.identifier = identifier
         self.appId = appId
         self.name = name
-        self.description = description
+        self.details = details
         self.ios_sku = ios_sku
         self.type = type
         self.extras = extras
         self.status = status
         self.oneTimeProduct = oneTimeProduct
         self.subscriptionProduct = subscriptionProduct
+        super.init()
     }
 
     static func parse(jsonProduct: [String: Any]) async -> MobilyProduct {
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFractionalSeconds]
 
-        let type = ProductType(rawValue: jsonProduct["type"]! as! String)!
+        let type = ProductType.parse(jsonProduct["type"]! as! String)!
 
         var status: ProductStatus
         var oneTimeProduct: MobilyOneTimeProduct? = nil
@@ -69,7 +70,7 @@ public class MobilyProduct {
             identifier: jsonProduct["identifier"]! as! String,
             appId: jsonProduct["appId"]! as! String,
             name: jsonProduct["name"]! as! String,
-            description: jsonProduct["description"]! as! String,
+            details: jsonProduct["description"]! as! String,
             ios_sku: jsonProduct["ios_sku"]! as! String,
             type: type,
             extras: jsonProduct["extras"]! as! [String: Any]?,

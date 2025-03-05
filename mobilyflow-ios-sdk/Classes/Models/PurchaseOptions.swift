@@ -5,11 +5,9 @@
 //  Created by Gregoire Taja on 08/01/2025.
 //
 
-public class PurchaseOptions {
+public class PurchaseOptions: NSObject {
     var offer: MobilySubscriptionOffer?
     var quantity: Int?
-
-    public init() {}
 
     public func setOffer(_ offer: MobilySubscriptionOffer?) -> PurchaseOptions {
         self.offer = offer
