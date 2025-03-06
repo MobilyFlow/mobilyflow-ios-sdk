@@ -12,7 +12,7 @@ import Foundation
     let debug: Bool
     let apiURL: String?
 
-    @objc init(
+    @objc public init(
         languages: [String]? = nil,
         debug: Bool = false,
         apiURL: String? = nil

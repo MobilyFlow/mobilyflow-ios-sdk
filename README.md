@@ -16,3 +16,11 @@ To install it, simply add the following line to your Podfile:
 ```ruby
 pod 'MobilyflowSDK'
 ```
+
+## Generate OBJC Header
+
+```bash
+swiftc -emit-objc-header  -sdk $(xcrun --show-sdk-path --sdk iphoneos) -target arm64-apple-ios15.0 -framework UIKit -framework Foundation \
+    -emit-objc-header-path Sources/MobilyflowSDK/MobilyflowSDK.h \
+    -module-name MobilyflowSDK Sources/**/*
+```

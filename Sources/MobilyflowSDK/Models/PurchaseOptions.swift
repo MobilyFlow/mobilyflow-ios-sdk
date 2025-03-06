@@ -11,6 +11,10 @@ import Foundation
     var offer: MobilySubscriptionOffer?
     var quantity: Int?
 
+    @objc override public init() {
+        super.init()
+    }
+
     @objc public func setOffer(_ offer: MobilySubscriptionOffer?) -> PurchaseOptions {
         self.offer = offer
         return self

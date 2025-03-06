@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'MobilyflowSDK'
   s.module_name      = 'MobilyflowSDK'
-  s.version          = '0.0.2'
+  s.version          = '0.0.4-alpha1'
   s.summary          = 'MobilyFlow SDK for iOS'
 
 # This description is used to generate tags and improve search results.
@@ -31,6 +31,7 @@ Mobilyflow SDK for iOS
 
   s.ios.deployment_target = '15.0'
   s.swift_versions = '5.0'
+  # s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES' }
 
   s.source_files = 'Sources/MobilyflowSDK/**/*'
 end

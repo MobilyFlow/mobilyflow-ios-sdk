@@ -64,7 +64,7 @@ import StoreKit
     /* ****************************** LOGIN ****************************** */
     /* ******************************************************************* */
 
-    public func login(externalId: String) async throws {
+    @objc public func login(externalId: String) async throws {
         // 1. Login
         let loginResponse = try await self.API.login(externalId: externalId)
         self.customerId = loginResponse.customerId
@@ -171,6 +171,7 @@ import StoreKit
     /* ******************************************************************* */
 
     public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
+        // TODO: productId & offerId instead of direct product & offer (for react native compatibility)
         var resultStatus: WebhookStatus = .error
 
         try await purchaseExecutor.executeOrFallback({
