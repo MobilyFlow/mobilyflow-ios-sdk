@@ -1,6 +1,0 @@
-framework module mobilyflow_ios_sdk {
-  umbrella header "mobilyflow-ios-sdk-umbrella.h"
-
-  export *
-  module * { export * }
-}
