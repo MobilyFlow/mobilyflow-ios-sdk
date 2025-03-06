@@ -31,5 +31,5 @@ Mobilyflow SDK for iOS
   s.ios.deployment_target = '15.0'
   s.swift_versions = '5.0'
 
-  s.source_files = 'mobilyflow-ios-sdk/Sources/MobilyflowSDK/**/*'
+  s.source_files = 'Sources/MobilyflowSDK/**/*'
 end
