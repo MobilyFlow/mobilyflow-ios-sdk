@@ -64,7 +64,7 @@ import StoreKit
     /* ****************************** LOGIN ****************************** */
     /* ******************************************************************* */
 
-    @objc public func login(externalId: String) async throws {
+    public func login(externalId: String) async throws {
         // 1. Login
         let loginResponse = try await self.API.login(externalId: externalId)
         self.customerId = loginResponse.customerId
@@ -316,11 +316,12 @@ import StoreKit
     /* ************************************************************** */
     /* ********************* OBJECTIVE-C BRIDGE ********************* */
     /* ************************************************************** */
-    @objc func login(externalId: String, error: NSErrorPointer) async {
+    @objc public func login(externalId: String, error: NSErrorPointer) async {
         do {
             return try await self.login(externalId: externalId)
         } catch let err {
-            error?.pointee = err as NSError
+            NSLog("Error here %@", err as NSError)
+            // error?.pointee = err as NSError
         }
     }
 
