@@ -9,12 +9,12 @@ import Foundation
 
 @objc public class MobilyPurchaseSDKOptions: NSObject {
     let languages: [String]?
-    let debug: Bool?
+    let debug: Bool
     let apiURL: String?
 
-    init(
+    @objc init(
         languages: [String]? = nil,
-        debug: Bool? = nil,
+        debug: Bool = false,
         apiURL: String? = nil
     ) {
         self.languages = languages

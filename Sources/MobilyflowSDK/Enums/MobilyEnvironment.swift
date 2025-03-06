@@ -8,9 +8,9 @@
 import Foundation
 
 @objc public enum MobilyEnvironment: Int {
-    case development
-    case staging
-    case production
+    case development = 0
+    case staging = 1
+    case production = 2
 
     public func toString() -> String {
         switch self {

@@ -8,7 +8,7 @@
 import Foundation
 
 @objc public enum ProductStatus: Int {
-    case available
-    case invalid
-    case unavailable
+    case invalid = 0
+    case unavailable = 1
+    case available = 2
 }

@@ -8,8 +8,8 @@
 import Foundation
 
 @objc public enum Platform: Int {
-    case ios
-    case android
+    case ios = 0
+    case android = 1
 
     static func parse(_ rawValue: String) -> Platform? {
         switch rawValue.lowercased() {

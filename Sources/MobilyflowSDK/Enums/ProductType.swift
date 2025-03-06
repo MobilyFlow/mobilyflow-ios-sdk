@@ -8,8 +8,8 @@
 import Foundation
 
 @objc public enum ProductType: Int {
-    case one_time
-    case subscription
+    case one_time = 0
+    case subscription = 1
 
     static func parse(_ rawValue: String) -> ProductType? {
         switch rawValue.lowercased() {

@@ -9,9 +9,9 @@ import Foundation
 import StoreKit
 
 @objc public enum PeriodUnit: Int {
-    case week
-    case month
-    case year
+    case week = 0
+    case month = 1
+    case year = 2
 
     static func parseSubscriptionPeriod(_ period: Product.SubscriptionPeriod) throws -> (count: Int, unit: PeriodUnit) {
         if period.unit == .day && period.value == 7 {

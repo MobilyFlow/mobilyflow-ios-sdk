@@ -8,7 +8,8 @@
 
 Pod::Spec.new do |s|
   s.name             = 'MobilyflowSDK'
-  s.version          = '0.0.1'
+  s.module_name      = 'MobilyflowSDK'
+  s.version          = '0.0.2'
   s.summary          = 'MobilyFlow SDK for iOS'
 
 # This description is used to generate tags and improve search results.

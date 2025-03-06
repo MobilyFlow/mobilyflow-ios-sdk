@@ -20,7 +20,7 @@ import StoreKit
 
     @objc public var products: [MobilyProduct]
 
-    init(
+    @objc init(
         id: String, identifier: String, name: String, details: String, ios_groupId: String, extras: [String: Any]? = nil
     ) {
         self.id = id

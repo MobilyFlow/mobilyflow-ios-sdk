@@ -8,9 +8,9 @@
 import Foundation
 
 @objc public enum WebhookStatus: Int {
-    case pending
-    case success
-    case error
+    case pending = 0
+    case error = 1
+    case success = 2
 
     static func parse(_ rawValue: String) -> WebhookStatus? {
         switch rawValue.lowercased() {
