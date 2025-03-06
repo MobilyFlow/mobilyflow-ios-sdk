@@ -52,8 +52,6 @@ func printTransaction(transaction: Transaction) async {
     print("signedDate = ", transaction.signedDate)
     print("revocationDate = ", transaction.revocationDate ?? "nil")
     print("isUpgraded = ", transaction.isUpgraded)
-
-    let status = await transaction.subscriptionStatus
     print("==============================")
 }
 

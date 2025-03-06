@@ -5,6 +5,8 @@
 //  Created by Gregoire Taja on 08/01/2025.
 //
 
+import Foundation
+
 public class PurchaseOptions: NSObject {
     var offer: MobilySubscriptionOffer?
     var quantity: Int?

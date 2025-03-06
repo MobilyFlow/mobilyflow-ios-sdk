@@ -5,6 +5,8 @@
 //  Created by Gregoire Taja on 25/02/2025.
 //
 
+import Foundation
+
 @objc public class MobilyPurchaseSDKOptions: NSObject {
     let languages: [String]?
     let debug: Bool?
