@@ -316,21 +316,22 @@ import StoreKit
     /* ************************************************************** */
     /* ********************* OBJECTIVE-C BRIDGE ********************* */
     /* ************************************************************** */
-    @objc public func login(externalId: String, error: NSErrorPointer) async {
+    @objc public func loginObjc(externalId: String) async -> NSError? {
         do {
-            return try await self.login(externalId: externalId)
+            try await self.login(externalId: externalId)
+            return nil
         } catch let err {
             NSLog("Error here %@", err as NSError)
-            // error?.pointee = err as NSError
+            return err as NSError
         }
     }
 
-    @objc public func getProducts(identifiers: [String]?, error: NSErrorPointer) async -> [MobilyProduct]? {
+    @objc public func getProductsObjc(identifiers: [String]?) async -> ([MobilyProduct]?, NSError?) {
         do {
-            return try await self.getProducts(identifiers: identifiers)
+            let products = try await self.getProducts(identifiers: identifiers)
+            return (products, nil)
         } catch let err {
-            error?.pointee = err as NSError
-            return nil
+            return (nil, err as NSError)
         }
     }
 

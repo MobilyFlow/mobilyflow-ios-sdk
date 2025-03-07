@@ -371,8 +371,8 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 - (void)openRefundDialogWithTransactionId:(uint64_t)transactionId completionHandler:(void (^ _Nonnull)(BOOL))completionHandler;
 - (void)sendDiagnotic;
 - (void)getStoreCountryWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable))completionHandler;
-- (void)loginWithExternalId:(NSString * _Nonnull)externalId error:(NSError * _Nullable * _Nullable)error completionHandler:(void (^ _Nonnull)(void))completionHandler;
-- (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers error:(NSError * _Nullable * _Nullable)error completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable))completionHandler;
+- (void)loginObjcWithExternalId:(NSString * _Nonnull)externalId completionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler;
+- (void)getProductsObjcWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers error:(NSError * _Nullable * _Nullable)error completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable))completionHandler;
 - (MobilyCustomerEntitlement * _Nullable)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
 - (NSArray<MobilyCustomerEntitlement *> * _Nullable)getEntitlementsWithProductIds:(NSArray<NSString *> * _Nonnull)productIds error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
