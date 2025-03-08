@@ -77,7 +77,7 @@ class MobilyPurchaseSDKHelper {
         var upgradeOrDowngrade = 0
         if product.type == .one_time {
             if !product.oneTimeProduct!.isConsumable {
-                let entitlement = try! syncer.getEntitlement(forProductId: product.id)
+                let entitlement = try! await syncer.getEntitlement(forProductId: product.id)
                 if entitlement != nil {
                     throw MobilyPurchaseError.already_purchased
                 } else {
@@ -91,8 +91,8 @@ class MobilyPurchaseSDKHelper {
             }
         } else {
             let entitlement = product.subscriptionProduct!.subscriptionGroupId != nil ?
-                try! syncer.getEntitlement(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId!) :
-                try! syncer.getEntitlement(forProductId: product.id)
+                try! await syncer.getEntitlement(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId!) :
+                try! await syncer.getEntitlement(forProductId: product.id)
 
             let storeAccountTransaction = product.subscriptionProduct!.subscriptionGroupId != nil ?
                 syncer.getStoreAccountTransaction(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId!) :

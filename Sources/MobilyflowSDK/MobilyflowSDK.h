@@ -354,7 +354,6 @@ SWIFT_CLASS("_TtC13MobilyflowSDK13MobilyProduct")
 @end
 
 @class MobilyPurchaseSDKOptions;
-@class NSError;
 @class MobilySubscriptionGroup;
 enum TransferOwnershipStatus : NSInteger;
 @class PurchaseOptions;
@@ -364,20 +363,22 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 @interface MobilyPurchaseSDK : NSObject
 - (nonnull instancetype)initWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(enum MobilyEnvironment)environment options:(MobilyPurchaseSDKOptions * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
 - (void)close;
+- (void)loginWithExternalId:(NSString * _Nonnull)externalId completionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler;
+- (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
+- (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
+- (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
+- (void)getEntitlementWithProductId:(NSString * _Nonnull)productId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
+- (NSArray<MobilyCustomerEntitlement *> * _Nullable)getEntitlementsWithProductIds:(NSArray<NSString *> * _Nonnull)productIds error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
+/// Request transfer ownership of local device transactions.
+- (void)requestTransferOwnershipWithCompletionHandler:(void (^ _Nonnull)(enum TransferOwnershipStatus, NSError * _Nullable))completionHandler;
 /// Open the manage subscription dialog
 - (void)openManageSubscriptionWithCompletionHandler:(void (^ _Nonnull)(void))completionHandler;
 /// Open a refund dialog for the given transactionId (it’s the app store transactionId, not the MobilyFlow transactionId).
 /// Pro tips: to test declined refund in sandbox, once the dialog appear, select “other” and write “REJECT” in the text box.
 - (void)openRefundDialogWithTransactionId:(uint64_t)transactionId completionHandler:(void (^ _Nonnull)(BOOL))completionHandler;
+- (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(enum WebhookStatus, NSError * _Nullable))completionHandler;
 - (void)sendDiagnotic;
 - (void)getStoreCountryWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable))completionHandler;
-- (void)loginObjcWithExternalId:(NSString * _Nonnull)externalId completionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler;
-- (void)getProductsObjcWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
-- (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers error:(NSError * _Nullable * _Nullable)error completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable))completionHandler;
-- (MobilyCustomerEntitlement * _Nullable)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
-- (NSArray<MobilyCustomerEntitlement *> * _Nullable)getEntitlementsWithProductIds:(NSArray<NSString *> * _Nonnull)productIds error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
-- (void)requestTransferOwnershipWithError:(NSError * _Nullable * _Nullable)error completionHandler:(void (^ _Nonnull)(enum TransferOwnershipStatus))completionHandler;
-- (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options error:(NSError * _Nullable * _Nullable)error completionHandler:(void (^ _Nonnull)(enum WebhookStatus))completionHandler;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end

@@ -157,20 +157,24 @@ class MobilyPurchaseSDKSyncer {
         return result
     }
 
-    func getEntitlement(forSubscriptionGroup subscriptionGroupId: String) throws -> MobilyCustomerEntitlement? {
+    func getEntitlement(forSubscriptionGroup subscriptionGroupId: String) async throws -> MobilyCustomerEntitlement? {
         if customerId == nil {
             throw MobilyError.no_customer_logged
         }
+
+        try await ensureSync()
 
         return entitlements?.first { entitlement in
             entitlement.type == .subscription && entitlement.product.subscriptionProduct?.subscriptionGroupId == subscriptionGroupId
         }
     }
 
-    func getEntitlement(forProductId productId: String) throws -> MobilyCustomerEntitlement? {
+    func getEntitlement(forProductId productId: String) async throws -> MobilyCustomerEntitlement? {
         if customerId == nil {
             throw MobilyError.no_customer_logged
         }
+
+        try await ensureSync()
 
         return entitlements?.first { entitlement in
             entitlement.product.id == productId

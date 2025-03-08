@@ -64,7 +64,7 @@ import StoreKit
     /* ****************************** LOGIN ****************************** */
     /* ******************************************************************* */
 
-    public func login(externalId: String) async throws {
+    @objc public func login(externalId: String) async throws {
         // 1. Login
         let loginResponse = try await self.API.login(externalId: externalId)
         self.customerId = loginResponse.customerId
@@ -92,11 +92,11 @@ import StoreKit
     /* **************************** PRODUCTS ***************************** */
     /* ******************************************************************* */
 
-    public func getProducts(identifiers: [String]?) async throws -> [MobilyProduct] {
+    @objc public func getProducts(identifiers: [String]?) async throws -> [MobilyProduct] {
         return try await syncer.getProducts(identifiers: identifiers)
     }
 
-    public func getSubscriptionGroups(identifiers: [String]?) async throws -> [MobilySubscriptionGroup] {
+    @objc public func getSubscriptionGroups(identifiers: [String]?) async throws -> [MobilySubscriptionGroup] {
         return try await syncer.getSubscriptionGroups(identifiers: identifiers)
     }
 
@@ -104,31 +104,22 @@ import StoreKit
     /* ************************** ENTITLEMENTS *************************** */
     /* ******************************************************************* */
 
-    public func getEntitlementForSubscription(subscriptionGroupId: String) throws -> MobilyCustomerEntitlement? {
-        return try syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId)
+    @objc public func getEntitlementForSubscription(subscriptionGroupId: String) async throws -> MobilyCustomerEntitlement? {
+        return try await syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId)
     }
 
-    public func getEntitlement(productId: String) throws -> MobilyCustomerEntitlement? {
-        return try syncer.getEntitlement(forProductId: productId)
+    @objc public func getEntitlement(productId: String) async throws -> MobilyCustomerEntitlement? {
+        return try await syncer.getEntitlement(forProductId: productId)
     }
 
-    public func getEntitlement(productId: String, error: NSErrorPointer) -> MobilyCustomerEntitlement? {
-        do {
-            return try self.getEntitlement(productId: productId)
-        } catch let err {
-            error?.pointee = err as NSError
-            return nil
-        }
-    }
-
-    public func getEntitlements(productIds: [String]) throws -> [MobilyCustomerEntitlement] {
+    @objc public func getEntitlements(productIds: [String]) throws -> [MobilyCustomerEntitlement] {
         return try syncer.getEntitlements(forProductIds: productIds)
     }
 
     /**
      Request transfer ownership of local device transactions.
      */
-    public func requestTransferOwnership() async throws -> TransferOwnershipStatus {
+    @objc public func requestTransferOwnership() async throws -> TransferOwnershipStatus {
         if customerId == nil {
             throw MobilyError.no_customer_logged
         }
@@ -170,7 +161,7 @@ import StoreKit
     /* **************************** PURCHASE ***************************** */
     /* ******************************************************************* */
 
-    public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
+    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
         // TODO: productId & offerId instead of direct product & offer (for react native compatibility)
         var resultStatus: WebhookStatus = .error
 
@@ -311,72 +302,5 @@ import StoreKit
     // TODO: onStorefrontChange
     @objc public func getStoreCountry() async -> String? {
         return (await Storefront.current)?.countryCode
-    }
-
-    /* ************************************************************** */
-    /* ********************* OBJECTIVE-C BRIDGE ********************* */
-    /* ************************************************************** */
-    @objc public func loginObjc(externalId: String) async -> NSError? {
-        do {
-            try await self.login(externalId: externalId)
-            return nil
-        } catch let err {
-            NSLog("Error here %@", err as NSError)
-            return err as NSError
-        }
-    }
-
-    @objc public func getProductsObjc(identifiers: [String]?) async -> ([MobilyProduct]?, NSError?) {
-        do {
-            let products = try await self.getProducts(identifiers: identifiers)
-            return (products, nil)
-        } catch let err {
-            return (nil, err as NSError)
-        }
-    }
-
-    @objc public func getSubscriptionGroups(identifiers: [String]?, error: NSErrorPointer) async -> [MobilySubscriptionGroup]? {
-        do {
-            return try await self.getSubscriptionGroups(identifiers: identifiers)
-        } catch let err {
-            error?.pointee = err as NSError
-            return nil
-        }
-    }
-
-    @objc public func getEntitlementForSubscription(subscriptionGroupId: String, error: NSErrorPointer) -> MobilyCustomerEntitlement? {
-        do {
-            return try self.getEntitlementForSubscription(subscriptionGroupId: subscriptionGroupId)
-        } catch let err {
-            error?.pointee = err as NSError
-            return nil
-        }
-    }
-
-    @objc public func getEntitlements(productIds: [String], error: NSErrorPointer) -> [MobilyCustomerEntitlement]? {
-        do {
-            return try self.getEntitlements(productIds: productIds)
-        } catch let err {
-            error?.pointee = err as NSError
-            return nil
-        }
-    }
-
-    @objc public func requestTransferOwnership(error: NSErrorPointer) async -> TransferOwnershipStatus {
-        do {
-            return try await self.requestTransferOwnership()
-        } catch let err {
-            error?.pointee = err as NSError
-            return .error
-        }
-    }
-
-    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil, error: NSErrorPointer) async -> WebhookStatus {
-        do {
-            return try await self.purchaseProduct(product, options: options)
-        } catch let err {
-            error?.pointee = err as NSError
-            return .error
-        }
     }
 }
