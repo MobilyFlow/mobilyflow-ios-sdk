@@ -327,7 +327,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK25MobilyCustomerEntitlement")
 
 
 SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement15ItemEntitlement")
-@interface ItemEntitlement : NSObject
+@interface ItemEntitlement : Serializable
 @property (nonatomic, readonly) NSInteger quantity;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
@@ -337,7 +337,7 @@ SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement15ItemEntitlement")
 enum Platform : NSInteger;
 
 SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement23SubscriptionEntitlement")
-@interface SubscriptionEntitlement : NSObject
+@interface SubscriptionEntitlement : Serializable
 @property (nonatomic, readonly, copy) NSDate * _Nonnull startDate;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull expirationDate;
 @property (nonatomic, readonly) BOOL autoRenewEnable;

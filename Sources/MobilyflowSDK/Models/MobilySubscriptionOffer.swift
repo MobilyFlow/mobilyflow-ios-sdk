@@ -78,7 +78,7 @@ import StoreKit
 
         // 2. Populate
         if (isBaseOffer && iosProduct == nil) || (!isBaseOffer && iosOffer == nil) || status == .invalid {
-            price = (jsonOffer["defaultPrice"] as! NSNumber).decimalValue
+            price = Decimal(floatLiteral: coalesce(jsonOffer["defaultPrice"], 0.0) as! Double)
             currencyCode = coalesce(jsonOffer["defaultCurrencyCode"], "") as! String
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
 

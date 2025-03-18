@@ -30,9 +30,4 @@ public enum MobilyTransferOwnershipError: Error {
             return nil
         }
     }
-
-    static func toNSError(error: MobilyTransferOwnershipError) -> NSError {
-        // TODO:
-        return NSError(domain: "MobilyTransferOwnershipError", code: 0, userInfo: nil)
-    }
 }

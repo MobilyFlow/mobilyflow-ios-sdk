@@ -12,9 +12,4 @@ public enum MobilyError: Error {
     case server_unavailable
     case no_customer_logged
     case unknown_error
-
-    static func toNSError(error: MobilyError) -> NSError {
-        // TODO:
-        return NSError(domain: "MobilyError", code: 0, userInfo: nil)
-    }
 }
