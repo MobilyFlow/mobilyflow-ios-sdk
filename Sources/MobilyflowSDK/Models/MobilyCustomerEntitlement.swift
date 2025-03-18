@@ -8,12 +8,12 @@
 import Foundation
 import StoreKit
 
-@objc public class MobilyCustomerEntitlement: NSObject {
-    @objc let type: ProductType
-    @objc let product: MobilyProduct
-    @objc let platformOriginalTransactionId: String?
-    @objc let item: ItemEntitlement?
-    @objc let subscription: SubscriptionEntitlement?
+@objc public class MobilyCustomerEntitlement: Serializable {
+    @objc public let type: ProductType
+    @objc public let product: MobilyProduct
+    @objc public let platformOriginalTransactionId: String?
+    @objc public let item: ItemEntitlement?
+    @objc public let subscription: SubscriptionEntitlement?
 
     @objc init(type: ProductType, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?) {
         self.type = type
@@ -38,7 +38,7 @@ import StoreKit
             item = ItemEntitlement(quantity: jsonEntity["quantity"] as! Int)
         } else {
             let dateFormatter = ISO8601DateFormatter()
-            dateFormatter.formatOptions = [.withFractionalSeconds]
+            dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
 
             let platform = Platform.parse(jsonEntity["platform"]! as! String)!
 
@@ -74,8 +74,8 @@ import StoreKit
         )
     }
 
-    @objc class ItemEntitlement: NSObject {
-        @objc let quantity: Int
+    @objc public class ItemEntitlement: Serializable {
+        @objc public let quantity: Int
 
         @objc init(quantity: Int) {
             self.quantity = quantity
@@ -83,12 +83,12 @@ import StoreKit
         }
     }
 
-    @objc class SubscriptionEntitlement: NSObject {
-        @objc let startDate: Date
-        @objc let expirationDate: Date
-        @objc let autoRenewEnable: Bool
-        @objc let platform: Platform
-        @objc let isManagedByThisStoreAccount: Bool
+    @objc public class SubscriptionEntitlement: Serializable {
+        @objc public let startDate: Date
+        @objc public let expirationDate: Date
+        @objc public let autoRenewEnable: Bool
+        @objc public let platform: Platform
+        @objc public let isManagedByThisStoreAccount: Bool
 
         @objc init(startDate: Date, expirationDate: Date, autoRenewEnable: Bool, platform: Platform, isManagedByThisStoreAccount: Bool) {
             self.startDate = startDate

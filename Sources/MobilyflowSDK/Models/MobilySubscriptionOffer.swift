@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-@objc public class MobilySubscriptionOffer: NSObject {
+@objc public class MobilySubscriptionOffer: Serializable {
     @objc public let id: String?
     @objc public let name: String?
     @objc public let price: Decimal
@@ -78,7 +78,7 @@ import StoreKit
 
         // 2. Populate
         if (isBaseOffer && iosProduct == nil) || (!isBaseOffer && iosOffer == nil) || status == .invalid {
-            price = jsonOffer["defaultPrice"] as! Decimal
+            price = (jsonOffer["defaultPrice"] as! NSNumber).decimalValue
             currencyCode = coalesce(jsonOffer["defaultCurrencyCode"], "") as! String
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
 

@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-@objc public class MobilySubscriptionProduct: NSObject {
+@objc public class MobilySubscriptionProduct: Serializable {
     @objc public let baseOffer: MobilySubscriptionOffer
     @objc public let freeTrial: MobilySubscriptionOffer?
     @objc public let promotionalOffers: [MobilySubscriptionOffer]
@@ -37,6 +37,7 @@ import StoreKit
         let iosProduct = MobilyPurchaseRegistry.getIOSProduct(jsonProduct["ios_sku"]! as! String)
         let baseOffer = await MobilySubscriptionOffer.parse(jsonOffer: jsonProduct, iosProduct: iosProduct, isBaseOffer: true)
 
+        // TODO: This means offer are returned at all if the ios product is not available
         if iosProduct?.subscription != nil {
             let jsonOffers = jsonProduct["Offers"] as? [[String: Any]] ?? []
 
@@ -61,7 +62,7 @@ import StoreKit
         }
 
         let subscriptionGroupLevel: Int
-        if #available(iOS 16.4, *) {
+        if #available(iOS 16.4, *), iosProduct != nil {
             subscriptionGroupLevel = iosProduct!.subscription!.groupLevel
         } else {
             subscriptionGroupLevel = jsonProduct["subscriptionGroupLevel"]! as! Int

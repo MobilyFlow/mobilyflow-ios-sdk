@@ -301,9 +301,48 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 
 #if defined(__OBJC__)
+@class NSString;
+
+SWIFT_CLASS("_TtC13MobilyflowSDK12Serializable")
+@interface Serializable : NSObject
+- (NSDictionary<NSString *, id> * _Nonnull)toDictionary SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
+enum ProductType : NSInteger;
+@class MobilyProduct;
+@class ItemEntitlement;
+@class SubscriptionEntitlement;
 
 SWIFT_CLASS("_TtC13MobilyflowSDK25MobilyCustomerEntitlement")
-@interface MobilyCustomerEntitlement : NSObject
+@interface MobilyCustomerEntitlement : Serializable
+@property (nonatomic, readonly) enum ProductType type;
+@property (nonatomic, readonly, strong) MobilyProduct * _Nonnull product;
+@property (nonatomic, readonly, copy) NSString * _Nullable platformOriginalTransactionId;
+@property (nonatomic, readonly, strong) ItemEntitlement * _Nullable item;
+@property (nonatomic, readonly, strong) SubscriptionEntitlement * _Nullable subscription;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+
+SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement15ItemEntitlement")
+@interface ItemEntitlement : NSObject
+@property (nonatomic, readonly) NSInteger quantity;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+@class NSDate;
+enum Platform : NSInteger;
+
+SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement23SubscriptionEntitlement")
+@interface SubscriptionEntitlement : NSObject
+@property (nonatomic, readonly, copy) NSDate * _Nonnull startDate;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull expirationDate;
+@property (nonatomic, readonly) BOOL autoRenewEnable;
+@property (nonatomic, readonly) enum Platform platform;
+@property (nonatomic, readonly) BOOL isManagedByThisStoreAccount;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -314,11 +353,10 @@ typedef SWIFT_ENUM(NSInteger, MobilyEnvironment, closed) {
   MobilyEnvironmentProduction = 2,
 };
 
-@class NSString;
 enum ProductStatus : NSInteger;
 
 SWIFT_CLASS("_TtC13MobilyflowSDK20MobilyOneTimeProduct")
-@interface MobilyOneTimeProduct : NSObject
+@interface MobilyOneTimeProduct : Serializable
 @property (nonatomic, readonly) NSDecimal price;
 @property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
 @property (nonatomic, readonly, copy) NSString * _Nonnull priceFormatted;
@@ -330,12 +368,10 @@ SWIFT_CLASS("_TtC13MobilyflowSDK20MobilyOneTimeProduct")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-@class NSDate;
-enum ProductType : NSInteger;
 @class MobilySubscriptionProduct;
 
 SWIFT_CLASS("_TtC13MobilyflowSDK13MobilyProduct")
-@interface MobilyProduct : NSObject
+@interface MobilyProduct : Serializable
 @property (nonatomic, readonly, copy) NSString * _Nonnull id;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
@@ -368,7 +404,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 - (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getEntitlementWithProductId:(NSString * _Nonnull)productId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
-- (NSArray<MobilyCustomerEntitlement *> * _Nullable)getEntitlementsWithProductIds:(NSArray<NSString *> * _Nonnull)productIds error:(NSError * _Nullable * _Nullable)error SWIFT_WARN_UNUSED_RESULT;
+- (void)getEntitlementsWithProductIds:(NSArray<NSString *> * _Nonnull)productIds completionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
 /// Request transfer ownership of local device transactions.
 - (void)requestTransferOwnershipWithCompletionHandler:(void (^ _Nonnull)(enum TransferOwnershipStatus, NSError * _Nullable))completionHandler;
 /// Open the manage subscription dialog
@@ -393,7 +429,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK24MobilyPurchaseSDKOptions")
 
 
 SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionGroup")
-@interface MobilySubscriptionGroup : NSObject
+@interface MobilySubscriptionGroup : Serializable
 @property (nonatomic, readonly, copy) NSString * _Nonnull id;
 @property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
 @property (nonatomic, readonly, copy) NSString * _Nonnull name;
@@ -408,7 +444,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionGroup")
 enum PeriodUnit : NSInteger;
 
 SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionOffer")
-@interface MobilySubscriptionOffer : NSObject
+@interface MobilySubscriptionOffer : Serializable
 @property (nonatomic, readonly, copy) NSString * _Nullable id;
 @property (nonatomic, readonly, copy) NSString * _Nullable name;
 @property (nonatomic, readonly) NSDecimal price;
@@ -426,7 +462,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionOffer")
 
 
 SWIFT_CLASS("_TtC13MobilyflowSDK25MobilySubscriptionProduct")
-@interface MobilySubscriptionProduct : NSObject
+@interface MobilySubscriptionProduct : Serializable
 @property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nonnull baseOffer;
 @property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable freeTrial;
 @property (nonatomic, readonly, copy) NSArray<MobilySubscriptionOffer *> * _Nonnull promotionalOffers;
@@ -467,6 +503,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK15PurchaseOptions")
 - (PurchaseOptions * _Nonnull)setOffer:(MobilySubscriptionOffer * _Nullable)offer SWIFT_WARN_UNUSED_RESULT;
 - (PurchaseOptions * _Nonnull)setQuantity:(NSInteger)quantity SWIFT_WARN_UNUSED_RESULT;
 @end
+
 
 typedef SWIFT_ENUM(NSInteger, TransferOwnershipStatus, closed) {
   TransferOwnershipStatusPending = 0,

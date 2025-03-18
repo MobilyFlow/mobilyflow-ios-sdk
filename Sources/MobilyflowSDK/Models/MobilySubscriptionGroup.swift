@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-@objc public class MobilySubscriptionGroup: NSObject {
+@objc public class MobilySubscriptionGroup: Serializable {
     @objc public let id: String
     @objc public let identifier: String
 

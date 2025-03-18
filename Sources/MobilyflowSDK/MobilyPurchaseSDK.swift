@@ -112,7 +112,7 @@ import StoreKit
         return try await syncer.getEntitlement(forProductId: productId)
     }
 
-    @objc public func getEntitlements(productIds: [String]) throws -> [MobilyCustomerEntitlement] {
+    @objc public func getEntitlements(productIds: [String]) async throws -> [MobilyCustomerEntitlement] {
         return try syncer.getEntitlements(forProductIds: productIds)
     }
 

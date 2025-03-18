@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-@objc public class MobilyOneTimeProduct: NSObject {
+@objc public class MobilyOneTimeProduct: Serializable {
     @objc public let price: Decimal
     @objc public let currencyCode: String
     @objc public let priceFormatted: String

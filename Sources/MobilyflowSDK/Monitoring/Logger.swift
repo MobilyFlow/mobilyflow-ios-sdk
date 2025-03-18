@@ -23,7 +23,7 @@ class Logger {
     
     private static let dateFormatter = {
         let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime]
+        formatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
         return formatter
     }()
     

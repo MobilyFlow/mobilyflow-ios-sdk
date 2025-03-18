@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-@objc public class MobilyProduct: NSObject {
+@objc public class MobilyProduct: Serializable {
     @objc public let id: String
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
@@ -47,7 +47,7 @@ import StoreKit
 
     static func parse(jsonProduct: [String: Any]) async -> MobilyProduct {
         let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFractionalSeconds]
+        dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
 
         let type = ProductType.parse(jsonProduct["type"]! as! String)!
 
