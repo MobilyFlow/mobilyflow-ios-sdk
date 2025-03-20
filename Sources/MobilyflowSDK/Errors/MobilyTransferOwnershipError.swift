@@ -10,10 +10,10 @@ import Foundation
 public enum MobilyTransferOwnershipError: Error {
     case nothing_to_transfer
     case transfer_to_same_customer
-
     case already_pending
-    case webhook_failed
+
     case webhook_not_processed
+    case webhook_failed
 
     static func parse(_ rawValue: String) -> MobilyTransferOwnershipError? {
         if rawValue == "nothing_to_transfer" {

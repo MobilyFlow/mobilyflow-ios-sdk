@@ -37,7 +37,11 @@ import Foundation
         let mirror = Mirror(reflecting: self)
 
         for child in mirror.children {
-            if let label = child.label {
+            if var label = child.label {
+                if label == "details" {
+                    label = "description"
+                }
+
                 dict[label] = Serializable.parseValue(child.value)
             }
         }
