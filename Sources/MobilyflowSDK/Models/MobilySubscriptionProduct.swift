@@ -37,7 +37,7 @@ import StoreKit
         let iosProduct = MobilyPurchaseRegistry.getIOSProduct(jsonProduct["ios_sku"]! as! String)
         let baseOffer = await MobilySubscriptionOffer.parse(jsonOffer: jsonProduct, iosProduct: iosProduct, isBaseOffer: true)
 
-        // TODO: This means offer are returned at all if the ios product is not available
+        // TODO: This means no offer are returned at all if the ios product is not available
         if iosProduct?.subscription != nil {
             let jsonOffers = jsonProduct["Offers"] as? [[String: Any]] ?? []
 
