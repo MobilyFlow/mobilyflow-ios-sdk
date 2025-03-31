@@ -92,12 +92,12 @@ import StoreKit
     /* **************************** PRODUCTS ***************************** */
     /* ******************************************************************* */
 
-    @objc public func getProducts(identifiers: [String]?) async throws -> [MobilyProduct] {
-        return try await syncer.getProducts(identifiers: identifiers)
+    @objc public func getProducts(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilyProduct] {
+        return try await syncer.getProducts(identifiers: identifiers, onlyAvailable: onlyAvailable)
     }
 
-    @objc public func getSubscriptionGroups(identifiers: [String]?) async throws -> [MobilySubscriptionGroup] {
-        return try await syncer.getSubscriptionGroups(identifiers: identifiers)
+    @objc public func getSubscriptionGroups(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilySubscriptionGroup] {
+        return try await syncer.getSubscriptionGroups(identifiers: identifiers, onlyAvailable: onlyAvailable)
     }
 
     /* ******************************************************************* */
@@ -302,5 +302,9 @@ import StoreKit
     // TODO: onStorefrontChange
     @objc public func getStoreCountry() async -> String? {
         return (await Storefront.current)?.countryCode
+    }
+
+    @objc public func isForwardingEnable() async throws -> Bool {
+        return try await API.isForwardingEnable(customerId: customerId)
     }
 }

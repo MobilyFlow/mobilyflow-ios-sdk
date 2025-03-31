@@ -244,4 +244,23 @@ class MobilyPurchaseAPI {
             throw MobilyError.unknown_error
         }
     }
+
+    public func isForwardingEnable(customerId: UUID?) async throws -> Bool {
+        let request = ApiRequest(method: "GET", url: "/apps/me/customers/is-forwarding-enable")
+        if customerId != nil {
+            _ = request.addParam("customerId", customerId!.uuidString.lowercased())
+        }
+        _ = request.addParam("platform", "ios")
+
+        guard let res = try? await self.helper.request(request) else {
+            throw MobilyError.server_unavailable
+        }
+
+        if res.success {
+            let jsonResponse = res.json()
+            return jsonResponse["enable"] as! Bool
+        } else {
+            throw MobilyError.unknown_error
+        }
+    }
 }

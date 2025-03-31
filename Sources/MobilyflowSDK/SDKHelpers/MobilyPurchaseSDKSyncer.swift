@@ -129,28 +129,42 @@ class MobilyPurchaseSDKSyncer {
         }
     }
 
-    func getProducts(identifiers: [String]?) async throws -> [MobilyProduct] {
+    func getProducts(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilyProduct] {
         try await ensureSync()
 
         var result: [MobilyProduct] = []
 
-        for p in products! {
-            if identifiers == nil || identifiers!.contains(p.identifier) {
-                result.append(p)
+        for product in products! {
+            if !onlyAvailable || product.status == .available {
+                if identifiers == nil || identifiers!.contains(product.identifier) {
+                    result.append(product)
+                }
             }
         }
 
         return result
     }
 
-    func getSubscriptionGroups(identifiers: [String]?) async throws -> [MobilySubscriptionGroup] {
+    func getSubscriptionGroups(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilySubscriptionGroup] {
         try await ensureSync()
 
         var result: [MobilySubscriptionGroup] = []
 
-        for g in subscriptionGroups! {
-            if identifiers == nil || identifiers!.contains(g.identifier) {
-                result.append(g)
+        for group in subscriptionGroups! {
+            var products: [MobilyProduct] = []
+
+            for product in self.products! {
+                if !onlyAvailable || product.status == .available {
+                    if group.id == product.subscriptionProduct?.subscriptionGroupId {
+                        products.append(product)
+                    }
+                }
+            }
+
+            if identifiers == nil || identifiers!.contains(group.identifier) {
+                if !onlyAvailable || products.count > 0 {
+                    result.append(group)
+                }
             }
         }
 
