@@ -30,7 +30,7 @@ class MobilyPurchaseAPI {
         self.environment = environment
         self.lang = languages.joined(separator: ",")
 
-        self.helper = ApiHelper(baseURL: API_URL, defaultHeaders: ["Authorization": "Bearer \(apiKey)"])
+        self.helper = ApiHelper(baseURL: API_URL, defaultHeaders: ["Authorization": "ApiKey \(apiKey)"])
     }
 
     /**
@@ -46,7 +46,7 @@ class MobilyPurchaseAPI {
         }
 
         if res.success {
-            let data = res.json()
+            let data = res.json()["data"] as! [String: Any]
             return LoginResponse(customerId: UUID(uuidString: data["id"] as! String)!, platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String])
         } else {
             throw MobilyError.unknown_error
@@ -74,7 +74,7 @@ class MobilyPurchaseAPI {
         }
 
         if res.success {
-            return res.jsonArray()
+            return res.json()["data"] as! [[String: Any]]
         } else {
             throw MobilyError.unknown_error
         }
@@ -92,7 +92,7 @@ class MobilyPurchaseAPI {
         }
 
         if res.success {
-            return res.jsonArray()
+            return res.json()["data"] as! [[String: Any]]
         } else {
             throw MobilyError.unknown_error
         }
@@ -114,7 +114,7 @@ class MobilyPurchaseAPI {
         }
 
         if res.success {
-            let jsonResponse = res.json()
+            let jsonResponse = res.json()["data"] as! [String: Any]
             return Product.SubscriptionOffer.Signature(
                 keyID: jsonResponse["keyID"] as! String,
                 nonce: UUID(uuidString: jsonResponse["nonce"] as! String)!,
@@ -157,7 +157,7 @@ class MobilyPurchaseAPI {
 
         let jsonResponse = res.json()
         if res.success {
-            return jsonResponse["id"]! as! String
+            return (jsonResponse["data"] as! [String: Any])["id"]! as! String
         } else {
             let error = MobilyTransferOwnershipError.parse(jsonResponse["errorCode"]! as! String)
             if error != nil {
@@ -179,7 +179,7 @@ class MobilyPurchaseAPI {
         }
 
         if res.success {
-            let jsonResponse = res.json()
+            let jsonResponse = res.json()["data"] as! [String: Any]
             return TransferOwnershipStatus.parse(jsonResponse["status"] as! String)!
         } else {
             throw MobilyError.unknown_error
@@ -219,7 +219,7 @@ class MobilyPurchaseAPI {
         }
 
         if res.success {
-            let jsonResponse = res.json()
+            let jsonResponse = res.json()["data"] as! [String: Any]
             return WebhookStatus.parse(jsonResponse["status"] as! String)!
         } else {
             throw MobilyError.unknown_error
@@ -257,7 +257,7 @@ class MobilyPurchaseAPI {
         }
 
         if res.success {
-            let jsonResponse = res.json()
+            let jsonResponse = res.json()["data"] as! [String: Any]
             return jsonResponse["enable"] as! Bool
         } else {
             throw MobilyError.unknown_error
