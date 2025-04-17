@@ -13,6 +13,7 @@ import StoreKit
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
     @objc public let identifier: String
+    @objc public let externalRef: String?
     @objc public let appId: String
 
     @objc public let name: String
@@ -27,12 +28,13 @@ import StoreKit
     @objc public let subscriptionProduct: MobilySubscriptionProduct?
 
     @objc init(
-        id: String, createdAt: Date, updatedAt: Date, identifier: String, appId: String, name: String, details: String, ios_sku: String, type: ProductType, extras: [String: Any]? = nil, status: ProductStatus, oneTimeProduct: MobilyOneTimeProduct? = nil, subscriptionProduct: MobilySubscriptionProduct? = nil
+        id: String, createdAt: Date, updatedAt: Date, identifier: String, externalRef: String?, appId: String, name: String, details: String, ios_sku: String, type: ProductType, extras: [String: Any]? = nil, status: ProductStatus, oneTimeProduct: MobilyOneTimeProduct? = nil, subscriptionProduct: MobilySubscriptionProduct? = nil
     ) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.identifier = identifier
+        self.externalRef = externalRef
         self.appId = appId
         self.name = name
         self.details = details
@@ -68,6 +70,7 @@ import StoreKit
             createdAt: dateFormatter.date(from: jsonProduct["createdAt"]! as! String)!,
             updatedAt: dateFormatter.date(from: jsonProduct["updatedAt"]! as! String)!,
             identifier: jsonProduct["identifier"]! as! String,
+            externalRef: jsonProduct["externalRef"]! as? String,
             appId: jsonProduct["appId"]! as! String,
             name: jsonProduct["name"]! as! String,
             details: jsonProduct["description"]! as! String,
