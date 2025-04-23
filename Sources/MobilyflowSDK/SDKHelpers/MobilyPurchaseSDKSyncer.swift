@@ -62,7 +62,10 @@ class MobilyPurchaseSDKSyncer {
         let jsonProducts = try await self.API.getProducts(identifiers: nil)
 
         // 2. Get product from App Store
-        let iosIdentifiers = jsonProducts.map { p in p["ios_sku"]! } as! [String]
+        let iosIdentifiers = jsonProducts
+            .filter { p in p["ios_sku"] != nil && !(p["ios_sku"]! as! String).isEmpty }
+            .map { p in p["ios_sku"]! } as! [String]
+
         guard let storeProducts = try? await Product.products(for: iosIdentifiers) else {
             throw MobilyError.store_unavailable
         }

@@ -64,9 +64,9 @@ import StoreKit
     /* ****************************** LOGIN ****************************** */
     /* ******************************************************************* */
 
-    @objc public func login(externalId: String) async throws {
+    @objc public func login(externalRef: String) async throws {
         // 1. Login
-        let loginResponse = try await self.API.login(externalId: externalId)
+        let loginResponse = try await self.API.login(externalRef: externalRef)
         self.customerId = loginResponse.customerId
         self.syncer.login(customerId: customerId)
         diagnostics.customerId = self.customerId

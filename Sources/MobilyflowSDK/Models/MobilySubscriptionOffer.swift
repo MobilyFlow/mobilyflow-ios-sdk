@@ -9,7 +9,9 @@ import Foundation
 import StoreKit
 
 @objc public class MobilySubscriptionOffer: Serializable {
-    @objc public let id: String?
+    @objc public let id: String? // null for base offer
+    @objc public let identifier: String? // null for base offer
+    @objc public let externalRef: String? // null for base offer
     @objc public let name: String?
     @objc public let price: Decimal
     @objc public let currencyCode: String
@@ -17,12 +19,14 @@ import StoreKit
     @objc public let isFreeTrial: Bool
     @objc public let periodCount: Int
     @objc public let periodUnit: PeriodUnit
-    @objc public let ios_offerId: String?
+    @objc public let ios_offerId: String? // null for base offer
     @objc public let extras: [String: Any]?
     @objc public let status: ProductStatus
 
-    @objc init(id: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, isFreeTrial: Bool, periodCount: Int, periodUnit: PeriodUnit, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
+    @objc init(id: String?, identifier: String?, externalRef: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, isFreeTrial: Bool, periodCount: Int, periodUnit: PeriodUnit, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
         self.id = id
+        self.identifier = identifier
+        self.externalRef = externalRef
         self.name = name
         self.price = price
         self.currencyCode = currencyCode
@@ -39,6 +43,8 @@ import StoreKit
 
     static func parse(jsonOffer: [String: Any], iosProduct: Product?, isBaseOffer: Bool) async -> MobilySubscriptionOffer {
         var id: String? = nil
+        var identifier: String? = nil
+        var externalRef: String? = nil
         var name: String? = nil
         let price: Decimal
         let currencyCode: String
@@ -54,6 +60,8 @@ import StoreKit
 
         if !isBaseOffer {
             id = jsonOffer["id"] as? String
+            identifier = jsonOffer["identifier"] as? String
+            externalRef = jsonOffer["externalRef"] as? String
             name = jsonOffer["name"] as? String
             extras = jsonOffer["extras"] as? [String: Any]
             isFreeTrial = jsonOffer["isFreeTrial"] as? Bool ?? false
@@ -117,6 +125,8 @@ import StoreKit
 
         return MobilySubscriptionOffer(
             id: id,
+            identifier: identifier,
+            externalRef: externalRef,
             name: name,
             price: price,
             currencyCode: currencyCode,

@@ -34,12 +34,12 @@ class MobilyPurchaseAPI {
     }
 
     /**
-     Log user into MobilyFlow with his externalId and return his uuid.
+     Log user into MobilyFlow with his externalRef and return his uuid.
      Throws on error.
      */
-    public func login(externalId: String) async throws -> LoginResponse {
+    public func login(externalRef: String) async throws -> LoginResponse {
         let request = ApiRequest(method: "POST", url: "/apps/me/customers/login/ios")
-        _ = request.setData(["externalId": externalId, "environment": environment.toString()])
+        _ = request.setData(["externalRef": externalRef, "environment": environment.toString()])
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable

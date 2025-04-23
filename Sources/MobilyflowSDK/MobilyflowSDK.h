@@ -395,7 +395,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 @interface MobilyPurchaseSDK : NSObject
 - (nonnull instancetype)initWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(enum MobilyEnvironment)environment options:(MobilyPurchaseSDKOptions * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
 - (void)close;
-- (void)loginWithExternalId:(NSString * _Nonnull)externalId completionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler;
+- (void)loginWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler;
 - (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
@@ -440,6 +440,8 @@ enum PeriodUnit : NSInteger;
 SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionOffer")
 @interface MobilySubscriptionOffer : Serializable
 @property (nonatomic, readonly, copy) NSString * _Nullable id;
+@property (nonatomic, readonly, copy) NSString * _Nullable identifier;
+@property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
 @property (nonatomic, readonly, copy) NSString * _Nullable name;
 @property (nonatomic, readonly) NSDecimal price;
 @property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
