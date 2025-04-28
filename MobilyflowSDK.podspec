@@ -9,10 +9,10 @@
 Pod::Spec.new do |s|
   s.name             = 'MobilyflowSDK'
   s.module_name      = 'MobilyflowSDK'
-  s.version          =  '0.1.1-alpha.5'
+  s.version          =   '0.1.1-alpha.6'
   s.summary          = 'MobilyFlow SDK for iOS'
   s.description      = 'Mobilyflow SDK for iOS'
-  
+
   s.homepage         = 'https://www.mobilyflow.com/'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'MobilyFlow' => 'contact@mobilyflow.com' }
