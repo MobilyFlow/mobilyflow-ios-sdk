@@ -1,4 +1,6 @@
 #!/bin/zsh
+set -e
+
 HEADER_FILE=Sources/MobilyflowSDK/MobilyflowSDK.h
 SCRIPT_DIR="$( dirname -- "$0" )"
 VERSION=$1
@@ -15,7 +17,7 @@ cd $SCRIPT_DIR/..
 rm -f $HEADER_FILE
 swiftc -emit-objc-header -emit-objc-header-path $HEADER_FILE \
   -sdk $(xcrun --show-sdk-path --sdk iphoneos) -target arm64-apple-ios15.0 \
-  -framework UIKit -framework Foundation -module-name MobilyflowSDK Sources/**/*
+  -framework UIKit -framework Foundation -module-name MobilyflowSDK Sources/**/* || true
 
 # 3. Update podspec
 sed -i '' -E "s/( *s.version *= *)'([0-9a-zA-Z.-]+)'/\1 '${VERSION}'/" MobilyflowSDK.podspec
