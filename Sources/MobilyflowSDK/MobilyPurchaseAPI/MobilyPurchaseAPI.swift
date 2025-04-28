@@ -284,7 +284,7 @@ class MobilyPurchaseAPI {
     public func isForwardingEnable(externalRef: String?) async throws -> Bool {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/is-forwarding-enable")
         if externalRef != nil {
-            _ = request.addParam("externalRef", externalRef)
+            _ = request.addParam("externalRef", externalRef!)
         }
         _ = request.addParam("environment", environment.toString())
         _ = request.addParam("platform", "ios")
