@@ -310,6 +310,19 @@ SWIFT_CLASS("_TtC13MobilyflowSDK12Serializable")
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
+@class NSUUID;
+@class NSDate;
+SWIFT_CLASS("_TtC13MobilyflowSDK14MobilyCustomer")
+@interface MobilyCustomer : Serializable
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
+@property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
+@property (nonatomic, readonly) BOOL isForwardingEnable;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
 enum ProductType : NSInteger;
 @class MobilyProduct;
 @class ItemEntitlement;
@@ -332,7 +345,6 @@ SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement15ItemEntitlement")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-@class NSDate;
 enum Platform : NSInteger;
 SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement23SubscriptionEntitlement")
 @interface SubscriptionEntitlement : Serializable
@@ -395,7 +407,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 @interface MobilyPurchaseSDK : NSObject
 - (nonnull instancetype)initWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(enum MobilyEnvironment)environment options:(MobilyPurchaseSDKOptions * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
 - (void)close;
-- (void)loginWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler;
+- (void)loginWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
@@ -411,7 +423,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 - (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(enum WebhookStatus, NSError * _Nullable))completionHandler;
 - (void)sendDiagnotic;
 - (void)getStoreCountryWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable))completionHandler;
-- (void)isForwardingEnableWithCompletionHandler:(void (^ _Nonnull)(BOOL, NSError * _Nullable))completionHandler;
+- (void)isForwardingEnableWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(BOOL, NSError * _Nullable))completionHandler;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -463,7 +475,8 @@ SWIFT_CLASS("_TtC13MobilyflowSDK25MobilySubscriptionProduct")
 @property (nonatomic, readonly, copy) NSArray<MobilySubscriptionOffer *> * _Nonnull promotionalOffers;
 @property (nonatomic, readonly) enum ProductStatus status;
 @property (nonatomic, readonly) NSInteger groupLevel;
-@property (nonatomic, readonly, copy) NSString * _Nullable subscriptionGroupId;
+@property (nonatomic, readonly, copy) NSString * _Nonnull ios_subscriptionGroupId;
+@property (nonatomic, readonly, copy) NSString * _Nonnull subscriptionGroupId;
 @property (nonatomic, readonly, strong) MobilySubscriptionGroup * _Nullable subscriptionGroup;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
