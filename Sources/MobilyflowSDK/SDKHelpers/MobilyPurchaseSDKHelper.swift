@@ -81,7 +81,7 @@ class MobilyPurchaseSDKHelper {
                 if entitlement != nil {
                     throw MobilyPurchaseError.already_purchased
                 } else {
-                    let storeAccountTransaction = syncer.getStoreAccountTransaction(forProduct: product)
+                    let storeAccountTransaction = syncer.getStoreAccountTransaction(forIosSku: product.ios_sku)
 
                     if storeAccountTransaction != nil {
                         // Another customer is already entitled to this product on the same store account
@@ -90,13 +90,9 @@ class MobilyPurchaseSDKHelper {
                 }
             }
         } else {
-            let entitlement = product.subscriptionProduct!.subscriptionGroupId != nil ?
-                try! await syncer.getEntitlement(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId!) :
-                try! await syncer.getEntitlement(forProductId: product.id)
+            let entitlement = try! await syncer.getEntitlement(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId)
 
-            let storeAccountTransaction = product.subscriptionProduct!.subscriptionGroupId != nil ?
-                syncer.getStoreAccountTransaction(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId!) :
-                syncer.getStoreAccountTransaction(forProduct: product)
+            let storeAccountTransaction = syncer.getStoreAccountTransaction(forIosSubscriptionGroup: product.subscriptionProduct!.ios_subscriptionGroupId)
 
             if entitlement != nil {
                 if !entitlement!.subscription!.isManagedByThisStoreAccount {
@@ -119,8 +115,10 @@ class MobilyPurchaseSDKHelper {
                     }
                 }
             } else {
+                // TODO: The transaction may exists but be expired (check the date ?)
                 if storeAccountTransaction != nil {
                     // Another customer is already entitled to this product on the same store account
+                    print("expirationDate = ", storeAccountTransaction?.expirationDate)
                     throw MobilyPurchaseError.store_account_already_have_purchase
                 }
             }
@@ -146,12 +144,8 @@ class MobilyPurchaseSDKHelper {
         iosOptions.insert(Product.PurchaseOption.appAccountToken(customerId))
 
         iosOptions.insert(Product.PurchaseOption.onStorefrontChange(shouldContinuePurchase: { _ in
-            // In case storefront change, fetch product again
-            Task(priority: .high) { [weak syncer] in
-                try! await syncer?.syncProduct()
-                // TODO: Add event to notify developer to refetch product
-            }
-            return true
+            // TODO: In case storefront change, notify developer to refetch product
+            true
         }))
 
         if #available(iOS 17.4, *) {

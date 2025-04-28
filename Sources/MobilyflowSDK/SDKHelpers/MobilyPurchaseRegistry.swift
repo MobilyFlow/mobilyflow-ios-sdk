@@ -17,6 +17,17 @@ class MobilyPurchaseRegistry {
         let offers: [String: Product.SubscriptionOffer]?
     }
 
+    static func registerIOSProductSkus(_ skus: [String]) async {
+        let unknownSkus: [String] = skus.filter { skuToProduct[$0] == nil }
+
+        if !unknownSkus.isEmpty {
+            guard let storeProducts = try? await Product.products(for: unknownSkus) else {
+                return
+            }
+            registerIOSProducts(storeProducts)
+        }
+    }
+
     static func registerIOSProducts(_ products: [Product]) {
         for product in products {
             registerIOSProduct(product)

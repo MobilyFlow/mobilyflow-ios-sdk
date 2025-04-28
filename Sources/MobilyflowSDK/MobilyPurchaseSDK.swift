@@ -13,7 +13,7 @@ import StoreKit
     let API: MobilyPurchaseAPI
 
     let environment: MobilyEnvironment
-    var customerId: UUID?
+    var customer: MobilyCustomer?
 
     private var syncer: MobilyPurchaseSDKSyncer
     private let waiter: MobilyPurchaseSDKWaiter
@@ -40,7 +40,7 @@ import StoreKit
         super.init()
 
         Monitoring.initialize(tag: "MobilyFlow", allowLogging: options?.debug ?? false) { logFile in
-            try await self.API.uploadMonitoring(customerId: self.customerId, file: logFile)
+            try await self.API.uploadMonitoring(customerId: self.customer?.id, file: logFile)
         }
 
         lifecycleManager.registerCrash { _, _ in
@@ -50,7 +50,7 @@ import StoreKit
     }
 
     @objc public func close() {
-        self.customerId = nil
+        self.customer = nil
         diagnostics.customerId = nil
         self.updateTxTask?.cancel()
         self.syncer.close()
@@ -64,12 +64,12 @@ import StoreKit
     /* ****************************** LOGIN ****************************** */
     /* ******************************************************************* */
 
-    @objc public func login(externalRef: String) async throws {
+    @objc public func login(externalRef: String) async throws -> MobilyCustomer {
         // 1. Login
         let loginResponse = try await self.API.login(externalRef: externalRef)
-        self.customerId = loginResponse.customerId
-        self.syncer.login(customerId: customerId)
-        diagnostics.customerId = self.customerId
+        self.customer = MobilyCustomer.parse(jsonCustomer: loginResponse.customer, isForwardingEnable: loginResponse.isForwardingEnable)
+        diagnostics.customerId = self.customer?.id
+        try await self.syncer.login(customerId: customer?.id, jsonEntitlements: loginResponse.entitlements)
 
         // 2. Sync
         try await syncer.ensureSync()
@@ -81,11 +81,13 @@ import StoreKit
         let transactionToMap = await MobilyPurchaseSDKHelper.getTransactionToMap(loginResponse.platformOriginalTransactionIds)
         if !transactionToMap.isEmpty {
             do {
-                try await self.API.mapTransactions(customerId: self.customerId!, transactions: transactionToMap)
+                try await self.API.mapTransactions(customerId: self.customer!.id, transactions: transactionToMap)
             } catch {
                 Logger.e("Map transactions error", error: error)
             }
         }
+
+        return self.customer!
     }
 
     /* ******************************************************************* */
@@ -93,11 +95,52 @@ import StoreKit
     /* ******************************************************************* */
 
     @objc public func getProducts(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilyProduct] {
-        return try await syncer.getProducts(identifiers: identifiers, onlyAvailable: onlyAvailable)
+        try await syncer.ensureSync()
+
+        // 1. Get product from Mobily API
+        let jsonProducts = try await self.API.getProducts(identifiers: identifiers)
+
+        // 2. Get product from App Store
+        let iosIdentifiers = jsonProducts.map { p in p["ios_sku"]! } as! [String]
+        await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
+
+        // 3. Parse to MobilyProduct
+        var mobilyProducts: [MobilyProduct] = []
+
+        for jsonProduct in jsonProducts {
+            let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct)
+            if !onlyAvailable || mobilyProduct.status == .available {
+                mobilyProducts.append(mobilyProduct)
+            }
+        }
+
+        return mobilyProducts
     }
 
     @objc public func getSubscriptionGroups(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilySubscriptionGroup] {
-        return try await syncer.getSubscriptionGroups(identifiers: identifiers, onlyAvailable: onlyAvailable)
+        try await syncer.ensureSync()
+
+        // 1. Get groups from Mobily API
+        let jsonGroups = try await self.API.getSubscriptionGroups(identifiers: identifiers)
+
+        // 2. Get product from App Store
+        let iosIdentifiers = jsonGroups.flatMap { group in
+            (group["Products"] as! [[String: Any]]).map { product in product["ios_sku"] as! String }
+        }
+        await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
+
+        // 3. Parse to MobilySubscriptionGroup
+        var groups: [MobilySubscriptionGroup] = []
+
+        for jsonGroup in jsonGroups {
+            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, onlyAvailableProducts: onlyAvailable)
+
+            if !onlyAvailable || mobilyGroup.products.count > 0 {
+                groups.append(mobilyGroup)
+            }
+        }
+
+        return groups
     }
 
     /* ******************************************************************* */
@@ -120,14 +163,14 @@ import StoreKit
      Request transfer ownership of local device transactions.
      */
     @objc public func requestTransferOwnership() async throws -> TransferOwnershipStatus {
-        if customerId == nil {
+        if customer == nil {
             throw MobilyError.no_customer_logged
         }
 
         let transactionToClaim = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
 
         if !transactionToClaim.isEmpty {
-            let requestId = try await self.API.transferOwnershipRequest(customerId: self.customerId!, transactions: transactionToClaim)
+            let requestId = try await self.API.transferOwnershipRequest(customerId: self.customer!.id, transactions: transactionToClaim)
             let status = try await self.waiter.waitTransferOwnershipRequest(requestId: requestId)
             Logger.d("Request ownership transfer complete with status \(status)")
             return status
@@ -166,11 +209,11 @@ import StoreKit
         var resultStatus: WebhookStatus = .error
 
         try await purchaseExecutor.executeOrFallback({
-            if self.customerId == nil {
+            if self.customer == nil {
                 throw MobilyError.no_customer_logged
             }
 
-            let (iosProduct, purchaseOptions, upgradeOrDowngrade) = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: self.syncer, API: self.API, customerId: self.customerId!, product: product, options: options)
+            let (iosProduct, purchaseOptions, upgradeOrDowngrade) = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: self.syncer, API: self.API, customerId: self.customer!.id, product: product, options: options)
 
             let purchaseResult: Product.PurchaseResult
             do {
@@ -229,7 +272,7 @@ import StoreKit
                 case .verified(let transaction):
                     await self.finishTransaction(signedTx: signedTx)
                     resultStatus = try await self.waiter.waitWebhook(transaction: transaction, product: product, upgradeOrDowngrade: upgradeOrDowngrade)
-                    try await self.syncer.syncEntitlements()
+                    try await self.syncer.ensureSync(force: true)
                 case .unverified:
                     Logger.e("purchaseProduct unverified")
                     try? Monitoring.exportDiagnostic(sinceDays: 1)
@@ -279,10 +322,12 @@ import StoreKit
             Logger.d("Finish transaction: \(transaction.id)")
             await transaction.finish()
 
-            do {
-                try await API.mapTransactions(customerId: customerId!, transactions: [signedTx.jwsRepresentation])
-            } catch {
-                Logger.e("Map transaction error", error: error)
+            if let customerId = customer?.id {
+                do {
+                    try await API.mapTransactions(customerId: customerId, transactions: [signedTx.jwsRepresentation])
+                } catch {
+                    Logger.e("Map transaction error", error: error)
+                }
             }
         }
     }
@@ -304,7 +349,7 @@ import StoreKit
         return (await Storefront.current)?.countryCode
     }
 
-    @objc public func isForwardingEnable() async throws -> Bool {
-        return try await API.isForwardingEnable(customerId: customerId)
+    @objc public func isForwardingEnable(externalRef: String) async throws -> Bool {
+        return try await API.isForwardingEnable(externalRef: externalRef)
     }
 }

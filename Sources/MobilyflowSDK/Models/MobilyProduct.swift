@@ -47,7 +47,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonProduct: [String: Any]) async -> MobilyProduct {
+    static func parse(jsonProduct: [String: Any], fromSubscriptionGroup: MobilySubscriptionGroup? = nil) async -> MobilyProduct {
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
 
@@ -61,7 +61,7 @@ import StoreKit
             oneTimeProduct = MobilyOneTimeProduct.parse(jsonProduct: jsonProduct)
             status = oneTimeProduct!.status
         } else {
-            subscriptionProduct = await MobilySubscriptionProduct.parse(jsonProduct: jsonProduct)
+            subscriptionProduct = await MobilySubscriptionProduct.parse(jsonProduct: jsonProduct, fromSubscriptionGroup: fromSubscriptionGroup)
             status = subscriptionProduct!.status
         }
 
@@ -74,7 +74,7 @@ import StoreKit
             appId: jsonProduct["appId"]! as! String,
             name: jsonProduct["name"]! as! String,
             details: jsonProduct["description"]! as! String,
-            ios_sku: jsonProduct["ios_sku"]! as! String,
+            ios_sku: jsonProduct["ios_sku"] as! String,
             type: type,
             extras: jsonProduct["extras"]! as! [String: Any]?,
             status: status,

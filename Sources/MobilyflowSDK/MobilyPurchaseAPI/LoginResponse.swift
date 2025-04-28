@@ -8,6 +8,8 @@
 import Foundation
 
 struct LoginResponse {
-    let customerId: UUID
+    let customer: [String: Any]
+    let entitlements: [[String: Any]]
     let platformOriginalTransactionIds: [String]
+    let isForwardingEnable: Bool
 }

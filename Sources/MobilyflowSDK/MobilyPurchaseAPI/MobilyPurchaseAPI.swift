@@ -47,7 +47,13 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let data = res.json()["data"] as! [String: Any]
-            return LoginResponse(customerId: UUID(uuidString: data["id"] as! String)!, platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String])
+
+            return LoginResponse(
+                customer: data["customer"] as! [String: Any],
+                entitlements: data["entitlements"] as! [[String: Any]],
+                platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String],
+                isForwardingEnable: data["isForwardingEnable"] as! Bool
+            )
         } else {
             throw MobilyError.unknown_error
         }
@@ -61,9 +67,38 @@ class MobilyPurchaseAPI {
             return []
         }
 
-        let request = ApiRequest(method: "GET", url: "/apps/me/products/")
+        let request = ApiRequest(method: "GET", url: "/apps/me/products/for-app")
         _ = request.addParam("environment", environment.toString())
         _ = request.addParam("lang", self.lang)
+        _ = request.addParam("platform", "ios")
+
+        if identifiers != nil {
+            _ = request.addParam("identifiers", identifiers!.joined(separator: ","))
+        }
+
+        guard let res = try? await self.helper.request(request) else {
+            throw MobilyError.server_unavailable
+        }
+
+        if res.success {
+            return res.json()["data"] as! [[String: Any]]
+        } else {
+            throw MobilyError.unknown_error
+        }
+    }
+
+    /**
+     Get products in JSON Array format
+     */
+    public func getSubscriptionGroups(identifiers: [String]?) async throws -> [[String: Any]] {
+        if identifiers != nil && identifiers?.count == 0 {
+            return []
+        }
+
+        let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app")
+        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("lang", self.lang)
+        _ = request.addParam("platform", "ios")
 
         if identifiers != nil {
             _ = request.addParam("identifiers", identifiers!.joined(separator: ","))
@@ -86,6 +121,7 @@ class MobilyPurchaseAPI {
     public func getCustomerEntitlements(customerId: UUID) async throws -> [[String: Any]] {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/entitlements")
         _ = request.addParam("lang", self.lang)
+        _ = request.addParam("loadProduct", "true")
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -245,11 +281,12 @@ class MobilyPurchaseAPI {
         }
     }
 
-    public func isForwardingEnable(customerId: UUID?) async throws -> Bool {
+    public func isForwardingEnable(externalRef: String?) async throws -> Bool {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/is-forwarding-enable")
-        if customerId != nil {
-            _ = request.addParam("customerId", customerId!.uuidString.lowercased())
+        if externalRef != nil {
+            _ = request.addParam("externalRef", externalRef)
         }
+        _ = request.addParam("environment", environment.toString())
         _ = request.addParam("platform", "ios")
 
         guard let res = try? await self.helper.request(request) else {

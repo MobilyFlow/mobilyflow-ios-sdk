@@ -34,8 +34,8 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonGroup: [String: Any]) -> MobilySubscriptionGroup {
-        return MobilySubscriptionGroup(
+    static func parse(jsonGroup: [String: Any], onlyAvailableProducts: Bool = false) async -> MobilySubscriptionGroup {
+        let group = MobilySubscriptionGroup(
             id: jsonGroup["id"]! as! String,
             identifier: jsonGroup["identifier"]! as! String,
             name: jsonGroup["name"]! as! String,
@@ -43,5 +43,17 @@ import StoreKit
             ios_groupId: jsonGroup["ios_groupId"]! as! String,
             extras: jsonGroup["extras"] as? [String: Any]
         )
+
+        if let jsonProducts = jsonGroup["Products"] as? [[String: Any]] {
+            for jsonProduct in jsonProducts {
+                let product = await MobilyProduct.parse(jsonProduct: jsonProduct, fromSubscriptionGroup: group)
+
+                if !onlyAvailableProducts || product.status == .available {
+                    group.products.append(product)
+                }
+            }
+        }
+
+        return group
     }
 }
