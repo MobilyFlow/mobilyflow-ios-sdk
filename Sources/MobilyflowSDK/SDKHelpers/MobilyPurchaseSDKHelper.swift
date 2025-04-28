@@ -57,6 +57,7 @@ class MobilyPurchaseSDKHelper {
     ) async throws -> (Product, Set<Product.PurchaseOption>, Int) {
         let iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku)
         if iosProduct == nil {
+            // Probably store_unavavaible but no way to check...
             throw MobilyPurchaseError.product_unavailable
         }
 

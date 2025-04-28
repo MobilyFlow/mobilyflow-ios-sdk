@@ -15,6 +15,8 @@ import StoreKit
     let environment: MobilyEnvironment
     var customer: MobilyCustomer?
 
+    var isStoreAvailable = true
+
     private var syncer: MobilyPurchaseSDKSyncer
     private let waiter: MobilyPurchaseSDKWaiter
     private let diagnostics: MobilyPurchaseSDKDiagnostics
@@ -205,7 +207,6 @@ import StoreKit
     /* ******************************************************************* */
 
     @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
-        // TODO: productId & offerId instead of direct product & offer (for react native compatibility)
         var resultStatus: WebhookStatus = .error
 
         try await purchaseExecutor.executeOrFallback({
@@ -314,6 +315,7 @@ import StoreKit
                     }
                 }
             }
+            Logger.d("End update task")
         }
     }
 
