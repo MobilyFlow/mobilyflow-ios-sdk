@@ -299,6 +299,7 @@ import StoreKit
     /* ******************************************************************* */
 
     private func startUpdateTransactionTask() {
+        self.updateTxTask?.cancel()
         self.updateTxTask = Task(priority: .background) {
             do {
                 try await syncer.ensureSync()
@@ -311,6 +312,7 @@ import StoreKit
             for await signedTx in Transaction.updates {
                 if case .verified(let tx) = signedTx {
                     if !(await MobilyPurchaseSDKHelper.isTransactionFinished(id: tx.id)) {
+                        Logger.d("[startUpdateTransactionTask] finishTransaction")
                         await self.finishTransaction(signedTx: signedTx)
                     }
                 }

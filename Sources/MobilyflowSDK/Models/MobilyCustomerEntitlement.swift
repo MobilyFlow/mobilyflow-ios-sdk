@@ -56,12 +56,15 @@ import StoreKit
                 autoRenewEnable = renewalInfo!.willAutoRenew
             }
 
+            let renewProductJson = jsonEntity["RenewProduct"] as? [String: Any]
+
             subscription = SubscriptionEntitlement(
                 startDate: dateFormatter.date(from: jsonEntity["startDate"]! as! String)!,
                 expirationDate: dateFormatter.date(from: jsonEntity["expirationDate"]! as! String)!,
                 autoRenewEnable: autoRenewEnable,
                 platform: Platform.parse(jsonEntity["platform"]! as! String)!,
-                isManagedByThisStoreAccount: storeAccountTx != nil
+                isManagedByThisStoreAccount: storeAccountTx != nil,
+                renewProduct: renewProductJson != nil ? await MobilyProduct.parse(jsonProduct: renewProductJson!) : nil
             )
         }
 
@@ -89,13 +92,15 @@ import StoreKit
         @objc public let autoRenewEnable: Bool
         @objc public let platform: Platform
         @objc public let isManagedByThisStoreAccount: Bool
+        @objc public let renewProduct: MobilyProduct?
 
-        @objc init(startDate: Date, expirationDate: Date, autoRenewEnable: Bool, platform: Platform, isManagedByThisStoreAccount: Bool) {
+        @objc init(startDate: Date, expirationDate: Date, autoRenewEnable: Bool, platform: Platform, isManagedByThisStoreAccount: Bool, renewProduct: MobilyProduct?) {
             self.startDate = startDate
             self.expirationDate = expirationDate
             self.autoRenewEnable = autoRenewEnable
             self.platform = platform
             self.isManagedByThisStoreAccount = isManagedByThisStoreAccount
+            self.renewProduct = renewProduct
 
             super.init()
         }
