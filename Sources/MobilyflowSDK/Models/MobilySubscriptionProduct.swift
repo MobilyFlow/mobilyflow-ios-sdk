@@ -16,9 +16,8 @@ import StoreKit
     @objc public let groupLevel: Int
     @objc public let ios_subscriptionGroupId: String
     @objc public let subscriptionGroupId: String
-    @objc public let subscriptionGroup: MobilySubscriptionGroup?
 
-    @objc init(baseOffer: MobilySubscriptionOffer, freeTrial: MobilySubscriptionOffer? = nil, promotionalOffers: [MobilySubscriptionOffer], status: ProductStatus, groupLevel: Int, ios_subscriptionGroupId: String, subscriptionGroupId: String, subscriptionGroup: MobilySubscriptionGroup?) {
+    @objc init(baseOffer: MobilySubscriptionOffer, freeTrial: MobilySubscriptionOffer? = nil, promotionalOffers: [MobilySubscriptionOffer], status: ProductStatus, groupLevel: Int, ios_subscriptionGroupId: String, subscriptionGroupId: String) {
         self.baseOffer = baseOffer
         self.freeTrial = freeTrial
         self.promotionalOffers = promotionalOffers
@@ -26,7 +25,6 @@ import StoreKit
         self.groupLevel = groupLevel
         self.ios_subscriptionGroupId = ios_subscriptionGroupId
         self.subscriptionGroupId = subscriptionGroupId
-        self.subscriptionGroup = subscriptionGroup
 
         super.init()
     }
@@ -78,7 +76,6 @@ import StoreKit
             groupLevel: subscriptionGroupLevel,
             ios_subscriptionGroupId: iosProduct?.subscription?.subscriptionGroupID ?? subscriptionGroup?.ios_groupId ?? fromSubscriptionGroup?.ios_groupId ?? "",
             subscriptionGroupId: jsonProduct["subscriptionGroupId"]! as! String,
-            subscriptionGroup: subscriptionGroup
         )
 
         return subscription
