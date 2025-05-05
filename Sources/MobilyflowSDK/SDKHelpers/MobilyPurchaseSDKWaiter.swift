@@ -34,18 +34,17 @@ class MobilyPurchaseSDKWaiter {
         }
 
         Logger.d("Wait webhook for \(transaction.id) (upgradeOrDowngrade: \(upgradeOrDowngrade))")
-        if upgradeOrDowngrade < 0 {
-            return .success
-        }
 
-        try? await API.forceWebhook(transactionId: transaction.id, type: upgradeOrDowngrade > 0 ? "upgrade" : "purchase", isSandbox: isSandbox)
+        if upgradeOrDowngrade >= 0 {
+            try? await API.forceWebhook(transactionId: transaction.id, type: upgradeOrDowngrade > 0 ? "upgrade" : "purchase", isSandbox: isSandbox)
+        }
 
         var result = WebhookStatus.pending
         let startTime = Date().timeIntervalSince1970
         var retry = 0
 
         while result == .pending {
-            result = try await self.API.getWebhookStatus(transactionId: transaction.id, isSandbox: isSandbox)
+            result = try await self.API.getWebhookStatus(transactionId: upgradeOrDowngrade < 0 ? transaction.originalID : transaction.id, isSandbox: isSandbox, isDowngrade: upgradeOrDowngrade < 0)
 
             if result == .pending {
                 // Exit the wait function after 1 minute
