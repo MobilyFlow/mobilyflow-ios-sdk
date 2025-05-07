@@ -74,15 +74,6 @@ func isDirectoryEmpty(_ url: URL) -> Bool {
     }
 }
 
-func getPreferredLanguages(_ languages: [String]?) -> [String] {
-    var usedLanguages = languages != nil ? languages! : NSLocale.preferredLanguages
-
-    for index in usedLanguages.indices {
-        let splitted = usedLanguages[index].split(separator: "-")
-        if splitted.count > 1 {
-            usedLanguages[index] = String(splitted[0])
-        }
-    }
-
-    return usedLanguages
+func getPreferredLocales(_ locales: [String]?) -> [String] {
+    return locales != nil ? locales! : NSLocale.preferredLanguages
 }

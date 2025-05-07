@@ -12,7 +12,7 @@ class MobilyPurchaseAPI {
     let appId: String
     let apiKey: String
     let environment: MobilyEnvironment
-    let lang: String
+    let locale: String
 
     let API_URL: String
     let helper: ApiHelper
@@ -21,14 +21,14 @@ class MobilyPurchaseAPI {
         appId: String,
         apiKey: String,
         environment: MobilyEnvironment,
-        languages: [String],
+        locales: [String],
         apiURL: String?
     ) {
         self.API_URL = apiURL ?? "https://api.mobilyflow.com/v1/"
         self.appId = appId
         self.apiKey = apiKey
         self.environment = environment
-        self.lang = languages.joined(separator: ",")
+        self.locale = locales.joined(separator: ",")
 
         self.helper = ApiHelper(baseURL: API_URL, defaultHeaders: ["Authorization": "ApiKey \(apiKey)"])
     }
@@ -69,7 +69,7 @@ class MobilyPurchaseAPI {
 
         let request = ApiRequest(method: "GET", url: "/apps/me/products/for-app")
         _ = request.addParam("environment", environment.toString())
-        _ = request.addParam("lang", self.lang)
+        _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
 
         if identifiers != nil {
@@ -97,7 +97,7 @@ class MobilyPurchaseAPI {
 
         let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app")
         _ = request.addParam("environment", environment.toString())
-        _ = request.addParam("lang", self.lang)
+        _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
 
         if identifiers != nil {
@@ -120,7 +120,7 @@ class MobilyPurchaseAPI {
      */
     public func getCustomerEntitlements(customerId: UUID) async throws -> [[String: Any]] {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/entitlements")
-        _ = request.addParam("lang", self.lang)
+        _ = request.addParam("locale", self.locale)
         _ = request.addParam("loadProduct", "true")
 
         guard let res = try? await self.helper.request(request) else {

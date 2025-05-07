@@ -8,16 +8,16 @@
 import Foundation
 
 @objc public class MobilyPurchaseSDKOptions: NSObject {
-    let languages: [String]?
+    let locales: [String]?
     let debug: Bool
     let apiURL: String?
 
     @objc public init(
-        languages: [String]? = nil,
+        locales: [String]? = nil,
         debug: Bool = false,
         apiURL: String? = nil
     ) {
-        self.languages = languages
+        self.locales = locales
         self.debug = debug
         self.apiURL = apiURL
         super.init()

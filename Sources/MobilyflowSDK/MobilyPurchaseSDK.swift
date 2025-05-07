@@ -34,7 +34,7 @@ import StoreKit
     ) {
         self.appId = appId
         self.environment = environment
-        self.API = MobilyPurchaseAPI(appId: appId, apiKey: apiKey, environment: environment, languages: getPreferredLanguages(options?.languages), apiURL: options?.apiURL)
+        self.API = MobilyPurchaseAPI(appId: appId, apiKey: apiKey, environment: environment, locales: getPreferredLocales(options?.locales), apiURL: options?.apiURL)
         self.diagnostics = MobilyPurchaseSDKDiagnostics(customerId: nil)
         self.waiter = MobilyPurchaseSDKWaiter(API: API, diagnostics: self.diagnostics)
         self.syncer = MobilyPurchaseSDKSyncer(API: self.API)
