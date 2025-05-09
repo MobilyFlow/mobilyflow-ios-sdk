@@ -16,14 +16,15 @@ import StoreKit
     @objc public let price: Decimal
     @objc public let currencyCode: String
     @objc public let priceFormatted: String
-    @objc public let isFreeTrial: Bool
-    @objc public let periodCount: Int
-    @objc public let periodUnit: PeriodUnit
+    @objc public let type: String?
+    @objc public let periodCount: Int // For freeTrial only
+    @objc public let periodUnit: PeriodUnit // For freeTrial only
+    @objc public let countBillingCycle: Int // For recurring only
     @objc public let ios_offerId: String? // null for base offer
     @objc public let extras: [String: Any]?
     @objc public let status: ProductStatus
 
-    @objc init(id: String?, identifier: String?, externalRef: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, isFreeTrial: Bool, periodCount: Int, periodUnit: PeriodUnit, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
+    @objc init(id: String?, identifier: String?, externalRef: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: PeriodUnit, countBillingCycle: Int, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
         self.id = id
         self.identifier = identifier
         self.externalRef = externalRef
@@ -31,9 +32,10 @@ import StoreKit
         self.price = price
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
-        self.isFreeTrial = isFreeTrial
+        self.type = type
         self.periodCount = periodCount
         self.periodUnit = periodUnit
+        self.countBillingCycle = countBillingCycle
         self.ios_offerId = ios_offerId
         self.extras = extras
         self.status = status
@@ -49,9 +51,10 @@ import StoreKit
         let price: Decimal
         let currencyCode: String
         let priceFormatted: String
-        var isFreeTrial = false
+        var type = "recurring"
         let periodCount: Int
         let periodUnit: PeriodUnit
+        let countBillingCycle: Int
         var ios_offerId: String? = nil
         var extras: [String: Any]? = nil
         var status: ProductStatus = .unavailable
@@ -64,13 +67,13 @@ import StoreKit
             externalRef = jsonOffer["externalRef"] as? String
             name = jsonOffer["name"] as? String
             extras = jsonOffer["extras"] as? [String: Any]
-            isFreeTrial = jsonOffer["isFreeTrial"] as? Bool ?? false
+            type = jsonOffer["type"] as! String
             ios_offerId = jsonOffer["ios_offerId"] as? String
 
             if iosProduct != nil {
                 if ios_offerId != nil {
                     iosOffer = MobilyPurchaseRegistry.getIOSOffer(iosProduct!.id, offerId: ios_offerId!)
-                } else if isFreeTrial {
+                } else if type == "free_trial" {
                     iosOffer = iosProduct!.subscription!.introductoryOffer
                 }
             }
@@ -91,16 +94,27 @@ import StoreKit
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
 
             // If isBaseOffer, jsonOffer is the jsonProduct
-            let periodPrefix = isBaseOffer ? "subscription" : "offer"
-            periodCount = jsonOffer["\(periodPrefix)PeriodCount"] as! Int
-            periodUnit = PeriodUnit.parse(jsonOffer["\(periodPrefix)PeriodUnit"] as! String)!
+            if isBaseOffer {
+                periodCount = jsonOffer["subscriptionPeriodCount"] as! Int
+                periodUnit = PeriodUnit.parse(jsonOffer["subscriptionPeriodUnit"] as! String)!
+                countBillingCycle = 0
+            } else if type == "free_trial" {
+                periodCount = jsonOffer["offerPeriodCount"] as! Int
+                periodUnit = PeriodUnit.parse(jsonOffer["offerPeriodUnit"] as! String)!
+                countBillingCycle = 0
+            } else {
+                // TODO: inherit from basePlan
+                periodCount = 0
+                periodUnit = PeriodUnit.week
+                countBillingCycle = jsonOffer["offerCountBillingCycle"] as! Int
+            }
         } else {
             status = .available
             currencyCode = iosProduct!.priceFormatStyle.currencyCode
 
             if iosOffer != nil {
                 // Real offer
-                if isFreeTrial {
+                if type == "free_trial" {
                     if !(await iosProduct!.subscription!.isEligibleForIntroOffer) {
                         status = .unavailable
                     }
@@ -112,6 +126,7 @@ import StoreKit
                 let parsedPeriod = try! PeriodUnit.parseSubscriptionPeriod(iosOffer!.period)
                 periodCount = parsedPeriod.count
                 periodUnit = parsedPeriod.unit
+                countBillingCycle = iosOffer!.periodCount
             } else {
                 // Base offer, use iosProduct
                 price = iosProduct!.price
@@ -120,6 +135,7 @@ import StoreKit
                 let parsedPeriod = try! PeriodUnit.parseSubscriptionPeriod(iosProduct!.subscription!.subscriptionPeriod)
                 periodCount = parsedPeriod.count
                 periodUnit = parsedPeriod.unit
+                countBillingCycle = 0
             }
         }
 
@@ -131,9 +147,10 @@ import StoreKit
             price: price,
             currencyCode: currencyCode,
             priceFormatted: priceFormatted,
-            isFreeTrial: isFreeTrial,
+            type: type,
             periodCount: periodCount,
             periodUnit: periodUnit,
+            countBillingCycle: countBillingCycle,
             ios_offerId: ios_offerId,
             extras: extras,
             status: status

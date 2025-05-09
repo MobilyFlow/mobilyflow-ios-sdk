@@ -44,7 +44,7 @@ import StoreKit
             for jsonOffer in jsonOffers {
                 let offer = await MobilySubscriptionOffer.parse(jsonOffer: jsonOffer, iosProduct: iosProduct, isBaseOffer: false)
 
-                if offer.isFreeTrial {
+                if offer.type == "free_trial" {
                     if freeTrial != nil {
                         Logger.w("Offer \(iosProduct!.id)/\(offer.ios_offerId ?? "nil") is incompatible with MobilyFlow (too many free trials)")
                         continue
