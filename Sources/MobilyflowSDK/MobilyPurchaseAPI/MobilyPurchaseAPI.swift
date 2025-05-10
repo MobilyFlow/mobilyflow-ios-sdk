@@ -135,6 +135,24 @@ class MobilyPurchaseAPI {
     }
 
     /**
+     Get products in JSON Array format
+     */
+    public func getLastTxPlatformIdForProduct(customerId: UUID, productId: String) async throws -> String {
+        let request = ApiRequest(method: "GET", url: "/apps/me/transactions/last-platform-tx-id/ios/\(productId)")
+        _ = request.addParam("customerId", customerId.uuidString.lowercased())
+
+        guard let res = try? await self.helper.request(request) else {
+            throw MobilyError.server_unavailable
+        }
+
+        if res.success {
+            return res.json()["data"] as! String
+        } else {
+            throw MobilyError.unknown_error
+        }
+    }
+
+    /**
      Take a customerId and an offerId (offerId from MobilyFlow) and return the signed offer, like explained in the doc:
      https://developer.apple.com/documentation/storekit/in-app_purchase/original_api_for_in-app_purchase/subscriptions_and_offers/generating_a_signature_for_promotional_offers
 

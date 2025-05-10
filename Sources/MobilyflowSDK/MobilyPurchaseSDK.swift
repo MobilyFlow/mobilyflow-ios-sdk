@@ -198,11 +198,30 @@ import StoreKit
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
     @objc public func openRefundDialog(product: MobilyProduct) async -> RefundDialogResult {
-        for await signedTx in Transaction.currentEntitlements {
-            if case .verified(let transaction) = signedTx {
-                if transaction.productID == product.ios_sku {
-                    let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                    return (result ?? .userCancelled) == .success ? .success : .cancelled
+        if product.oneTimeProduct?.isConsumable ?? false {
+            do {
+                let lastTxId = try await self.API.getLastTxPlatformIdForProduct(customerId: self.customer!.id, productId: product.id)
+                let result = try? await Transaction.beginRefundRequest(for: UInt64(lastTxId)!, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
+                return (result ?? .userCancelled) == .success ? .success : .cancelled
+            } catch {
+                return .transaction_not_found
+            }
+        } else {
+            if #available(iOS 18.4, *) {
+                for await signedTx in Transaction.currentEntitlements(for: product.ios_sku) {
+                    if case .verified(let transaction) = signedTx {
+                        let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
+                        return (result ?? .userCancelled) == .success ? .success : .cancelled
+                    }
+                }
+            } else {
+                for await signedTx in Transaction.currentEntitlements {
+                    if case .verified(let transaction) = signedTx {
+                        if transaction.productID == product.ios_sku {
+                            let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
+                            return (result ?? .userCancelled) == .success ? .success : .cancelled
+                        }
+                    }
                 }
             }
         }
