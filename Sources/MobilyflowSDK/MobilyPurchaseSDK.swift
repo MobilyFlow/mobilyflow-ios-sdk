@@ -193,13 +193,20 @@ import StoreKit
     }
 
     /**
-     * Open a refund dialog for the given transactionId (it's the app store transactionId, not the MobilyFlow transactionId).
+     * Open a refund dialog for the last transaction on the given product.
      *
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
-    @objc public func openRefundDialog(transactionId: UInt64) async -> Bool {
-        let result = try? await Transaction.beginRefundRequest(for: transactionId, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-        return (result ?? .userCancelled) == .success
+    @objc public func openRefundDialog(product: MobilyProduct) async -> RefundDialogResult {
+        for await signedTx in Transaction.currentEntitlements {
+            if case .verified(let transaction) = signedTx {
+                if transaction.productID == product.id {
+                    let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
+                    return (result ?? .userCancelled) == .success ? .success : .cancelled
+                }
+            }
+        }
+        return .transaction_not_found
     }
 
     /* ******************************************************************* */
