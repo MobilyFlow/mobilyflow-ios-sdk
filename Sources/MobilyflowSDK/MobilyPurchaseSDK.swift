@@ -200,7 +200,7 @@ import StoreKit
     @objc public func openRefundDialog(product: MobilyProduct) async -> RefundDialogResult {
         for await signedTx in Transaction.currentEntitlements {
             if case .verified(let transaction) = signedTx {
-                if transaction.productID == product.id {
+                if transaction.productID == product.ios_sku {
                     let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
                     return (result ?? .userCancelled) == .success ? .success : .cancelled
                 }

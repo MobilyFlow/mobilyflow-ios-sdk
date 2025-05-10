@@ -17,9 +17,9 @@ import StoreKit
     @objc public let currencyCode: String
     @objc public let priceFormatted: String
     @objc public let type: String?
-    @objc public let periodCount: Int // For freeTrial only
-    @objc public let periodUnit: PeriodUnit // For freeTrial only
-    @objc public let countBillingCycle: Int // For recurring only
+    @objc public let periodCount: Int
+    @objc public let periodUnit: PeriodUnit
+    @objc public let countBillingCycle: Int
     @objc public let ios_offerId: String? // null for base offer
     @objc public let extras: [String: Any]?
     @objc public let status: ProductStatus
@@ -43,7 +43,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonOffer: [String: Any], iosProduct: Product?, isBaseOffer: Bool) async -> MobilySubscriptionOffer {
+    static func parse(jsonBase: [String: Any], jsonOffer: [String: Any]?, iosProduct: Product?) async -> MobilySubscriptionOffer {
         var id: String? = nil
         var identifier: String? = nil
         var externalRef: String? = nil
@@ -61,14 +61,14 @@ import StoreKit
 
         var iosOffer: Product.SubscriptionOffer?
 
-        if !isBaseOffer {
-            id = jsonOffer["id"] as? String
-            identifier = jsonOffer["identifier"] as? String
-            externalRef = jsonOffer["externalRef"] as? String
-            name = jsonOffer["name"] as? String
-            extras = jsonOffer["extras"] as? [String: Any]
-            type = jsonOffer["type"] as! String
-            ios_offerId = jsonOffer["ios_offerId"] as? String
+        if jsonOffer != nil {
+            id = jsonOffer!["id"] as? String
+            identifier = jsonOffer!["identifier"] as? String
+            externalRef = jsonOffer!["externalRef"] as? String
+            name = jsonOffer!["name"] as? String
+            extras = jsonOffer!["extras"] as? [String: Any]
+            type = jsonOffer!["type"] as! String
+            ios_offerId = jsonOffer!["ios_offerId"] as? String
 
             if iosProduct != nil {
                 if ios_offerId != nil {
@@ -88,25 +88,31 @@ import StoreKit
         }
 
         // 2. Populate
-        if (isBaseOffer && iosProduct == nil) || (!isBaseOffer && iosOffer == nil) || status == .invalid {
-            price = Decimal(floatLiteral: coalesce(jsonOffer["defaultPrice"], 0.0) as! Double)
-            currencyCode = coalesce(jsonOffer["defaultCurrencyCode"], "") as! String
+        if jsonOffer == nil && iosProduct == nil {
+            // Base offer but unavailable
+            price = Decimal(floatLiteral: coalesce(jsonBase["defaultPrice"], 0.0) as! Double)
+            currencyCode = coalesce(jsonBase["defaultCurrencyCode"], "") as! String
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
 
-            // If isBaseOffer, jsonOffer is the jsonProduct
-            if isBaseOffer {
-                periodCount = jsonOffer["subscriptionPeriodCount"] as! Int
-                periodUnit = PeriodUnit.parse(jsonOffer["subscriptionPeriodUnit"] as! String)!
-                countBillingCycle = 0
-            } else if type == "free_trial" {
-                periodCount = jsonOffer["offerPeriodCount"] as! Int
-                periodUnit = PeriodUnit.parse(jsonOffer["offerPeriodUnit"] as! String)!
-                countBillingCycle = 0
+            periodCount = jsonBase["subscriptionPeriodCount"] as! Int
+            periodUnit = PeriodUnit.parse(jsonBase["subscriptionPeriodUnit"] as! String)!
+            countBillingCycle = 0
+        } else if (jsonOffer != nil && iosOffer == nil) || status == .invalid {
+            // Promotionnal offer but unavailable
+            price = Decimal(floatLiteral: coalesce(jsonOffer!["defaultPrice"], 0.0) as! Double)
+            currencyCode = coalesce(jsonOffer!["defaultCurrencyCode"], "") as! String
+            priceFormatted = formatPrice(price, currencyCode: currencyCode)
+
+            if type == "free_trial" {
+                periodCount = jsonOffer!["offerPeriodCount"] as! Int
+                periodUnit = PeriodUnit.parse(jsonOffer!["offerPeriodUnit"] as! String)!
+                countBillingCycle = 1
             } else {
-                // TODO: inherit from basePlan
-                periodCount = 0
-                periodUnit = PeriodUnit.week
-                countBillingCycle = jsonOffer["offerCountBillingCycle"] as! Int
+                countBillingCycle = jsonOffer!["offerCountBillingCycle"] as! Int
+
+                // Inherit from baseOffer
+                periodCount = jsonBase["subscriptionPeriodCount"] as! Int
+                periodUnit = PeriodUnit.parse(jsonBase["subscriptionPeriodUnit"] as! String)!
             }
         } else {
             status = .available

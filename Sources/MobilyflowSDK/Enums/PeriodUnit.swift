@@ -26,8 +26,8 @@ import StoreKit
         }
     }
 
-    static func parse(_ rawValue: String) -> PeriodUnit? {
-        switch rawValue.lowercased() {
+    public static func parse(_ str: String) -> PeriodUnit? {
+        switch str.lowercased() {
         case "week":
             return .week
         case "month":
@@ -36,6 +36,17 @@ import StoreKit
             return .year
         default:
             return nil
+        }
+    }
+
+    public static func toString(_ value: PeriodUnit) -> String {
+        switch value {
+        case .week:
+            return "week"
+        case .month:
+            return "month"
+        case .year:
+            return "year"
         }
     }
 }

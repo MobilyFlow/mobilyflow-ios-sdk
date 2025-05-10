@@ -36,13 +36,13 @@ import StoreKit
 
         let iosSku = jsonProduct["ios_sku"] as! String
         let iosProduct = MobilyPurchaseRegistry.getIOSProduct(iosSku)
-        let baseOffer = await MobilySubscriptionOffer.parse(jsonOffer: jsonProduct, iosProduct: iosProduct, isBaseOffer: true)
+        let baseOffer = await MobilySubscriptionOffer.parse(jsonBase: jsonProduct, jsonOffer: nil, iosProduct: iosProduct)
 
         if iosProduct?.subscription != nil {
             let jsonOffers = jsonProduct["Offers"] as? [[String: Any]] ?? []
 
             for jsonOffer in jsonOffers {
-                let offer = await MobilySubscriptionOffer.parse(jsonOffer: jsonOffer, iosProduct: iosProduct, isBaseOffer: false)
+                let offer = await MobilySubscriptionOffer.parse(jsonBase: jsonProduct, jsonOffer: jsonOffer, iosProduct: iosProduct)
 
                 if offer.type == "free_trial" {
                     if freeTrial != nil {
