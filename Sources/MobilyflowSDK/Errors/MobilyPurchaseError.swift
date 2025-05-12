@@ -12,6 +12,7 @@ public enum MobilyPurchaseError: Error {
 
     case product_unavailable
     case network_unavailable
+    case billing_issue
 
     case webhook_failed
     case webhook_not_processed

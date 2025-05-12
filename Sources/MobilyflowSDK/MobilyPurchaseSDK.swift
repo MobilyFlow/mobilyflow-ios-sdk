@@ -297,9 +297,8 @@ import StoreKit
             case .success(let signedTx):
                 switch signedTx {
                 case .verified(let transaction):
-                    await self.finishTransaction(signedTx: signedTx)
                     resultStatus = try await self.waiter.waitWebhook(transaction: transaction, product: product, upgradeOrDowngrade: upgradeOrDowngrade)
-                    try await self.syncer.ensureSync(force: true)
+                    await self.finishTransaction(signedTx: signedTx)
                 case .unverified:
                     Logger.e("purchaseProduct unverified")
                     try? Monitoring.exportDiagnostic(sinceDays: 1)
@@ -358,6 +357,9 @@ import StoreKit
                 } catch {
                     Logger.e("Map transaction error", error: error)
                 }
+
+                // TODO: In case we receive update from Transaction.updates, we have no guarantee that webhook is successful
+                try? await syncer.ensureSync(force: true)
             }
         }
     }
