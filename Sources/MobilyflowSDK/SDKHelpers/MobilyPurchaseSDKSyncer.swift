@@ -10,7 +10,7 @@ import StoreKit
 
 class MobilyPurchaseSDKSyncer {
     private let API: MobilyPurchaseAPI
-    private var customerId: UUID?
+    private var customer: MobilyCustomer?
 
     private let CACHE_DURATION_SEC = 3600.0
 
@@ -24,12 +24,12 @@ class MobilyPurchaseSDKSyncer {
         self.API = API
     }
 
-    func login(customerId: UUID?, jsonEntitlements: [[String: Any]]?) async throws {
+    func login(customer: MobilyCustomer?, jsonEntitlements: [[String: Any]]?) async throws {
         syncExecutor.sync {
-            self.customerId = customerId
+            self.customer = customer
             self.entitlements = nil
         }
-        if self.customerId != nil && jsonEntitlements != nil {
+        if self.customer != nil && jsonEntitlements != nil {
             try await syncExecutor.execute {
                 try await self._syncEntitlements(jsonEntitlements: jsonEntitlements)
                 self.lastSyncTime = Date().timeIntervalSince1970
@@ -39,7 +39,7 @@ class MobilyPurchaseSDKSyncer {
 
     func close() {
         syncExecutor.sync {
-            self.customerId = nil
+            self.customer = nil
             self.entitlements = nil
         }
         syncExecutor.cancel()
@@ -53,8 +53,15 @@ class MobilyPurchaseSDKSyncer {
                 (self.lastSyncTime! + self.CACHE_DURATION_SEC) < Date().timeIntervalSince1970
             {
                 Logger.d("Run Sync")
-                try await self._syncEntitlements()
-                self.lastSyncTime = Date().timeIntervalSince1970
+                if self.customer != nil {
+                    if self.customer!.isForwardingEnable {
+                        if let isForwardingEnable = try? await self.API.isForwardingEnable(externalRef: self.customer!.externalRef) {
+                            self.customer!.isForwardingEnable = isForwardingEnable
+                        }
+                    }
+                    try await self._syncEntitlements()
+                    self.lastSyncTime = Date().timeIntervalSince1970
+                }
                 Logger.d("End Sync")
             }
         }
@@ -76,13 +83,9 @@ class MobilyPurchaseSDKSyncer {
     }
 
     private func _syncEntitlements(jsonEntitlements overrideJsonEntitlements: [[String: Any]]? = nil) async throws {
-        if customerId == nil {
-            return
-        }
-
         try await _syncStoreAccountTransactions()
 
-        let jsonEntitlements = overrideJsonEntitlements != nil ? overrideJsonEntitlements! : try await self.API.getCustomerEntitlements(customerId: customerId!)
+        let jsonEntitlements = overrideJsonEntitlements != nil ? overrideJsonEntitlements! : try await self.API.getCustomerEntitlements(customerId: customer!.id)
         var entitlements: [MobilyCustomerEntitlement] = []
 
         for jsonEntitlement in jsonEntitlements {
@@ -93,7 +96,7 @@ class MobilyPurchaseSDKSyncer {
     }
 
     func getEntitlement(forSubscriptionGroup subscriptionGroupId: String) async throws -> MobilyCustomerEntitlement? {
-        if customerId == nil {
+        if customer == nil {
             throw MobilyError.no_customer_logged
         }
 
@@ -105,7 +108,7 @@ class MobilyPurchaseSDKSyncer {
     }
 
     func getEntitlement(forProductId productId: String) async throws -> MobilyCustomerEntitlement? {
-        if customerId == nil {
+        if customer == nil {
             throw MobilyError.no_customer_logged
         }
 
@@ -117,7 +120,7 @@ class MobilyPurchaseSDKSyncer {
     }
 
     func getEntitlements(forProductIds productIds: [String]) throws -> [MobilyCustomerEntitlement] {
-        if customerId == nil {
+        if customer == nil {
             throw MobilyError.no_customer_logged
         }
 

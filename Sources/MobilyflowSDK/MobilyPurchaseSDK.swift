@@ -71,7 +71,7 @@ import StoreKit
         let loginResponse = try await self.API.login(externalRef: externalRef)
         self.customer = MobilyCustomer.parse(jsonCustomer: loginResponse.customer, isForwardingEnable: loginResponse.isForwardingEnable)
         diagnostics.customerId = self.customer?.id
-        try await self.syncer.login(customerId: customer?.id, jsonEntitlements: loginResponse.entitlements)
+        try await self.syncer.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
         // 2. Sync
         try await syncer.ensureSync()
@@ -238,6 +238,8 @@ import StoreKit
         try await purchaseExecutor.executeOrFallback({
             if self.customer == nil {
                 throw MobilyError.no_customer_logged
+            } else if self.customer!.isForwardingEnable {
+                throw MobilyPurchaseError.customer_forwarded
             }
 
             let (iosProduct, purchaseOptions) = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: self.syncer, API: self.API, customerId: self.customer!.id, product: product, options: options)
@@ -353,13 +355,15 @@ import StoreKit
             Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
             await transaction.finish()
 
-            if let customerId = customer?.id {
+            if let customer = self.customer {
                 do {
-                    try await API.mapTransactions(customerId: customerId, transactions: [signedTx.jwsRepresentation])
+                    try await API.mapTransactions(customerId: customer.id, transactions: [signedTx.jwsRepresentation])
                 } catch {
                     Logger.e("Map transaction error", error: error)
                 }
-                resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction)) ?? .error
+                if !customer.isForwardingEnable {
+                    resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction)) ?? .error
+                }
                 try? await syncer.ensureSync(force: true)
             }
         }
@@ -385,5 +389,9 @@ import StoreKit
 
     @objc public func isForwardingEnable(externalRef: String) async throws -> Bool {
         return try await API.isForwardingEnable(externalRef: externalRef)
+    }
+
+    @objc public func getCustomer() async throws -> MobilyCustomer? {
+        return self.customer
     }
 }

@@ -21,6 +21,7 @@ public enum MobilyPurchaseError: Error {
     case renew_already_on_this_plan
     case not_managed_by_this_store_account
     case store_account_already_have_purchase
+    case customer_forwarded
 
     case user_canceled
     case failed

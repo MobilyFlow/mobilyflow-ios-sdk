@@ -12,7 +12,7 @@ import Foundation
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
     @objc public let externalRef: String?
-    @objc public let isForwardingEnable: Bool
+    @objc public var isForwardingEnable: Bool
 
     @objc init(id: UUID, createdAt: Date, updatedAt: Date, externalRef: String?, isForwardingEnable: Bool) {
         self.id = id
