@@ -245,10 +245,9 @@ class MobilyPurchaseAPI {
 
      type is "purchase" | "upgrade"
      */
-    public func forceWebhook(transactionId: UInt64, type: String, isSandbox: Bool) async throws {
+    public func forceWebhook(transactionId: UInt64, isSandbox: Bool) async throws {
         let request = ApiRequest(method: "POST", url: "/apps/me/platform-notifications/force-webhook/ios")
         _ = request.addData("platformTxId", String(transactionId))
-        _ = request.addData("type", type)
         _ = request.addData("isSandbox", isSandbox)
 
         guard let res = try? await self.helper.request(request) else {
@@ -263,11 +262,11 @@ class MobilyPurchaseAPI {
     /**
      Get webhook status from transactionID
      */
-    public func getWebhookStatus(transactionId: UInt64, isSandbox: Bool, isDowngrade: Bool) async throws -> WebhookStatus {
+    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool) async throws -> WebhookStatus {
         let request = ApiRequest(method: "GET", url: "/apps/me/events/webhook-status/ios")
         _ = request.addParam("isSandbox", String(isSandbox))
+        _ = request.addParam("platformTxOriginalId", String(transactionOriginalId))
         _ = request.addParam("platformTxId", String(transactionId))
-        _ = request.addParam("isDowngrade", String(isDowngrade))
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable

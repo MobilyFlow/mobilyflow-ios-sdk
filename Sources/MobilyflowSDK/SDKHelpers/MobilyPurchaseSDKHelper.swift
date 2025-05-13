@@ -54,7 +54,7 @@ class MobilyPurchaseSDKHelper {
     static func createPurchaseOptions(
         syncer: MobilyPurchaseSDKSyncer, API: MobilyPurchaseAPI,
         customerId: UUID, product: MobilyProduct, options: PurchaseOptions?
-    ) async throws -> (Product, Set<Product.PurchaseOption>, Int) {
+    ) async throws -> (Product, Set<Product.PurchaseOption>) {
         let iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku)
         if iosProduct == nil {
             // Probably store_unavavaible but no way to check...
@@ -75,7 +75,6 @@ class MobilyPurchaseSDKHelper {
         }
 
         // Manage already purchased
-        var upgradeOrDowngrade = 0
         if product.type == .one_time {
             if !product.oneTimeProduct!.isConsumable {
                 let entitlement = try! await syncer.getEntitlement(forProductId: product.id)
@@ -111,8 +110,6 @@ class MobilyPurchaseSDKHelper {
                         } else {
                             throw MobilyPurchaseError.renew_already_on_this_plan
                         }
-                    } else {
-                        upgradeOrDowngrade = product.subscriptionProduct!.groupLevel < entitlement!.product.subscriptionProduct!.groupLevel ? 1 : -1
                     }
                 }
             } else {
@@ -160,7 +157,7 @@ class MobilyPurchaseSDKHelper {
             iosOptions.insert(Product.PurchaseOption.quantity(options!.quantity!))
         }
 
-        return (iosProduct!, iosOptions, upgradeOrDowngrade)
+        return (iosProduct!, iosOptions)
     }
 
     static func isTransactionFinished(id: UInt64) async -> Bool {

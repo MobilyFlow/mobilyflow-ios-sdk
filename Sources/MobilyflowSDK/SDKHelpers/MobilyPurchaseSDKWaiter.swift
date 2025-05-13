@@ -22,29 +22,17 @@ class MobilyPurchaseSDKWaiter {
      *
      * upgradeOrDowngrade is 0 for purchase, -1 for downgrade, 1 for upgrade (subscription only).
      */
-    func waitWebhook(transaction: Transaction, product: MobilyProduct, upgradeOrDowngrade: Int) async throws -> WebhookStatus {
-        let isSandbox: Bool
+    func waitWebhook(transaction: Transaction) async throws -> WebhookStatus {
+        let isSandbox = isSandboxTransaction(transaction: transaction)
 
-        if #available(iOS 16.0, *) {
-            isSandbox = transaction.environment != .production
-        } else {
-            // This is not 100% reliable: it can produce false negative, but the worst behavior in that case is
-            // error during waiting but in Sandbox only
-            isSandbox = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
-        }
-
-        Logger.d("Wait webhook for \(transaction.id) (upgradeOrDowngrade: \(upgradeOrDowngrade))")
-
-        if upgradeOrDowngrade >= 0 {
-            try? await API.forceWebhook(transactionId: transaction.id, type: upgradeOrDowngrade > 0 ? "upgrade" : "purchase", isSandbox: isSandbox)
-        }
+        Logger.d("Wait webhook for \(transaction.id)")
 
         var result = WebhookStatus.pending
         let startTime = Date().timeIntervalSince1970
         var retry = 0
 
         while result == .pending {
-            result = try await self.API.getWebhookStatus(transactionId: upgradeOrDowngrade < 0 ? transaction.originalID : transaction.id, isSandbox: isSandbox, isDowngrade: upgradeOrDowngrade < 0)
+            result = try await self.API.getWebhookStatus(transactionOriginalId: transaction.originalID, transactionId: transaction.id, isSandbox: isSandbox)
 
             if result == .pending {
                 // Exit the wait function after 1 minute

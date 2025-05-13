@@ -240,7 +240,7 @@ import StoreKit
                 throw MobilyError.no_customer_logged
             }
 
-            let (iosProduct, purchaseOptions, upgradeOrDowngrade) = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: self.syncer, API: self.API, customerId: self.customer!.id, product: product, options: options)
+            let (iosProduct, purchaseOptions) = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: self.syncer, API: self.API, customerId: self.customer!.id, product: product, options: options)
 
             let purchaseResult: Product.PurchaseResult
             do {
@@ -297,8 +297,9 @@ import StoreKit
             case .success(let signedTx):
                 switch signedTx {
                 case .verified(let transaction):
-                    resultStatus = try await self.waiter.waitWebhook(transaction: transaction, product: product, upgradeOrDowngrade: upgradeOrDowngrade)
-                    await self.finishTransaction(signedTx: signedTx)
+                    Logger.d("Force webhook for \(transaction.id)")
+                    try? await self.API.forceWebhook(transactionId: transaction.id, isSandbox: isSandboxTransaction(transaction: transaction))
+                    resultStatus = await self.finishTransaction(signedTx: signedTx)
                 case .unverified:
                     Logger.e("purchaseProduct unverified")
                     try? Monitoring.exportDiagnostic(sinceDays: 1)
@@ -346,9 +347,10 @@ import StoreKit
         }
     }
 
-    private func finishTransaction(signedTx: VerificationResult<Transaction>) async {
+    private func finishTransaction(signedTx: VerificationResult<Transaction>) async -> WebhookStatus {
+        var resultStatus: WebhookStatus = .error
         if case .verified(let transaction) = signedTx {
-            Logger.d("Finish transaction: \(transaction.id)")
+            Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
             await transaction.finish()
 
             if let customerId = customer?.id {
@@ -357,11 +359,11 @@ import StoreKit
                 } catch {
                     Logger.e("Map transaction error", error: error)
                 }
-
-                // TODO: In case we receive update from Transaction.updates, we have no guarantee that webhook is successful
+                resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction)) ?? .error
                 try? await syncer.ensureSync(force: true)
             }
         }
+        return resultStatus
     }
 
     /* *********************************************************** */

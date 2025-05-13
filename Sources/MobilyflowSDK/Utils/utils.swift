@@ -39,22 +39,6 @@ func calcWaitWebhookTime(_ retry: Int) -> UInt32 {
     return UInt32(truncating: NSDecimalNumber(decimal: delay * 1000000.0)) // convert to micro seconds
 }
 
-func printTransaction(transaction: Transaction) async {
-    print("==== TX \(transaction.id) ====")
-
-    print("id = ", transaction.id)
-    print("originalID = ", transaction.originalID)
-    print("productID = ", transaction.productID)
-    print("appAccountToken = ", transaction.appAccountToken?.uuidString.lowercased() ?? "nil")
-    print("quantity = ", transaction.purchasedQuantity)
-    print("purchaseDate = ", transaction.purchaseDate)
-    print("expirationDate = ", transaction.expirationDate ?? "nil")
-    print("signedDate = ", transaction.signedDate)
-    print("revocationDate = ", transaction.revocationDate ?? "nil")
-    print("isUpgraded = ", transaction.isUpgraded)
-    print("==============================")
-}
-
 /**
  Check if directory is empty (this ignore the precense of .DS_Store file)
  */
@@ -76,4 +60,34 @@ func isDirectoryEmpty(_ url: URL) -> Bool {
 
 func getPreferredLocales(_ locales: [String]?) -> [String] {
     return locales != nil ? locales! : NSLocale.preferredLanguages
+}
+
+func isSandboxTransaction(transaction: Transaction) -> Bool {
+    let isSandbox: Bool
+
+    if #available(iOS 16.0, *) {
+        isSandbox = transaction.environment != .production
+    } else {
+        // This is not 100% reliable: it can produce false negative, but the worst behavior in that case is
+        // error during waiting but in Sandbox only
+        isSandbox = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+    }
+
+    return isSandbox
+}
+
+func printTransaction(transaction: Transaction) async {
+    print("==== TX \(transaction.id) ====")
+
+    print("id = ", transaction.id)
+    print("originalID = ", transaction.originalID)
+    print("productID = ", transaction.productID)
+    print("appAccountToken = ", transaction.appAccountToken?.uuidString.lowercased() ?? "nil")
+    print("quantity = ", transaction.purchasedQuantity)
+    print("purchaseDate = ", transaction.purchaseDate)
+    print("expirationDate = ", transaction.expirationDate ?? "nil")
+    print("signedDate = ", transaction.signedDate)
+    print("revocationDate = ", transaction.revocationDate ?? "nil")
+    print("isUpgraded = ", transaction.isUpgraded)
+    print("==============================")
 }
