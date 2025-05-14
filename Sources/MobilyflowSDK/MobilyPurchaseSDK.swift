@@ -56,6 +56,7 @@ import StoreKit
         diagnostics.customerId = nil
         self.updateTxTask?.cancel()
         self.syncer.close()
+        self.lifecycleManager.unregisterAll()
     }
 
     deinit {
@@ -74,7 +75,7 @@ import StoreKit
         try await self.syncer.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
         // 2. Sync
-        try await syncer.ensureSync()
+        try await syncer.ensureSync(force: true)
 
         // 3. Manage out-of-app purchase
         startUpdateTransactionTask()
@@ -235,10 +236,14 @@ import StoreKit
     @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
         var resultStatus: WebhookStatus = .error
 
+        if self.customer == nil {
+            throw MobilyError.no_customer_logged
+        }
+
         try await purchaseExecutor.executeOrFallback({
-            if self.customer == nil {
-                throw MobilyError.no_customer_logged
-            } else if self.customer!.isForwardingEnable {
+            try await self.syncer.ensureSync()
+
+            if self.customer!.isForwardingEnable {
                 throw MobilyPurchaseError.customer_forwarded
             }
 

@@ -49,7 +49,7 @@ class MobilyPurchaseSDKHelper {
 
     /**
      Create the set of PurchaseOption to start the billing flow.
-     It return a tuple (iosProduct, Set<Product.PurchaseOption>, upgradeOrDowngrade)
+     It return a tuple (iosProduct, Set<Product.PurchaseOption>)
      */
     static func createPurchaseOptions(
         syncer: MobilyPurchaseSDKSyncer, API: MobilyPurchaseAPI,
