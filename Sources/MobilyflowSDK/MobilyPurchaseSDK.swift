@@ -305,7 +305,7 @@ import StoreKit
                 switch signedTx {
                 case .verified(let transaction):
                     Logger.d("Force webhook for \(transaction.id)")
-                    try? await self.API.forceWebhook(transactionId: transaction.id, isSandbox: isSandboxTransaction(transaction: transaction))
+                    try? await self.API.forceWebhook(transactionId: transaction.id, productId: product.id, isSandbox: isSandboxTransaction(transaction: transaction))
                     resultStatus = await self.finishTransaction(signedTx: signedTx)
                 case .unverified:
                     Logger.e("purchaseProduct unverified")
