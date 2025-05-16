@@ -318,7 +318,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK14MobilyCustomer")
 @property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
 @property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
-@property (nonatomic, readonly) BOOL isForwardingEnable;
+@property (nonatomic) BOOL isForwardingEnable;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -353,6 +353,7 @@ SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement23SubscriptionEntitl
 @property (nonatomic, readonly) BOOL autoRenewEnable;
 @property (nonatomic, readonly) enum Platform platform;
 @property (nonatomic, readonly) BOOL isManagedByThisStoreAccount;
+@property (nonatomic, readonly, strong) MobilyProduct * _Nullable renewProduct;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -401,6 +402,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK13MobilyProduct")
 @class MobilyPurchaseSDKOptions;
 @class MobilySubscriptionGroup;
 enum TransferOwnershipStatus : NSInteger;
+enum RefundDialogResult : NSInteger;
 @class PurchaseOptions;
 enum WebhookStatus : NSInteger;
 SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
@@ -417,20 +419,21 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 - (void)requestTransferOwnershipWithCompletionHandler:(void (^ _Nonnull)(enum TransferOwnershipStatus, NSError * _Nullable))completionHandler;
 /// Open the manage subscription dialog
 - (void)openManageSubscriptionWithCompletionHandler:(void (^ _Nonnull)(void))completionHandler;
-/// Open a refund dialog for the given transactionId (it’s the app store transactionId, not the MobilyFlow transactionId).
+/// Open a refund dialog for the last transaction on the given product.
 /// Pro tips: to test declined refund in sandbox, once the dialog appear, select “other” and write “REJECT” in the text box.
-- (void)openRefundDialogWithTransactionId:(uint64_t)transactionId completionHandler:(void (^ _Nonnull)(BOOL))completionHandler;
+- (void)openRefundDialogWithProduct:(MobilyProduct * _Nonnull)product completionHandler:(void (^ _Nonnull)(enum RefundDialogResult))completionHandler;
 - (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(enum WebhookStatus, NSError * _Nullable))completionHandler;
 - (void)sendDiagnotic;
 - (void)getStoreCountryWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable))completionHandler;
 - (void)isForwardingEnableWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(BOOL, NSError * _Nullable))completionHandler;
+- (void)getCustomerWithCompletionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK24MobilyPurchaseSDKOptions")
 @interface MobilyPurchaseSDKOptions : NSObject
-- (nonnull instancetype)initWithLanguages:(NSArray<NSString *> * _Nullable)languages debug:(BOOL)debug apiURL:(NSString * _Nullable)apiURL OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithLocales:(NSArray<NSString *> * _Nullable)locales debug:(BOOL)debug apiURL:(NSString * _Nullable)apiURL OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -458,9 +461,10 @@ SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionOffer")
 @property (nonatomic, readonly) NSDecimal price;
 @property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
 @property (nonatomic, readonly, copy) NSString * _Nonnull priceFormatted;
-@property (nonatomic, readonly) BOOL isFreeTrial;
+@property (nonatomic, readonly, copy) NSString * _Nullable type;
 @property (nonatomic, readonly) NSInteger periodCount;
 @property (nonatomic, readonly) enum PeriodUnit periodUnit;
+@property (nonatomic, readonly) NSInteger countBillingCycle;
 @property (nonatomic, readonly, copy) NSString * _Nullable ios_offerId;
 @property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable extras;
 @property (nonatomic, readonly) enum ProductStatus status;
@@ -477,7 +481,6 @@ SWIFT_CLASS("_TtC13MobilyflowSDK25MobilySubscriptionProduct")
 @property (nonatomic, readonly) NSInteger groupLevel;
 @property (nonatomic, readonly, copy) NSString * _Nonnull ios_subscriptionGroupId;
 @property (nonatomic, readonly, copy) NSString * _Nonnull subscriptionGroupId;
-@property (nonatomic, readonly, strong) MobilySubscriptionGroup * _Nullable subscriptionGroup;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -510,6 +513,12 @@ SWIFT_CLASS("_TtC13MobilyflowSDK15PurchaseOptions")
 - (PurchaseOptions * _Nonnull)setOffer:(MobilySubscriptionOffer * _Nullable)offer SWIFT_WARN_UNUSED_RESULT;
 - (PurchaseOptions * _Nonnull)setQuantity:(NSInteger)quantity SWIFT_WARN_UNUSED_RESULT;
 @end
+
+typedef SWIFT_ENUM(NSInteger, RefundDialogResult, closed) {
+  RefundDialogResultCancelled = 0,
+  RefundDialogResultSuccess = 1,
+  RefundDialogResultTransaction_not_found = 2,
+};
 
 typedef SWIFT_ENUM(NSInteger, TransferOwnershipStatus, closed) {
   TransferOwnershipStatusPending = 0,
