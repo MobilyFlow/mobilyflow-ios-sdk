@@ -26,6 +26,8 @@ import StoreKit
 
     private let lifecycleManager = AppLifecycleManager()
 
+    private var productsCaches: [String: MobilyProduct] = [:]
+
     @objc public init(
         appId: String,
         apiKey: String,
@@ -112,6 +114,8 @@ import StoreKit
 
         for jsonProduct in jsonProducts {
             let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct)
+            productsCaches[mobilyProduct.id] = mobilyProduct
+
             if !onlyAvailable || mobilyProduct.status == .available {
                 mobilyProducts.append(mobilyProduct)
             }
@@ -138,12 +142,20 @@ import StoreKit
         for jsonGroup in jsonGroups {
             let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, onlyAvailableProducts: onlyAvailable)
 
+            for product in mobilyGroup.products {
+                productsCaches[product.id] = product
+            }
+
             if !onlyAvailable || mobilyGroup.products.count > 0 {
                 groups.append(mobilyGroup)
             }
         }
 
         return groups
+    }
+
+    @objc public func getProductFromCacheWithId(id: String) -> MobilyProduct? {
+        return productsCaches[id]
     }
 
     /* ******************************************************************* */
