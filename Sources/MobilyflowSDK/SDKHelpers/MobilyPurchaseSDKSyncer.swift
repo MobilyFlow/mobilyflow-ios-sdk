@@ -119,13 +119,17 @@ class MobilyPurchaseSDKSyncer {
         }
     }
 
-    func getEntitlements(forProductIds productIds: [String]) throws -> [MobilyCustomerEntitlement] {
+    func getEntitlements(forProductIds productIds: [String]?) throws -> [MobilyCustomerEntitlement] {
         if customer == nil {
             throw MobilyError.no_customer_logged
         }
 
+        if productIds == nil {
+            return entitlements ?? []
+        }
+
         return entitlements?.filter { entitlement in
-            productIds.contains(entitlement.product.id)
+            productIds!.contains(entitlement.product.id)
         } ?? []
     }
 
