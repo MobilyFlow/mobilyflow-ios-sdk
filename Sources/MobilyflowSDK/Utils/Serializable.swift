@@ -24,7 +24,7 @@ import Foundation
                 dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
                 return dateFormatter.string(from: val)
             } else if let val = value as? UUID {
-                return val.uuidString
+                return val.uuidString.lowercased()
             } else if let val = value as? any RawRepresentable {
                 return val.rawValue
             } else {
