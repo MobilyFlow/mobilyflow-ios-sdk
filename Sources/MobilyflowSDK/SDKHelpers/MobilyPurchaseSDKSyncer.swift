@@ -47,6 +47,12 @@ class MobilyPurchaseSDKSyncer {
 
     func ensureSync(force: Bool = false) async throws {
         try await syncExecutor.execute {
+            if self.customer != nil && self.customer!.isForwardingEnable {
+                if let isForwardingEnable = try? await self.API.isForwardingEnable(externalRef: self.customer!.externalRef) {
+                    self.customer!.isForwardingEnable = isForwardingEnable
+                }
+            }
+
             if
                 force ||
                 self.lastSyncTime == nil ||
@@ -54,11 +60,6 @@ class MobilyPurchaseSDKSyncer {
             {
                 Logger.d("Run Sync")
                 if self.customer != nil {
-                    if self.customer!.isForwardingEnable {
-                        if let isForwardingEnable = try? await self.API.isForwardingEnable(externalRef: self.customer!.externalRef) {
-                            self.customer!.isForwardingEnable = isForwardingEnable
-                        }
-                    }
                     try await self._syncEntitlements()
                     self.lastSyncTime = Date().timeIntervalSince1970
                 }
