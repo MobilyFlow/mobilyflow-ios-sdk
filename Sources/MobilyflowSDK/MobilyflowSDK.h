@@ -349,7 +349,7 @@ enum Platform : NSInteger;
 SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement23SubscriptionEntitlement")
 @interface SubscriptionEntitlement : Serializable
 @property (nonatomic, readonly, copy) NSDate * _Nonnull startDate;
-@property (nonatomic, readonly, copy) NSDate * _Nonnull expirationDate;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull endDate;
 @property (nonatomic, readonly) BOOL autoRenewEnable;
 @property (nonatomic, readonly) enum Platform platform;
 @property (nonatomic, readonly) BOOL isManagedByThisStoreAccount;

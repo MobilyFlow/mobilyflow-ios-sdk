@@ -60,7 +60,7 @@ import StoreKit
 
             subscription = SubscriptionEntitlement(
                 startDate: dateFormatter.date(from: jsonEntity["startDate"]! as! String)!,
-                expirationDate: dateFormatter.date(from: jsonEntity["expirationDate"]! as! String)!,
+                endDate: dateFormatter.date(from: jsonEntity["endDate"]! as! String)!,
                 autoRenewEnable: autoRenewEnable,
                 platform: Platform.parse(jsonEntity["platform"]! as! String)!,
                 isManagedByThisStoreAccount: storeAccountTx != nil,
@@ -88,15 +88,15 @@ import StoreKit
 
     @objc public class SubscriptionEntitlement: Serializable {
         @objc public let startDate: Date
-        @objc public let expirationDate: Date
+        @objc public let endDate: Date
         @objc public let autoRenewEnable: Bool
         @objc public let platform: Platform
         @objc public let isManagedByThisStoreAccount: Bool
         @objc public let renewProduct: MobilyProduct?
 
-        @objc init(startDate: Date, expirationDate: Date, autoRenewEnable: Bool, platform: Platform, isManagedByThisStoreAccount: Bool, renewProduct: MobilyProduct?) {
+        @objc init(startDate: Date, endDate: Date, autoRenewEnable: Bool, platform: Platform, isManagedByThisStoreAccount: Bool, renewProduct: MobilyProduct?) {
             self.startDate = startDate
-            self.expirationDate = expirationDate
+            self.endDate = endDate
             self.autoRenewEnable = autoRenewEnable
             self.platform = platform
             self.isManagedByThisStoreAccount = isManagedByThisStoreAccount
