@@ -190,7 +190,7 @@ import StoreKit
             Logger.d("Request ownership transfer complete with status \(status)")
             return status
         } else {
-            return .acknowledged
+            throw MobilyTransferOwnershipError.nothing_to_transfer
         }
     }
 

@@ -79,10 +79,6 @@ class MobilyPurchaseSDKWaiter {
         }
         Logger.d("Transfer Ownership wait completed (\(result))")
 
-        if result == .error {
-            throw MobilyTransferOwnershipError.webhook_failed
-        }
-
         return result
     }
 }

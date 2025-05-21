@@ -9,10 +9,9 @@ import Foundation
 
 @objc public enum TransferOwnershipStatus: Int {
     case pending = 0
-    case error = 1
-    case delayed = 2
-    case acknowledged = 3
-    case rejected = 4
+    case delayed = 1
+    case acknowledged = 2
+    case rejected = 3
 
     static func parse(_ rawValue: String) -> TransferOwnershipStatus? {
         switch rawValue.lowercased() {
@@ -24,8 +23,6 @@ import Foundation
             return .acknowledged
         case "rejected":
             return .rejected
-        case "error":
-            return .error
         default:
             return nil
         }
