@@ -523,10 +523,9 @@ typedef SWIFT_ENUM(NSInteger, RefundDialogResult, closed) {
 
 typedef SWIFT_ENUM(NSInteger, TransferOwnershipStatus, closed) {
   TransferOwnershipStatusPending = 0,
-  TransferOwnershipStatusError = 1,
-  TransferOwnershipStatusDelayed = 2,
-  TransferOwnershipStatusAcknowledged = 3,
-  TransferOwnershipStatusRejected = 4,
+  TransferOwnershipStatusDelayed = 1,
+  TransferOwnershipStatusAcknowledged = 2,
+  TransferOwnershipStatusRejected = 3,
 };
 
 typedef SWIFT_ENUM(NSInteger, WebhookStatus, closed) {
