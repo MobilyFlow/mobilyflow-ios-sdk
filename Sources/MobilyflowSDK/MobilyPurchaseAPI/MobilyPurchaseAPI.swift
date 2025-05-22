@@ -116,12 +116,35 @@ class MobilyPurchaseAPI {
     }
 
     /**
-     Get products in JSON Array format
+     Get entitlements
      */
     public func getCustomerEntitlements(customerId: UUID) async throws -> [[String: Any]] {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/entitlements")
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("loadProduct", "true")
+
+        guard let res = try? await self.helper.request(request) else {
+            throw MobilyError.server_unavailable
+        }
+
+        if res.success {
+            return res.json()["data"] as! [[String: Any]]
+        } else {
+            throw MobilyError.unknown_error
+        }
+    }
+
+    /**
+     Get external entitlements
+     */
+    public func getCustomerExternalEntitlements(customerId: UUID, transactions: [String]) async throws -> [[String: Any]] {
+        let request = ApiRequest(method: "POST", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/external-entitlements")
+        _ = request.setData([
+            "locale": self.locale,
+            "platform": "ios",
+            "loadProduct": true,
+            "transactions": transactions
+        ])
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable

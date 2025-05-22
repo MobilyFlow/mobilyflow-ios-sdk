@@ -14,13 +14,15 @@ import StoreKit
     @objc public let platformOriginalTransactionId: String?
     @objc public let item: ItemEntitlement?
     @objc public let subscription: SubscriptionEntitlement?
+    @objc public let customerId: String
 
-    @objc init(type: ProductType, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?) {
+    @objc init(type: ProductType, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?, customerId: String) {
         self.type = type
         self.product = product
         self.platformOriginalTransactionId = platformOriginalTransactionId
         self.item = item
         self.subscription = subscription
+        self.customerId = customerId
 
         super.init()
     }
@@ -33,6 +35,7 @@ import StoreKit
 
         var item: ItemEntitlement? = nil
         var subscription: SubscriptionEntitlement? = nil
+        let customerId = jsonEntity["customerId"] as! String
 
         if type == .one_time {
             item = ItemEntitlement(quantity: jsonEntity["quantity"] as! Int)
@@ -73,7 +76,8 @@ import StoreKit
             product: product,
             platformOriginalTransactionId: platformOriginalTransactionId,
             item: item,
-            subscription: subscription
+            subscription: subscription,
+            customerId: customerId,
         )
     }
 

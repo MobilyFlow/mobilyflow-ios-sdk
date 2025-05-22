@@ -28,12 +28,16 @@ class MobilyPurchaseSDKHelper {
         return transactionToMap
     }
 
-    static func getAllTransactionSignatures() async -> [String] {
+    static func getAllTransactionSignatures() async -> ([String], [UInt64: Transaction]) {
+        var storeAccountTransactions: [UInt64: Transaction] = [:]
+
         var knownOriginalTxIds: [String] = []
         var transactionSignatures: [String] = []
 
         for await signedTx in Transaction.currentEntitlements {
             if case .verified(let transaction) = signedTx {
+                storeAccountTransactions[transaction.originalID] = transaction
+
                 let originalTxId = String(transaction.originalID)
 
                 // Avoid sending duplicate originalTxId that can happen when subscription renew
@@ -44,7 +48,7 @@ class MobilyPurchaseSDKHelper {
             }
         }
 
-        return transactionSignatures
+        return (transactionSignatures, storeAccountTransactions)
     }
 
     /**

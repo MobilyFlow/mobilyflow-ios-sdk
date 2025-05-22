@@ -174,6 +174,25 @@ import StoreKit
         return try syncer.getEntitlements(forProductIds: productIds)
     }
 
+    @objc public func getExternalEntitlements() async throws -> [MobilyCustomerEntitlement] {
+        if customer == nil {
+            throw MobilyError.no_customer_logged
+        }
+
+        let (transactionToClaim, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
+        var entitlements: [MobilyCustomerEntitlement] = []
+
+        if !transactionToClaim.isEmpty {
+            let jsonEntitlements = try await self.API.getCustomerExternalEntitlements(customerId: customer!.id, transactions: transactionToClaim)
+
+            for jsonEntitlement in jsonEntitlements {
+                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: storeAccountTransactions))
+            }
+        }
+
+        return entitlements
+    }
+
     /**
      Request transfer ownership of local device transactions.
      */
@@ -182,7 +201,7 @@ import StoreKit
             throw MobilyError.no_customer_logged
         }
 
-        let transactionToClaim = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
+        let (transactionToClaim, _) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
 
         if !transactionToClaim.isEmpty {
             let requestId = try await self.API.transferOwnershipRequest(customerId: self.customer!.id, transactions: transactionToClaim)
