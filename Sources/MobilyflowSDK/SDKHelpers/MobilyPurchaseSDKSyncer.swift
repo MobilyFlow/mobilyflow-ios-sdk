@@ -104,7 +104,7 @@ class MobilyPurchaseSDKSyncer {
         try await ensureSync()
 
         return entitlements?.first { entitlement in
-            entitlement.type == .subscription && entitlement.product.subscriptionProduct?.subscriptionGroupId == subscriptionGroupId
+            entitlement.type == ProductType.subscription && entitlement.product.subscriptionProduct?.subscriptionGroupId == subscriptionGroupId
         }
     }
 

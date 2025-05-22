@@ -7,18 +7,13 @@
 
 import Foundation
 
-@objc public enum ProductType: Int {
-    case one_time = 0
-    case subscription = 1
-
-    static func parse(_ rawValue: String) -> ProductType? {
-        switch rawValue.lowercased() {
-        case "one_time":
-            return .one_time
-        case "subscription":
-            return .subscription
-        default:
-            return nil
-        }
+@objc public class ProductType: NSObject {
+    // Abstract
+    @available(*, unavailable, message: "This class is abstract and cannot be instantiated.")
+    override init() {
+        fatalError("This class is abstract and cannot be instantiated.")
     }
+
+    @objc public static let one_time = "one_time"
+    @objc public static let subscription = "subscription"
 }
