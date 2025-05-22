@@ -323,12 +323,13 @@ SWIFT_CLASS("_TtC13MobilyflowSDK14MobilyCustomer")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
+enum ProductType : NSInteger;
 @class MobilyProduct;
 @class ItemEntitlement;
 @class SubscriptionEntitlement;
 SWIFT_CLASS("_TtC13MobilyflowSDK25MobilyCustomerEntitlement")
 @interface MobilyCustomerEntitlement : Serializable
-@property (nonatomic, readonly, copy) NSString * _Nonnull type;
+@property (nonatomic, readonly) enum ProductType type;
 @property (nonatomic, readonly, strong) MobilyProduct * _Nonnull product;
 @property (nonatomic, readonly, copy) NSString * _Nullable platformOriginalTransactionId;
 @property (nonatomic, readonly, strong) ItemEntitlement * _Nullable item;
@@ -390,7 +391,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK13MobilyProduct")
 @property (nonatomic, readonly, copy) NSString * _Nonnull name;
 @property (nonatomic, readonly, copy) NSString * _Nonnull details;
 @property (nonatomic, readonly, copy) NSString * _Nonnull ios_sku;
-@property (nonatomic, readonly, copy) NSString * _Nonnull type;
+@property (nonatomic, readonly) enum ProductType type;
 @property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable extras;
 @property (nonatomic, readonly) enum ProductStatus status;
 @property (nonatomic, readonly, strong) MobilyOneTimeProduct * _Nullable oneTimeProduct;
@@ -504,15 +505,10 @@ typedef SWIFT_ENUM(NSInteger, ProductStatus, closed) {
   ProductStatusAvailable = 2,
 };
 
-SWIFT_CLASS("_TtC13MobilyflowSDK11ProductType")
-@interface ProductType : NSObject
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull one_time;)
-+ (NSString * _Nonnull)one_time SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull subscription;)
-+ (NSString * _Nonnull)subscription SWIFT_WARN_UNUSED_RESULT;
-@end
+typedef SWIFT_ENUM(NSInteger, ProductType, closed) {
+  ProductTypeOne_time = 0,
+  ProductTypeSubscription = 1,
+};
 
 SWIFT_CLASS("_TtC13MobilyflowSDK15PurchaseOptions")
 @interface PurchaseOptions : NSObject

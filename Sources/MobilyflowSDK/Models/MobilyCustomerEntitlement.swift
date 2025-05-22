@@ -9,14 +9,14 @@ import Foundation
 import StoreKit
 
 @objc public class MobilyCustomerEntitlement: Serializable {
-    @objc public let type: String
+    @objc public let type: ProductType
     @objc public let product: MobilyProduct
     @objc public let platformOriginalTransactionId: String?
     @objc public let item: ItemEntitlement?
     @objc public let subscription: SubscriptionEntitlement?
     @objc public let customerId: String
 
-    @objc init(type: String, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?, customerId: String) {
+    @objc init(type: ProductType, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?, customerId: String) {
         self.type = type
         self.product = product
         self.platformOriginalTransactionId = platformOriginalTransactionId
@@ -28,7 +28,7 @@ import StoreKit
     }
 
     static func parse(jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyCustomerEntitlement {
-        let type = jsonEntitlement["type"] as! String
+        let type = ProductType.parse(jsonEntitlement["type"]! as! String)!
         let jsonEntity = jsonEntitlement["entity"] as! [String: Any]
         let product = await MobilyProduct.parse(jsonProduct: jsonEntity["Product"] as! [String: Any])
         let platformOriginalTransactionId = jsonEntitlement["platformOriginalTransactionId"] as? String
@@ -37,7 +37,7 @@ import StoreKit
         var subscription: SubscriptionEntitlement? = nil
         let customerId = jsonEntity["customerId"] as! String
 
-        if type == ProductType.one_time {
+        if type == .one_time {
             item = ItemEntitlement(quantity: jsonEntity["quantity"] as! Int)
         } else {
             let dateFormatter = ISO8601DateFormatter()

@@ -20,7 +20,7 @@ import StoreKit
     @objc public let details: String
 
     @objc public let ios_sku: String
-    @objc public let type: String
+    @objc public let type: ProductType
     @objc public let extras: [String: Any]?
 
     @objc public let status: ProductStatus
@@ -28,7 +28,7 @@ import StoreKit
     @objc public let subscriptionProduct: MobilySubscriptionProduct?
 
     @objc init(
-        id: String, createdAt: Date, updatedAt: Date, identifier: String, externalRef: String?, appId: String, name: String, details: String, ios_sku: String, type: String, extras: [String: Any]? = nil, status: ProductStatus, oneTimeProduct: MobilyOneTimeProduct? = nil, subscriptionProduct: MobilySubscriptionProduct? = nil
+        id: String, createdAt: Date, updatedAt: Date, identifier: String, externalRef: String?, appId: String, name: String, details: String, ios_sku: String, type: ProductType, extras: [String: Any]? = nil, status: ProductStatus, oneTimeProduct: MobilyOneTimeProduct? = nil, subscriptionProduct: MobilySubscriptionProduct? = nil
     ) {
         self.id = id
         self.createdAt = createdAt
@@ -51,13 +51,13 @@ import StoreKit
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
 
-        let type = jsonProduct["type"] as! String
+        let type = ProductType.parse(jsonProduct["type"]! as! String)!
 
         var status: ProductStatus
         var oneTimeProduct: MobilyOneTimeProduct? = nil
         var subscriptionProduct: MobilySubscriptionProduct? = nil
 
-        if type == ProductType.one_time {
+        if type == .one_time {
             oneTimeProduct = MobilyOneTimeProduct.parse(jsonProduct: jsonProduct)
             status = oneTimeProduct!.status
         } else {
