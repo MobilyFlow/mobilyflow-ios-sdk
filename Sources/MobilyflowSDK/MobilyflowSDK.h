@@ -334,6 +334,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK25MobilyCustomerEntitlement")
 @property (nonatomic, readonly, copy) NSString * _Nullable platformOriginalTransactionId;
 @property (nonatomic, readonly, strong) ItemEntitlement * _Nullable item;
 @property (nonatomic, readonly, strong) SubscriptionEntitlement * _Nullable subscription;
+@property (nonatomic, readonly, copy) NSString * _Nonnull customerId;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -416,6 +417,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 - (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getEntitlementWithProductId:(NSString * _Nonnull)productId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getEntitlementsWithProductIds:(NSArray<NSString *> * _Nullable)productIds completionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
+- (void)getExternalEntitlementsWithCompletionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
 /// Request transfer ownership of local device transactions.
 - (void)requestTransferOwnershipWithCompletionHandler:(void (^ _Nonnull)(enum TransferOwnershipStatus, NSError * _Nullable))completionHandler;
 /// Open the manage subscription dialog
