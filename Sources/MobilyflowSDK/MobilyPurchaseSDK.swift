@@ -49,7 +49,7 @@ import StoreKit
 
         lifecycleManager.registerCrash { _, _ in
             Logger.fileHandle?.flush()
-            self.sendDiagnotic()
+            self.sendDiagnostic()
         }
     }
 
@@ -287,11 +287,11 @@ import StoreKit
                 throw MobilyPurchaseError.user_canceled
             } catch let error as Product.PurchaseError {
                 Logger.e("[purchaseProduct] PurchaseError", error: error)
-                self.sendDiagnotic()
+                self.sendDiagnostic()
                 throw MobilyPurchaseError.product_unavailable
             } catch StoreKitError.notAvailableInStorefront {
                 Logger.e("[purchaseProduct] Product notAvailableInStorefront")
-                self.sendDiagnotic()
+                self.sendDiagnostic()
                 throw MobilyPurchaseError.product_unavailable
             } catch StoreKitError.networkError(let url) {
                 Logger.e("[purchaseProduct] Network error: \(url)")
@@ -410,7 +410,7 @@ import StoreKit
     /* *********************** DIAGNOSTICS *********************** */
     /* *********************************************************** */
 
-    @objc public func sendDiagnotic() {
+    @objc public func sendDiagnostic() {
         diagnostics.sendDiagnostic()
     }
 
