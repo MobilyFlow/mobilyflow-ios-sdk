@@ -48,6 +48,7 @@ import StoreKit
         }
 
         lifecycleManager.registerCrash { _, _ in
+            // TODO: This sometime crash
             Logger.fileHandle?.flush()
             self.sendDiagnostic()
         }

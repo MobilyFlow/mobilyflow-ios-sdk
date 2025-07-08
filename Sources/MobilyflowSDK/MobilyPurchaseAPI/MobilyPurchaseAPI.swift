@@ -225,7 +225,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     public func transferOwnershipRequest(customerId: UUID, transactions: [String]) async throws -> String {
-        let request = ApiRequest(method: "POST", url: "/apps/me/customers/transfer-ownership/request/ios")
+        let request = ApiRequest(method: "POST", url: "/apps/me/customer-transfer-ownerships/request/ios")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "transactions": transactions])
 
         guard let res = try? await self.helper.request(request) else {
@@ -236,12 +236,12 @@ class MobilyPurchaseAPI {
         if res.success {
             return (jsonResponse["data"] as! [String: Any])["id"]! as! String
         } else {
-            let error = MobilyTransferOwnershipError.parse(jsonResponse["errorCode"]! as! String)
-            if error != nil {
-                throw error!
-            } else {
-                throw MobilyError.unknown_error
+            if let errorCode = jsonResponse["errorCode"] as? String {
+                if let error = MobilyTransferOwnershipError.parse(errorCode) {
+                    throw error
+                }
             }
+            throw MobilyError.unknown_error
         }
     }
 
@@ -249,7 +249,7 @@ class MobilyPurchaseAPI {
      Get transfer ownership request status from requestId
      */
     public func getTransferRequestStatus(requestId: String) async throws -> TransferOwnershipStatus {
-        let request = ApiRequest(method: "GET", url: "/apps/me/customers/transfer-ownership/\(requestId)/status")
+        let request = ApiRequest(method: "GET", url: "/apps/me/customer-transfer-ownerships/\(requestId)/status")
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
