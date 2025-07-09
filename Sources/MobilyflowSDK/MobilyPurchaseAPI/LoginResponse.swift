@@ -12,4 +12,5 @@ struct LoginResponse {
     let entitlements: [[String: Any]]
     let platformOriginalTransactionIds: [String]
     let isForwardingEnable: Bool
+    let appleRefundRequests: [[String: Any]]?
 }

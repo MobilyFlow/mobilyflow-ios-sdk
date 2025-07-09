@@ -76,6 +76,31 @@ func isSandboxTransaction(transaction: Transaction) -> Bool {
     return isSandbox
 }
 
+func getTopViewController(_ parent: UIViewController? = nil) -> UIViewController? {
+    var baseVC: UIViewController? = parent
+    if baseVC == nil {
+        baseVC = UIApplication.shared.delegate?.window??.rootViewController
+    }
+    if baseVC == nil {
+        baseVC = UIApplication.shared.connectedScenes
+            .compactMap { ($0 as? UIWindowScene)?.keyWindow }
+            .first?.rootViewController
+    }
+
+    if let nav = baseVC as? UINavigationController {
+        if !nav.isBeingDismissed {
+            return getTopViewController(nav.visibleViewController)
+        }
+    }
+    if let tab = baseVC as? UITabBarController {
+        if !tab.isBeingDismissed {
+            return getTopViewController(tab.selectedViewController)
+        }
+    }
+
+    return baseVC
+}
+
 func printTransaction(transaction: Transaction) async {
     print("==== TX \(transaction.id) ====")
 

@@ -52,7 +52,8 @@ class MobilyPurchaseAPI {
                 customer: data["customer"] as! [String: Any],
                 entitlements: data["entitlements"] as! [[String: Any]],
                 platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String],
-                isForwardingEnable: data["isForwardingEnable"] as! Bool
+                isForwardingEnable: data["isForwardingEnable"] as! Bool,
+                appleRefundRequests: data["appleRefundRequests"] as? [[String: Any]]
             )
         } else {
             throw MobilyError.unknown_error
@@ -210,6 +211,23 @@ class MobilyPurchaseAPI {
     public func mapTransactions(customerId: UUID, transactions: [String]) async throws {
         let request = ApiRequest(method: "POST", url: "/apps/me/customers/mappings/ios")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "transactions": transactions])
+
+        guard let res = try? await self.helper.request(request) else {
+            throw MobilyError.server_unavailable
+        }
+
+        if !res.success {
+            throw MobilyError.unknown_error
+        }
+    }
+
+    /**
+     Flag a refund request.
+     Throws on error.
+     */
+    public func flagRefundRequest(requestId: String, accepted: Bool) async throws {
+        let request = ApiRequest(method: "POST", url: "/apps/me/apple-refund-requests/\(requestId)/flag")
+        _ = request.setData(["accepted": accepted])
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable

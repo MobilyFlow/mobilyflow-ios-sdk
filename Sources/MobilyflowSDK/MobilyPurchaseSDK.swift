@@ -20,6 +20,7 @@ import StoreKit
     private var syncer: MobilyPurchaseSDKSyncer
     private let waiter: MobilyPurchaseSDKWaiter
     private let diagnostics: MobilyPurchaseSDKDiagnostics
+    private let refundRequestManager: MobilyPurchaseRefundRequestManager
 
     private var updateTxTask: Task<Void, Never>?
     private let purchaseExecutor = AsyncDispatchQueue(label: "mobilyflow-purchase")
@@ -40,6 +41,7 @@ import StoreKit
         self.diagnostics = MobilyPurchaseSDKDiagnostics(customerId: nil)
         self.waiter = MobilyPurchaseSDKWaiter(API: API, diagnostics: self.diagnostics)
         self.syncer = MobilyPurchaseSDKSyncer(API: self.API)
+        self.refundRequestManager = MobilyPurchaseRefundRequestManager(API: self.API)
 
         super.init()
 
@@ -90,6 +92,13 @@ import StoreKit
                 try await self.API.mapTransactions(customerId: self.customer!.id, transactions: transactionToMap)
             } catch {
                 Logger.e("Map transactions error", error: error)
+            }
+        }
+
+        // 5. Send Refund Requests Notifications
+        Task(priority: .background) {
+            if let refundRequests = loginResponse.appleRefundRequests {
+                await self.refundRequestManager.manageRefundRequests(refundRequests)
             }
         }
 
