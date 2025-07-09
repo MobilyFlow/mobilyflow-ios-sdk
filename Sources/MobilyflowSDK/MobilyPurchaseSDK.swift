@@ -97,6 +97,7 @@ import StoreKit
 
         // 5. Send Refund Requests Notifications
         Task(priority: .background) {
+            // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
             if let refundRequests = loginResponse.appleRefundRequests {
                 await self.refundRequestManager.manageRefundRequests(refundRequests)
             }
