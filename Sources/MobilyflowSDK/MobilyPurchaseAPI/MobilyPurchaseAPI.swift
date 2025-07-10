@@ -30,7 +30,11 @@ class MobilyPurchaseAPI {
         self.environment = environment
         self.locale = locales.joined(separator: ",")
 
-        self.helper = ApiHelper(baseURL: API_URL, defaultHeaders: ["Authorization": "ApiKey \(apiKey)"])
+        self.helper = ApiHelper(baseURL: API_URL, defaultHeaders: [
+            "Authorization": "ApiKey \(apiKey)",
+            "platform": "ios",
+            "sdk_version": MobilyFlowVersion.current,
+        ])
     }
 
     /**
@@ -144,7 +148,7 @@ class MobilyPurchaseAPI {
             "locale": self.locale,
             "platform": "ios",
             "loadProduct": true,
-            "transactions": transactions
+            "transactions": transactions,
         ])
 
         guard let res = try? await self.helper.request(request) else {

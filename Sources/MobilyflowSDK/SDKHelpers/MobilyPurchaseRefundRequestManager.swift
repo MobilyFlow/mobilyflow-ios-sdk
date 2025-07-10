@@ -39,6 +39,8 @@ class MobilyPurchaseRefundRequestManager {
 
     func manageRefundRequests(_ refundRequests: [[String: Any]]) async {
         for request in refundRequests {
+            try? await Task.sleep(nanoseconds: 1_000_000_000) // Wait 1 sec to let interface time to be ready
+
             let result = await self.showDialog(request: request)
             if result {
                 let requestType = request["type"] as! String
@@ -51,7 +53,6 @@ class MobilyPurchaseRefundRequestManager {
                 }
             }
             try? await self.API.flagRefundRequest(requestId: request["id"] as! String, accepted: result)
-            try? await Task.sleep(nanoseconds: 1_000_000_000) // Wait 1 sec
         }
     }
 }

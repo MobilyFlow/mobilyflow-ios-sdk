@@ -441,4 +441,8 @@ import StoreKit
     @objc public func getCustomer() async throws -> MobilyCustomer? {
         return self.customer
     }
+
+    @objc public func getSDKVersion() -> String {
+        return MobilyFlowVersion.current
+    }
 }
