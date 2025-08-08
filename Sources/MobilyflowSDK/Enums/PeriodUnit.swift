@@ -21,7 +21,7 @@ import StoreKit
         switch period.unit {
         case .week: return (period.value, .week)
         case .month: return (period.value, .month)
-        case .year: return (period.value, .month)
+        case .year: return (period.value, .year)
         default: fatalError("fromSubscriptionPeriodUnit -> Bad unit \(period.value) \(period.unit)")
         }
     }
