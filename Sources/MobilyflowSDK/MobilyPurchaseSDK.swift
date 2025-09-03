@@ -298,6 +298,11 @@ import StoreKit
                 throw MobilyPurchaseError.user_canceled
             } catch let error as Product.PurchaseError {
                 Logger.e("[purchaseProduct] PurchaseError", error: error)
+                Logger.d("[purchaseProduct] error.localizedDescription \(error.localizedDescription)")
+                Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription)")
+                Logger.d("[purchaseProduct] error.failureReason \(error.failureReason)")
+                Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion)")
+                Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor)")
                 self.sendDiagnostic()
                 throw MobilyPurchaseError.product_unavailable
             } catch StoreKitError.notAvailableInStorefront {
