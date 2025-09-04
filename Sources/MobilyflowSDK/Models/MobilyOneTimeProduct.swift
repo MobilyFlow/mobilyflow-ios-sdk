@@ -29,7 +29,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonProduct: [String: Any]) -> MobilyOneTimeProduct {
+    static func parse(jsonProduct: [String: Any], currentRegion: String?) -> MobilyOneTimeProduct {
         let price: Decimal
         let currencyCode: String
         let priceFormatted: String
@@ -39,8 +39,16 @@ import StoreKit
 
         if iosProduct == nil || iosProduct?.subscription != nil {
             status = iosProduct == nil ? .unavailable : .invalid
-            price = Decimal(floatLiteral: coalesce(jsonProduct["defaultPrice"], 0.0) as! Double)
-            currencyCode = coalesce(jsonProduct["defaultCurrencyCode"], "") as! String
+
+            let storePrice = StorePrice.getDefaultPrice(jsonProduct["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
+            if storePrice == nil {
+                price = Decimal(floatLiteral: 0.0)
+                currencyCode = ""
+            } else {
+                price = Decimal(floatLiteral: Double(storePrice!.priceMillis) / 1000.0)
+                currencyCode = storePrice!.currency
+            }
+
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
         } else {
             status = .available

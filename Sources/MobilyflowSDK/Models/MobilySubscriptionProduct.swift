@@ -29,20 +29,20 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonProduct: [String: Any], fromSubscriptionGroup: MobilySubscriptionGroup? = nil) async -> MobilySubscriptionProduct {
+    static func parse(jsonProduct: [String: Any], currentRegion: String?, fromSubscriptionGroup: MobilySubscriptionGroup? = nil) async -> MobilySubscriptionProduct {
         var freeTrial: MobilySubscriptionOffer? = nil
         var promotionalOffers: [MobilySubscriptionOffer] = []
         var subscriptionGroup: MobilySubscriptionGroup? = nil
 
         let iosSku = jsonProduct["ios_sku"] as! String
         let iosProduct = MobilyPurchaseRegistry.getIOSProduct(iosSku)
-        let baseOffer = await MobilySubscriptionOffer.parse(jsonBase: jsonProduct, jsonOffer: nil, iosProduct: iosProduct)
+        let baseOffer = await MobilySubscriptionOffer.parse(jsonBase: jsonProduct, jsonOffer: nil, iosProduct: iosProduct, currentRegion: currentRegion)
 
         if iosProduct?.subscription != nil {
             let jsonOffers = jsonProduct["Offers"] as? [[String: Any]] ?? []
 
             for jsonOffer in jsonOffers {
-                let offer = await MobilySubscriptionOffer.parse(jsonBase: jsonProduct, jsonOffer: jsonOffer, iosProduct: iosProduct)
+                let offer = await MobilySubscriptionOffer.parse(jsonBase: jsonProduct, jsonOffer: jsonOffer, iosProduct: iosProduct, currentRegion: currentRegion)
 
                 if offer.type == "free_trial" {
                     if freeTrial != nil {
@@ -58,7 +58,7 @@ import StoreKit
 
         let subscriptionGroupJson = jsonProduct["SubscriptionGroup"] as? [String: Any]
         if subscriptionGroupJson != nil {
-            subscriptionGroup = await MobilySubscriptionGroup.parse(jsonGroup: subscriptionGroupJson!)
+            subscriptionGroup = await MobilySubscriptionGroup.parse(jsonGroup: subscriptionGroupJson!, currentRegion: currentRegion)
         }
 
         let subscriptionGroupLevel: Int

@@ -123,8 +123,10 @@ import StoreKit
         // 3. Parse to MobilyProduct
         var mobilyProducts: [MobilyProduct] = []
 
+        let currentRegion = await StorePrice.getMostRelevantRegion()
+
         for jsonProduct in jsonProducts {
-            let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct)
+            let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct, currentRegion: currentRegion)
             productsCaches[mobilyProduct.id] = mobilyProduct
 
             if !onlyAvailable || mobilyProduct.status == .available {
@@ -150,8 +152,10 @@ import StoreKit
         // 3. Parse to MobilySubscriptionGroup
         var groups: [MobilySubscriptionGroup] = []
 
+        let currentRegion = await StorePrice.getMostRelevantRegion()
+
         for jsonGroup in jsonGroups {
-            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, onlyAvailableProducts: onlyAvailable)
+            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, currentRegion: currentRegion, onlyAvailableProducts: onlyAvailable)
 
             for product in mobilyGroup.products {
                 productsCaches[product.id] = product
@@ -196,8 +200,9 @@ import StoreKit
         if !transactionToClaim.isEmpty {
             let jsonEntitlements = try await self.API.getCustomerExternalEntitlements(customerId: customer!.id, transactions: transactionToClaim)
 
+            let currentRegion = await StorePrice.getMostRelevantRegion()
             for jsonEntitlement in jsonEntitlements {
-                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: storeAccountTransactions))
+                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: storeAccountTransactions, currentRegion: currentRegion))
             }
         }
 
@@ -436,7 +441,10 @@ import StoreKit
 
     // TODO: onStorefrontChange
     @objc public func getStoreCountry() async -> String? {
-        return (await Storefront.current)?.countryCode
+        if let alpha3 = (await Storefront.current)?.countryCode {
+            return CountryCodes.alpha3ToAlpha2(alpha3)
+        }
+        return nil
     }
 
     @objc public func isForwardingEnable(externalRef: String) async throws -> Bool {

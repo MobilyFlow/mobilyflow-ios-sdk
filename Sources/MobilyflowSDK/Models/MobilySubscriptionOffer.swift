@@ -45,7 +45,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonBase: [String: Any], jsonOffer: [String: Any]?, iosProduct: Product?) async -> MobilySubscriptionOffer {
+    static func parse(jsonBase: [String: Any], jsonOffer: [String: Any]?, iosProduct: Product?, currentRegion: String?) async -> MobilySubscriptionOffer {
         var id: String? = nil
         var identifier: String? = nil
         var externalRef: String? = nil
@@ -94,8 +94,15 @@ import StoreKit
         // 2. Populate
         if jsonOffer == nil && iosProduct == nil {
             // Base offer but unavailable
-            price = Decimal(floatLiteral: coalesce(jsonBase["defaultPrice"], 0.0) as! Double)
-            currencyCode = coalesce(jsonBase["defaultCurrencyCode"], "") as! String
+            let storePrice = StorePrice.getDefaultPrice(jsonBase["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
+            if storePrice == nil {
+                price = Decimal(floatLiteral: 0.0)
+                currencyCode = ""
+            } else {
+                price = Decimal(floatLiteral: Double(storePrice!.priceMillis) / 1000.0)
+                currencyCode = storePrice!.currency
+            }
+
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
 
             periodCount = jsonBase["subscriptionPeriodCount"] as! Int
@@ -103,8 +110,15 @@ import StoreKit
             countBillingCycle = 0
         } else if (jsonOffer != nil && iosOffer == nil) || status == .invalid {
             // Promotionnal offer but unavailable
-            price = Decimal(floatLiteral: coalesce(jsonOffer!["defaultPrice"], 0.0) as! Double)
-            currencyCode = coalesce(jsonOffer!["defaultCurrencyCode"], "") as! String
+            let storePrice = StorePrice.getDefaultPrice(jsonOffer!["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
+            if storePrice == nil {
+                price = Decimal(floatLiteral: 0.0)
+                currencyCode = ""
+            } else {
+                price = Decimal(floatLiteral: Double(storePrice!.priceMillis) / 1000.0)
+                currencyCode = storePrice!.currency
+            }
+
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
 
             if type == "free_trial" {
