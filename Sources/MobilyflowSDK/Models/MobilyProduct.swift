@@ -16,6 +16,7 @@ import StoreKit
     @objc public let externalRef: String?
     @objc public let appId: String
 
+    @objc public let referenceName: String
     @objc public let name: String
     @objc public let details: String
 
@@ -28,7 +29,7 @@ import StoreKit
     @objc public let subscriptionProduct: MobilySubscriptionProduct?
 
     @objc init(
-        id: String, createdAt: Date, updatedAt: Date, identifier: String, externalRef: String?, appId: String, name: String, details: String, ios_sku: String, type: ProductType, extras: [String: Any]? = nil, status: ProductStatus, oneTimeProduct: MobilyOneTimeProduct? = nil, subscriptionProduct: MobilySubscriptionProduct? = nil
+        id: String, createdAt: Date, updatedAt: Date, identifier: String, externalRef: String?, appId: String, referenceName: String, name: String, details: String, ios_sku: String, type: ProductType, extras: [String: Any]? = nil, status: ProductStatus, oneTimeProduct: MobilyOneTimeProduct? = nil, subscriptionProduct: MobilySubscriptionProduct? = nil
     ) {
         self.id = id
         self.createdAt = createdAt
@@ -36,6 +37,7 @@ import StoreKit
         self.identifier = identifier
         self.externalRef = externalRef
         self.appId = appId
+        self.referenceName = referenceName
         self.name = name
         self.details = details
         self.ios_sku = ios_sku
@@ -72,8 +74,9 @@ import StoreKit
             identifier: jsonProduct["identifier"]! as! String,
             externalRef: jsonProduct["externalRef"]! as? String,
             appId: jsonProduct["appId"]! as! String,
-            name: jsonProduct["name"]! as! String,
-            details: jsonProduct["description"]! as! String,
+            referenceName: jsonProduct["referenceName"]! as! String,
+            name: getTranslationValue(jsonProduct["_translations"] as! [[String: Any]], field: "name")!,
+            details: getTranslationValue(jsonProduct["_translations"] as! [[String: Any]], field: "description") ?? "",
             ios_sku: jsonProduct["ios_sku"] as! String,
             type: type,
             extras: jsonProduct["extras"]! as! [String: Any]?,

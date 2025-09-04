@@ -12,6 +12,7 @@ import StoreKit
     @objc public let id: String
     @objc public let identifier: String
 
+    @objc public let referenceName: String
     @objc public let name: String
     @objc public let details: String
 
@@ -21,10 +22,11 @@ import StoreKit
     @objc public var products: [MobilyProduct]
 
     @objc init(
-        id: String, identifier: String, name: String, details: String, ios_groupId: String, extras: [String: Any]? = nil
+        id: String, identifier: String, referenceName: String, name: String, details: String, ios_groupId: String, extras: [String: Any]? = nil
     ) {
         self.id = id
         self.identifier = identifier
+        self.referenceName = referenceName
         self.name = name
         self.details = details
         self.ios_groupId = ios_groupId
@@ -38,8 +40,9 @@ import StoreKit
         let group = MobilySubscriptionGroup(
             id: jsonGroup["id"]! as! String,
             identifier: jsonGroup["identifier"]! as! String,
-            name: jsonGroup["name"]! as! String,
-            details: jsonGroup["description"] as? String ?? "",
+            referenceName: jsonGroup["referenceName"]! as! String,
+            name: getTranslationValue(jsonGroup["_translations"] as! [[String: Any]], field: "name")!,
+            details: getTranslationValue(jsonGroup["_translations"] as! [[String: Any]], field: "description") ?? "",
             ios_groupId: jsonGroup["ios_groupId"]! as! String,
             extras: jsonGroup["extras"] as? [String: Any]
         )
