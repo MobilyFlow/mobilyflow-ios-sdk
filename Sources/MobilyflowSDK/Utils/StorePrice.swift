@@ -32,7 +32,10 @@ class StorePrice {
             return StorePrice.parse(currentRegionPrice!)
         }
 
-        let defaultStorePrice = storePrices.first { $0["isDefault"] as? Bool ?? false }
+        let defaultStorePrice = storePrices.first {
+            ($0["isDefault"] as? Bool ?? false) && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
+        }
+
         if defaultStorePrice != nil {
             return StorePrice.parse(defaultStorePrice!)
         }
