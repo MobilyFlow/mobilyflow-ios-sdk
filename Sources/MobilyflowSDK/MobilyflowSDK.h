@@ -388,6 +388,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK13MobilyProduct")
 @property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
 @property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
 @property (nonatomic, readonly, copy) NSString * _Nonnull appId;
+@property (nonatomic, readonly, copy) NSString * _Nonnull referenceName;
 @property (nonatomic, readonly, copy) NSString * _Nonnull name;
 @property (nonatomic, readonly, copy) NSString * _Nonnull details;
 @property (nonatomic, readonly, copy) NSString * _Nonnull ios_sku;
@@ -446,6 +447,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionGroup")
 @interface MobilySubscriptionGroup : Serializable
 @property (nonatomic, readonly, copy) NSString * _Nonnull id;
 @property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
+@property (nonatomic, readonly, copy) NSString * _Nonnull referenceName;
 @property (nonatomic, readonly, copy) NSString * _Nonnull name;
 @property (nonatomic, readonly, copy) NSString * _Nonnull details;
 @property (nonatomic, readonly, copy) NSString * _Nonnull ios_groupId;
@@ -461,6 +463,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionOffer")
 @property (nonatomic, readonly, copy) NSString * _Nullable id;
 @property (nonatomic, readonly, copy) NSString * _Nullable identifier;
 @property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
+@property (nonatomic, readonly, copy) NSString * _Nullable referenceName;
 @property (nonatomic, readonly, copy) NSString * _Nullable name;
 @property (nonatomic, readonly) NSDecimal price;
 @property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
