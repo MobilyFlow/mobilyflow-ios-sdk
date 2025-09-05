@@ -12,6 +12,7 @@ import StoreKit
     @objc public let id: String? // null for base offer
     @objc public let identifier: String? // null for base offer
     @objc public let externalRef: String? // null for base offer
+    @objc public let referenceName: String?
     @objc public let name: String?
     @objc public let price: Decimal
     @objc public let currencyCode: String
@@ -24,10 +25,11 @@ import StoreKit
     @objc public let extras: [String: Any]?
     @objc public let status: ProductStatus
 
-    @objc init(id: String?, identifier: String?, externalRef: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: PeriodUnit, countBillingCycle: Int, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
+    @objc init(id: String?, identifier: String?, externalRef: String?, referenceName: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: PeriodUnit, countBillingCycle: Int, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
         self.id = id
         self.identifier = identifier
         self.externalRef = externalRef
+        self.referenceName = referenceName
         self.name = name
         self.price = price
         self.currencyCode = currencyCode
@@ -43,10 +45,11 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonBase: [String: Any], jsonOffer: [String: Any]?, iosProduct: Product?) async -> MobilySubscriptionOffer {
+    static func parse(jsonBase: [String: Any], jsonOffer: [String: Any]?, iosProduct: Product?, currentRegion: String?) async -> MobilySubscriptionOffer {
         var id: String? = nil
         var identifier: String? = nil
         var externalRef: String? = nil
+        var referenceName: String? = nil
         var name: String? = nil
         let price: Decimal
         let currencyCode: String
@@ -65,7 +68,8 @@ import StoreKit
             id = jsonOffer!["id"] as? String
             identifier = jsonOffer!["identifier"] as? String
             externalRef = jsonOffer!["externalRef"] as? String
-            name = jsonOffer!["name"] as? String
+            referenceName = jsonOffer!["referenceName"] as? String
+            name = getTranslationValue(jsonOffer!["_translations"] as! [[String: Any]], field: "name")
             extras = jsonOffer!["extras"] as? [String: Any]
             type = jsonOffer!["type"] as! String
             ios_offerId = jsonOffer!["ios_offerId"] as? String
@@ -82,7 +86,7 @@ import StoreKit
         // 1. Validate offer
         if iosOffer != nil {
             if iosOffer?.paymentMode == .payUpFront {
-                NSLog("Warning: Pay Up Front is not supported for subscription offers")
+                Logger.w("Pay Up Front is not supported for subscription offers (ios offer \(iosOffer?.id))")
                 status = .invalid
             }
         }
@@ -90,8 +94,15 @@ import StoreKit
         // 2. Populate
         if jsonOffer == nil && iosProduct == nil {
             // Base offer but unavailable
-            price = Decimal(floatLiteral: coalesce(jsonBase["defaultPrice"], 0.0) as! Double)
-            currencyCode = coalesce(jsonBase["defaultCurrencyCode"], "") as! String
+            let storePrice = StorePrice.getDefaultPrice(jsonBase["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
+            if storePrice == nil {
+                price = Decimal(floatLiteral: 0.0)
+                currencyCode = ""
+            } else {
+                price = Decimal(floatLiteral: Double(storePrice!.priceMillis) / 1000.0)
+                currencyCode = storePrice!.currency
+            }
+
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
 
             periodCount = jsonBase["subscriptionPeriodCount"] as! Int
@@ -99,8 +110,15 @@ import StoreKit
             countBillingCycle = 0
         } else if (jsonOffer != nil && iosOffer == nil) || status == .invalid {
             // Promotionnal offer but unavailable
-            price = Decimal(floatLiteral: coalesce(jsonOffer!["defaultPrice"], 0.0) as! Double)
-            currencyCode = coalesce(jsonOffer!["defaultCurrencyCode"], "") as! String
+            let storePrice = StorePrice.getDefaultPrice(jsonOffer!["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
+            if storePrice == nil {
+                price = Decimal(floatLiteral: 0.0)
+                currencyCode = ""
+            } else {
+                price = Decimal(floatLiteral: Double(storePrice!.priceMillis) / 1000.0)
+                currencyCode = storePrice!.currency
+            }
+
             priceFormatted = formatPrice(price, currencyCode: currencyCode)
 
             if type == "free_trial" {
@@ -149,6 +167,7 @@ import StoreKit
             id: id,
             identifier: identifier,
             externalRef: externalRef,
+            referenceName: referenceName,
             name: name,
             price: price,
             currencyCode: currencyCode,

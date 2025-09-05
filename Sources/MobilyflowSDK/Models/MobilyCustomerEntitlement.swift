@@ -27,10 +27,10 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyCustomerEntitlement {
+    static func parse(jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction], currentRegion: String?) async -> MobilyCustomerEntitlement {
         let type = ProductType.parse(jsonEntitlement["type"]! as! String)!
         let jsonEntity = jsonEntitlement["entity"] as! [String: Any]
-        let product = await MobilyProduct.parse(jsonProduct: jsonEntity["Product"] as! [String: Any])
+        let product = await MobilyProduct.parse(jsonProduct: jsonEntity["Product"] as! [String: Any], currentRegion: currentRegion)
         let platformOriginalTransactionId = jsonEntitlement["platformOriginalTransactionId"] as? String
 
         var item: ItemEntitlement? = nil
@@ -67,7 +67,7 @@ import StoreKit
                 autoRenewEnable: autoRenewEnable,
                 platform: Platform.parse(jsonEntity["platform"]! as! String)!,
                 isManagedByThisStoreAccount: storeAccountTx != nil,
-                renewProduct: renewProductJson != nil ? await MobilyProduct.parse(jsonProduct: renewProductJson!) : nil
+                renewProduct: renewProductJson != nil ? await MobilyProduct.parse(jsonProduct: renewProductJson!, currentRegion: currentRegion) : nil
             )
         }
 

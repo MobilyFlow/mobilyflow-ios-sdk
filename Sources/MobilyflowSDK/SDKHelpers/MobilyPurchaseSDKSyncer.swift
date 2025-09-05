@@ -31,7 +31,8 @@ class MobilyPurchaseSDKSyncer {
         }
         if self.customer != nil && jsonEntitlements != nil {
             try await syncExecutor.execute {
-                try await self._syncEntitlements(jsonEntitlements: jsonEntitlements)
+                let currentRegion = await StorePrice.getMostRelevantRegion()
+                try await self._syncEntitlements(currentRegion: currentRegion, jsonEntitlements: jsonEntitlements)
                 self.lastSyncTime = Date().timeIntervalSince1970
             }
         }
@@ -60,7 +61,8 @@ class MobilyPurchaseSDKSyncer {
             {
                 Logger.d("Run Sync")
                 if self.customer != nil {
-                    try await self._syncEntitlements()
+                    let currentRegion = await StorePrice.getMostRelevantRegion()
+                    try await self._syncEntitlements(currentRegion: currentRegion)
                     self.lastSyncTime = Date().timeIntervalSince1970
                 }
                 Logger.d("End Sync")
@@ -83,14 +85,14 @@ class MobilyPurchaseSDKSyncer {
         self.storeAccountTransactions = storeAccountTransactions
     }
 
-    private func _syncEntitlements(jsonEntitlements overrideJsonEntitlements: [[String: Any]]? = nil) async throws {
+    private func _syncEntitlements(currentRegion: String?, jsonEntitlements overrideJsonEntitlements: [[String: Any]]? = nil) async throws {
         try await _syncStoreAccountTransactions()
 
         let jsonEntitlements = overrideJsonEntitlements != nil ? overrideJsonEntitlements! : try await self.API.getCustomerEntitlements(customerId: customer!.id)
         var entitlements: [MobilyCustomerEntitlement] = []
 
         for jsonEntitlement in jsonEntitlements {
-            entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: self.storeAccountTransactions!))
+            entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: self.storeAccountTransactions!, currentRegion: currentRegion))
         }
 
         self.entitlements = entitlements
