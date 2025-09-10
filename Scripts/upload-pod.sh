@@ -31,7 +31,7 @@ EOL
 # 4. Push and tag
 git add .
 git commit -m "Version ${VERSION}"
-git push origin main
+git push origin $(git branch --show-current)
 git tag "${VERSION}"
 git push --tags
 
