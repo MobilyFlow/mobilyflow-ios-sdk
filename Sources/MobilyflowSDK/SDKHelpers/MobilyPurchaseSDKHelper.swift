@@ -117,11 +117,13 @@ class MobilyPurchaseSDKHelper {
                     }
                 }
             } else {
-                // TODO: The transaction may exists but be expired (check the date ?)
                 if storeAccountTransaction != nil {
                     // Another customer is already entitled to this product on the same store account
-                    print("expirationDate = ", storeAccountTransaction?.expirationDate)
-                    throw MobilyPurchaseError.store_account_already_have_purchase
+                    print("expirationDate = \(storeAccountTransaction!.expirationDate)")
+
+                    if storeAccountTransaction!.expirationDate == nil || storeAccountTransaction!.expirationDate!.timeIntervalSinceNow > 0 {
+                        throw MobilyPurchaseError.store_account_already_have_purchase
+                    }
                 }
             }
 
