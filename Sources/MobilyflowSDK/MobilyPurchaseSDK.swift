@@ -117,7 +117,7 @@ import StoreKit
         let jsonProducts = try await self.API.getProducts(identifiers: identifiers)
 
         // 2. Get product from App Store
-        let iosIdentifiers = jsonProducts.map { p in p["ios_sku"]! } as! [String]
+        let iosIdentifiers = getAllIosSkuForJsonProducts(jsonProducts: jsonProducts)
         await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
 
         // 3. Parse to MobilyProduct
@@ -145,7 +145,7 @@ import StoreKit
 
         // 2. Get product from App Store
         let iosIdentifiers = jsonGroups.flatMap { group in
-            (group["Products"] as! [[String: Any]]).map { product in product["ios_sku"] as! String }
+            getAllIosSkuForJsonProducts(jsonProducts: group["Products"] as! [[String: Any]])
         }
         await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
 

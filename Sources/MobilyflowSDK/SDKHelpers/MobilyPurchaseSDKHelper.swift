@@ -59,21 +59,39 @@ class MobilyPurchaseSDKHelper {
         syncer: MobilyPurchaseSDKSyncer, API: MobilyPurchaseAPI,
         customerId: UUID, product: MobilyProduct, options: PurchaseOptions?
     ) async throws -> (Product, Set<Product.PurchaseOption>) {
-        let iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku)
-        if iosProduct == nil {
+        guard var iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku) else {
             // Probably store_unavavaible but no way to check...
             throw MobilyPurchaseError.product_unavailable
         }
 
+        var useIntroOffer = false
         var iosOffer: Product.SubscriptionOffer?
         if product.type == .subscription && options?.offer != nil {
             if options!.offer!.type == "free_trial" {
-                iosOffer = iosProduct!.subscription!.introductoryOffer
+                iosOffer = iosProduct.subscription!.introductoryOffer
             } else if options!.offer!.ios_offerId != nil {
-                iosOffer = MobilyPurchaseRegistry.getIOSOffer(product.ios_sku, offerId: options!.offer!.ios_offerId!)
+                let isEligibleForIntroOffer = await iosProduct.subscription!.isEligibleForIntroOffer
 
-                if iosOffer == nil {
-                    throw MobilyPurchaseError.product_unavailable
+                if isEligibleForIntroOffer {
+                    // User eligible for intro offer are not eligible to Promotional Offers
+                    if let equivalentIntroProductSku = options!.offer!.ios_equivalentIntroProductSku {
+                        if let equivalentIntroProduct = MobilyPurchaseRegistry.getIOSProduct(equivalentIntroProductSku) {
+                            // Actual promotional offer have an equivalentIntroProduct (for new user) that is eligible ->  Switch product to this one
+                            iosProduct = equivalentIntroProduct
+                            iosOffer = equivalentIntroProduct.subscription!.introductoryOffer
+                            useIntroOffer = true
+
+                            if iosOffer == nil {
+                                throw MobilyPurchaseError.product_unavailable
+                            }
+                        }
+                    }
+                } else {
+                    iosOffer = MobilyPurchaseRegistry.getIOSOffer(product.ios_sku, offerId: options!.offer!.ios_offerId!)
+
+                    if iosOffer == nil {
+                        throw MobilyPurchaseError.product_unavailable
+                    }
                 }
             }
         }
@@ -153,17 +171,19 @@ class MobilyPurchaseSDKHelper {
         }))
 
         if #available(iOS 17.4, *) {
-            if options?.offer?.ios_offerId != nil {
+            if options?.offer?.ios_offerId != nil && iosOffer != nil && !useIntroOffer {
                 let signature = try await API.signOffer(customerId: customerId, offerId: options!.offer!.id!)
                 iosOptions.insert(Product.PurchaseOption.promotionalOffer(offerID: options!.offer!.ios_offerId!, signature: signature))
             }
         }
 
+        print("iOS Product = \(iosProduct.id)")
+
         if options?.quantity != nil {
             iosOptions.insert(Product.PurchaseOption.quantity(options!.quantity!))
         }
 
-        return (iosProduct!, iosOptions)
+        return (iosProduct, iosOptions)
     }
 
     static func isTransactionFinished(id: UInt64) async -> Bool {
