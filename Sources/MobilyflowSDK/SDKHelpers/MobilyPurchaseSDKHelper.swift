@@ -68,6 +68,7 @@ class MobilyPurchaseSDKHelper {
     }
 
     static func isEligibleForPromotionnalOffer() async -> Bool {
+        // TODO: We should find a way to force it to false in production for testing purpose
         if #available(iOS 17.4, *) {
             for await signedTx in Transaction.all {
                 switch signedTx {
@@ -79,15 +80,13 @@ class MobilyPurchaseSDKHelper {
                     break
                 }
             }
-            return false
-        } else {
-            return false
         }
+        return false
     }
 
     /**
      Create the set of PurchaseOption to start the billing flow.
-     It return a tuple (iosProduct, Set<Product.PurchaseOption>)
+     It return an InternalPurchaseOptions that cas be either product with options or redeemURL
      */
     static func createPurchaseOptions(
         syncer: MobilyPurchaseSDKSyncer, API: MobilyPurchaseAPI,
