@@ -1,5 +1,5 @@
 //
-//  MobilyFetchError.swift
+//  MobilyError.swift
 //  MobilyPurchaseSDK
 //
 //  Created by Gregoire Taja on 26/07/2024.

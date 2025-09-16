@@ -74,11 +74,8 @@ class MobilyPurchaseSDKSyncer {
         var storeAccountTransactions: [UInt64: Transaction] = [:]
 
         for await signedTx in Transaction.currentEntitlements {
-            switch signedTx {
-            case .verified(let transaction):
+            if case .verified(let transaction) = signedTx {
                 storeAccountTransactions[transaction.originalID] = transaction
-            case .unverified:
-                break
             }
         }
 

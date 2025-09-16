@@ -294,83 +294,149 @@ import StoreKit
                 throw MobilyPurchaseError.customer_forwarded
             }
 
-            let (iosProduct, purchaseOptions) = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: self.syncer, API: self.API, customerId: self.customer!.id, product: product, options: options)
+            let internalPurchaseOptions = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: self.syncer, API: self.API, customerId: self.customer!.id, product: product, options: options)
 
-            let purchaseResult: Product.PurchaseResult
-            do {
-                purchaseResult = try await iosProduct.purchase(options: purchaseOptions)
-            } catch StoreKitError.userCancelled {
-                throw MobilyPurchaseError.user_canceled
-            } catch let error as Product.PurchaseError {
-                Logger.e("[purchaseProduct] PurchaseError", error: error)
-                Logger.d("[purchaseProduct] error.localizedDescription \(error.localizedDescription)")
-                Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription)")
-                Logger.d("[purchaseProduct] error.failureReason \(error.failureReason)")
-                Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion)")
-                Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor)")
-                self.sendDiagnostic()
-                throw MobilyPurchaseError.product_unavailable
-            } catch StoreKitError.notAvailableInStorefront {
-                Logger.e("[purchaseProduct] Product notAvailableInStorefront")
-                self.sendDiagnostic()
-                throw MobilyPurchaseError.product_unavailable
-            } catch StoreKitError.networkError(let url) {
-                Logger.e("[purchaseProduct] Network error: \(url)")
-                throw MobilyPurchaseError.network_unavailable
-            } catch StoreKitError.systemError(let error) {
-                Logger.e("[purchaseProduct] systemError", error: error)
-                throw MobilyError.store_unavailable
-            } /* catch StoreKitError.unknown {
+            if internalPurchaseOptions.isRedeemURL() {
+                let semaphore = DispatchSemaphore(value: 0)
+                var error: MobilyPurchaseError?
+                let offerCodeLifecycleManager = AppLifecycleManager()
+                let knownTransactionIdsForSku = await MobilyPurchaseSDKHelper.getKnownTransactionIdsForSku(product.ios_sku)
+                let openTime = Date().timeIntervalSince1970
+
+                offerCodeLifecycleManager.registerDidBecomeActive {
+                    Logger.d("[purchaseProduct] didBecomeActive")
+                    offerCodeLifecycleManager.unregisterAll()
+
+                    Task(priority: .high) {
+                        let startTime = Date().timeIntervalSince1970
+                        if openTime + 8 > startTime {
+                            // Less that 8s outside of the app, we consider the user doesn't buy the product as he will not have the time to execute the whole purchase flow
+                            Logger.w("[purchaseProduct] Less than 8s outside of the app -> consider purchase canceled (\(startTime - openTime)s)")
+                            error = MobilyPurchaseError.user_canceled
+                            semaphore.signal()
+                            return
+                        }
+
+                        // Pull Transaction in a loop as it's faster than waiting Transaction.updates
+                        while true {
+                            sleep(2)
+
+                            if startTime + 30 < Date().timeIntervalSince1970 {
+                                Logger.e("[purchaseProduct] Can't see offer code transaction after 30s, consider purchase canceled")
+                                error = MobilyPurchaseError.user_canceled
+                                semaphore.signal()
+                                return
+                            }
+
+                            for await signedTx in Transaction.currentEntitlements {
+                                if case .verified(let transaction) = signedTx {
+                                    if transaction.productID == product.ios_sku && !knownTransactionIdsForSku.contains(transaction.id) {
+                                        Logger.d("[purchaseProduct] Receive Offer Code Transaction: \(transaction.id)")
+                                        if await MobilyPurchaseSDKHelper.isTransactionFinished(id: transaction.id) {
+                                            resultStatus = .success
+                                        } else {
+                                            resultStatus = await self.finishTransaction(signedTx: signedTx)
+                                        }
+                                        semaphore.signal()
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                DispatchQueue.main.sync {
+                    Task(priority: .high) {
+                        await UIApplication.shared.open(internalPurchaseOptions.getReeemUrl())
+                    }
+                }
+
+                semaphore.wait()
+                if error != nil {
+                    throw error!
+                }
+            } else {
+                let (iosProduct, purchaseOptions) = internalPurchaseOptions.getPurchaseOptions()
+
+                let purchaseResult: Product.PurchaseResult
+                do {
+                    purchaseResult = try await iosProduct.purchase(options: purchaseOptions)
+                } catch StoreKitError.userCancelled {
+                    throw MobilyPurchaseError.user_canceled
+                } catch let error as Product.PurchaseError {
+                    Logger.e("[purchaseProduct] PurchaseError", error: error)
+                    Logger.d("[purchaseProduct] error.localizedDescription \(error.localizedDescription)")
+                    if #available(iOS 15.4, *) {
+                        Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription ?? "nil")")
+                        Logger.d("[purchaseProduct] error.failureReason \(error.failureReason ?? "nil")")
+                        Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion ?? "nil")")
+                        Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor ?? "nil")")
+                    }
+                    self.sendDiagnostic()
+                    throw MobilyPurchaseError.product_unavailable
+                } catch StoreKitError.notAvailableInStorefront {
+                    Logger.e("[purchaseProduct] Product notAvailableInStorefront")
+                    self.sendDiagnostic()
+                    throw MobilyPurchaseError.product_unavailable
+                } catch StoreKitError.networkError(let url) {
+                    Logger.e("[purchaseProduct] Network error: \(url)")
+                    throw MobilyPurchaseError.network_unavailable
+                } catch StoreKitError.systemError(let error) {
+                    Logger.e("[purchaseProduct] systemError", error: error)
+                    throw MobilyError.store_unavailable
+                } /* catch StoreKitError.unknown {
                  /*
-                   There is a tricky case:
-                    - User buy the subscritpion
-                    - He disable the auto-renew
-                    - He re-open the app and try to re-purchase (his subscription is still active, but this should re-enable auto-renew)
-                    - In that case the Product.purchase method throw StoreKitError.unknown but the subscription is well re-enable (at least in sandbox, maybe it work in production).
+                  There is a tricky case:
+                  - User buy the subscritpion
+                  - He disable the auto-renew
+                  - He re-open the app and try to re-purchase (his subscription is still active, but this should re-enable auto-renew)
+                  - In that case the Product.purchase method throw StoreKitError.unknown but the subscription is well re-enable (at least in sandbox, maybe it work in production).
 
                   The error: Received error that does not have a corresponding StoreKit Error: Error Domain=ASDErrorDomain Code=825 "No transactions in response" UserInfo={NSDebugDescription=No transactions in response}
 
-                   Check this post: https://developer.apple.com/forums/thread/770662
+                  Check this post: https://developer.apple.com/forums/thread/770662
 
                   This case is not managed but is ready to be use by uncommenting things related to isSusbscriptionReEnable
                   */
-                  if isSusbscriptionReEnable {
-                      Logger.d("Subscription re-enable fix -> Ignore error")
-                      return
-                  } else {
-                      Logger.d("Other error = unknown")
-                      throw MobilyPurchaseError.failed
-                  }
-             } */
-            catch {
-                Logger.e("[purchaseProduct] Other error", error: error)
-                throw MobilyPurchaseError.failed
-            }
-
-            switch purchaseResult {
-            case .pending:
-                // Probably waiting parental control approve (know as ask-to-buy scenario)
-                Logger.w("purchaseProduct pending")
-                throw MobilyPurchaseError.pending
-
-            case .success(let signedTx):
-                switch signedTx {
-                case .verified(let transaction):
-                    Logger.d("Force webhook for \(transaction.id)")
-                    try? await self.API.forceWebhook(transactionId: transaction.id, productId: product.id, isSandbox: isSandboxTransaction(transaction: transaction))
-                    resultStatus = await self.finishTransaction(signedTx: signedTx)
-                case .unverified:
-                    Logger.e("purchaseProduct unverified")
-                    try? Monitoring.exportDiagnostic(sinceDays: 1)
+                 if isSusbscriptionReEnable {
+                 Logger.d("Subscription re-enable fix -> Ignore error")
+                 return
+                 } else {
+                 Logger.d("Other error = unknown")
+                 throw MobilyPurchaseError.failed
+                 }
+                 } */
+                catch {
+                    Logger.e("[purchaseProduct] Other error", error: error)
                     throw MobilyPurchaseError.failed
                 }
 
-            case .userCancelled:
-                throw MobilyPurchaseError.user_canceled
+                switch purchaseResult {
+                case .pending:
+                    // Probably waiting parental control approve (know as ask-to-buy scenario)
+                    Logger.w("purchaseProduct pending")
+                    throw MobilyPurchaseError.pending
 
-            @unknown default:
-                assertionFailure("Unexpected result")
-                throw MobilyPurchaseError.failed
+                case .success(let signedTx):
+                    switch signedTx {
+                    case .verified(let transaction):
+                        Logger.d("Force webhook for \(transaction.id)")
+                        try? await self.API.forceWebhook(transactionId: transaction.id, productId: product.id, isSandbox: isSandboxTransaction(transaction: transaction))
+                        resultStatus = await self.finishTransaction(signedTx: signedTx)
+                    case .unverified:
+                        Logger.e("purchaseProduct unverified")
+                        try? Monitoring.exportDiagnostic(sinceDays: 1)
+                        throw MobilyPurchaseError.failed
+                    }
+
+                case .userCancelled:
+                    throw MobilyPurchaseError.user_canceled
+
+                @unknown default:
+                    assertionFailure("Unexpected result")
+                    throw MobilyPurchaseError.failed
+                }
             }
         }, fallback: {
             throw MobilyPurchaseError.purchase_already_pending
@@ -397,7 +463,7 @@ import StoreKit
             for await signedTx in Transaction.updates {
                 if case .verified(let tx) = signedTx {
                     if !(await MobilyPurchaseSDKHelper.isTransactionFinished(id: tx.id)) {
-                        Logger.d("[startUpdateTransactionTask] finishTransaction")
+                        Logger.d("[startUpdateTransactionTask] finishTransaction \(tx.id)")
                         await self.finishTransaction(signedTx: signedTx)
                     }
                 }

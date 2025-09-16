@@ -106,16 +106,6 @@ func getAllIosSkuForJsonProducts(jsonProducts: [[String: Any]]) -> [String] {
 
     for jsonProduct in jsonProducts {
         skus.append(jsonProduct["ios_sku"] as! String)
-
-        if jsonProduct["type"] as! String == "subscription" {
-            if let offers = jsonProduct["Offers"] as? [[String: Any]] {
-                for offer in offers {
-                    if let equivalentIntroProductSku = offer["ios_equivalentIntroProductSku"] as? String {
-                        skus.append(equivalentIntroProductSku)
-                    }
-                }
-            }
-        }
     }
 
     return skus

@@ -22,11 +22,10 @@ import StoreKit
     @objc public let periodUnit: PeriodUnit
     @objc public let countBillingCycle: Int
     @objc public let ios_offerId: String? // null for base offer
-    @objc public let ios_equivalentIntroProductSku: String?
     @objc public let extras: [String: Any]?
     @objc public let status: ProductStatus
 
-    @objc init(id: String?, identifier: String?, externalRef: String?, referenceName: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: PeriodUnit, countBillingCycle: Int, ios_offerId: String?, ios_equivalentIntroProductSku: String?, extras: [String: Any]? = nil, status: ProductStatus) {
+    @objc init(id: String?, identifier: String?, externalRef: String?, referenceName: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: PeriodUnit, countBillingCycle: Int, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
         self.id = id
         self.identifier = identifier
         self.externalRef = externalRef
@@ -40,7 +39,6 @@ import StoreKit
         self.periodUnit = periodUnit
         self.countBillingCycle = countBillingCycle
         self.ios_offerId = ios_offerId
-        self.ios_equivalentIntroProductSku = ios_equivalentIntroProductSku
         self.extras = extras
         self.status = status
 
@@ -61,7 +59,6 @@ import StoreKit
         let periodUnit: PeriodUnit
         let countBillingCycle: Int
         var ios_offerId: String? = nil
-        var ios_equivalentIntroProductSku: String? = nil
         var extras: [String: Any]? = nil
         var status: ProductStatus = .unavailable
 
@@ -76,7 +73,6 @@ import StoreKit
             extras = jsonOffer!["extras"] as? [String: Any]
             type = jsonOffer!["type"] as! String
             ios_offerId = jsonOffer!["ios_offerId"] as? String
-            ios_equivalentIntroProductSku = jsonOffer!["ios_equivalentIntroProductSku"] as? String
 
             if iosProduct != nil {
                 if ios_offerId != nil {
@@ -181,7 +177,6 @@ import StoreKit
             periodUnit: periodUnit,
             countBillingCycle: countBillingCycle,
             ios_offerId: ios_offerId,
-            ios_equivalentIntroProductSku: ios_equivalentIntroProductSku,
             extras: extras,
             status: status
         )

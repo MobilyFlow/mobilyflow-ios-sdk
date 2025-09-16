@@ -8,6 +8,22 @@
 import StoreKit
 
 class MobilyPurchaseSDKHelper {
+    static func getKnownTransactionIdsForSku(_ sku: String) async -> [UInt64] {
+        var knownTxIds: [UInt64] = []
+
+        for await signedTx in Transaction.currentEntitlements {
+            if case .verified(let transaction) = signedTx {
+                if transaction.productID == sku {
+                    if !knownTxIds.contains(transaction.id) {
+                        knownTxIds.append(transaction.id)
+                    }
+                }
+            }
+        }
+
+        return knownTxIds
+    }
+
     static func getTransactionToMap(_ knownOriginalTransactionIds: [String]) async -> [String] {
         var knownOriginalTxIds: [String] = knownOriginalTransactionIds
         var transactionToMap: [String] = []
@@ -51,6 +67,24 @@ class MobilyPurchaseSDKHelper {
         return (transactionSignatures, storeAccountTransactions)
     }
 
+    static func isEligibleForPromotionnalOffer() async -> Bool {
+        if #available(iOS 17.4, *) {
+            for await signedTx in Transaction.all {
+                switch signedTx {
+                case .verified(let transaction):
+                    if transaction.productType == .autoRenewable {
+                        return true
+                    }
+                case .unverified:
+                    break
+                }
+            }
+            return false
+        } else {
+            return false
+        }
+    }
+
     /**
      Create the set of PurchaseOption to start the billing flow.
      It return a tuple (iosProduct, Set<Product.PurchaseOption>)
@@ -58,39 +92,31 @@ class MobilyPurchaseSDKHelper {
     static func createPurchaseOptions(
         syncer: MobilyPurchaseSDKSyncer, API: MobilyPurchaseAPI,
         customerId: UUID, product: MobilyProduct, options: PurchaseOptions?
-    ) async throws -> (Product, Set<Product.PurchaseOption>) {
+    ) async throws -> InternalPurchaseOptions {
         guard var iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku) else {
             // Probably store_unavavaible but no way to check...
             throw MobilyPurchaseError.product_unavailable
         }
 
-        var useIntroOffer = false
+        var redeemUrl: URL?
         var iosOffer: Product.SubscriptionOffer?
         if product.type == .subscription && options?.offer != nil {
             if options!.offer!.type == "free_trial" {
                 iosOffer = iosProduct.subscription!.introductoryOffer
             } else if options!.offer!.ios_offerId != nil {
-                let isEligibleForIntroOffer = await iosProduct.subscription!.isEligibleForIntroOffer
-
-                if isEligibleForIntroOffer {
-                    // User eligible for intro offer are not eligible to Promotional Offers
-                    if let equivalentIntroProductSku = options!.offer!.ios_equivalentIntroProductSku {
-                        if let equivalentIntroProduct = MobilyPurchaseRegistry.getIOSProduct(equivalentIntroProductSku) {
-                            // Actual promotional offer have an equivalentIntroProduct (for new user) that is eligible ->  Switch product to this one
-                            iosProduct = equivalentIntroProduct
-                            iosOffer = equivalentIntroProduct.subscription!.introductoryOffer
-                            useIntroOffer = true
-
-                            if iosOffer == nil {
-                                throw MobilyPurchaseError.product_unavailable
-                            }
-                        }
-                    }
-                } else {
+                if await isEligibleForPromotionnalOffer() {
                     iosOffer = MobilyPurchaseRegistry.getIOSOffer(product.ios_sku, offerId: options!.offer!.ios_offerId!)
 
                     if iosOffer == nil {
                         throw MobilyPurchaseError.product_unavailable
+                    }
+                } else {
+                    // Promotional Offer not available, use offerCode instead
+                    do {
+                        let offerCode = try await API.appleOfferCode(customerId: customerId, offerId: options!.offer!.id!)
+                        redeemUrl = URL(string: offerCode["redeemUrl"] as! String)!
+                    } catch {
+                        Logger.e("Can't get appleOfferCode", error: error)
                     }
                 }
             }
@@ -137,8 +163,6 @@ class MobilyPurchaseSDKHelper {
             } else {
                 if storeAccountTransaction != nil {
                     // Another customer is already entitled to this product on the same store account
-                    print("expirationDate = \(storeAccountTransaction!.expirationDate)")
-
                     if storeAccountTransaction!.expirationDate == nil || storeAccountTransaction!.expirationDate!.timeIntervalSinceNow > 0 {
                         throw MobilyPurchaseError.store_account_already_have_purchase
                     }
@@ -162,6 +186,10 @@ class MobilyPurchaseSDKHelper {
              } */
         }
 
+        if redeemUrl != nil {
+            return InternalPurchaseOptions(redeemUrl: redeemUrl!)
+        }
+
         var iosOptions = Set<Product.PurchaseOption>()
         iosOptions.insert(Product.PurchaseOption.appAccountToken(customerId))
 
@@ -171,19 +199,17 @@ class MobilyPurchaseSDKHelper {
         }))
 
         if #available(iOS 17.4, *) {
-            if options?.offer?.ios_offerId != nil && iosOffer != nil && !useIntroOffer {
+            if options?.offer?.ios_offerId != nil && iosOffer != nil {
                 let signature = try await API.signOffer(customerId: customerId, offerId: options!.offer!.id!)
                 iosOptions.insert(Product.PurchaseOption.promotionalOffer(offerID: options!.offer!.ios_offerId!, signature: signature))
             }
         }
 
-        print("iOS Product = \(iosProduct.id)")
-
         if options?.quantity != nil {
             iosOptions.insert(Product.PurchaseOption.quantity(options!.quantity!))
         }
 
-        return (iosProduct, iosOptions)
+        return InternalPurchaseOptions(product: iosProduct, options: iosOptions)
     }
 
     static func isTransactionFinished(id: UInt64) async -> Bool {
