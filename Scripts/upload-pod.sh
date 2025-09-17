@@ -20,7 +20,7 @@ swiftc -emit-objc-header -emit-objc-header-path $HEADER_FILE \
   -framework UIKit -framework Foundation -module-name MobilyflowSDK Sources/**/* || true
 
 # 3. Update podspec & version.swift
-sed -i '' -E "s/( *s.version *= *)'([0-9a-zA-Z.-]+)'/\1 '${VERSION}'/" MobilyflowSDK.podspec
+sed -i '' -E "s/( *s.version *= *)'([0-9a-zA-Z.-]+)'/\1'${VERSION}'/" MobilyflowSDK.podspec
 
 cat > Sources/MobilyflowSDK/version.swift <<EOL
 struct MobilyFlowVersion {
