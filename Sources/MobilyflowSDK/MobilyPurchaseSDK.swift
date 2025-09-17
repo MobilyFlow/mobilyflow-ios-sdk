@@ -54,6 +54,12 @@ import StoreKit
             Logger.fileHandle?.flush()
             self.sendDiagnostic()
         }
+
+        // Log device info
+        Logger.d("[Device Info] OS = iOS \(DeviceInfo.getOSVersion())")
+        Logger.d("[Device Info] deviceModel = \(DeviceInfo.getDeviceModelName())")
+        Logger.d("[Device Info] appBundleIdentifier = \(DeviceInfo.getAppBundleIdentifier())")
+        Logger.d("[Device Info] appVersion = \(DeviceInfo.getAppVersionName()) (\(DeviceInfo.getAppBuildNumber()))")
     }
 
     @objc public func close() {
