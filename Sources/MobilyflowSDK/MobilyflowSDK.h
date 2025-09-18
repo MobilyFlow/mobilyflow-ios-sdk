@@ -412,6 +412,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 - (nonnull instancetype)initWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(enum MobilyEnvironment)environment options:(MobilyPurchaseSDKOptions * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
 - (void)close;
 - (void)loginWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
+- (void)logout;
 - (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
 - (MobilyProduct * _Nullable)getProductFromCacheWithIdWithId:(NSString * _Nonnull)id SWIFT_WARN_UNUSED_RESULT;
