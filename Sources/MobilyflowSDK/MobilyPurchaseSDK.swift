@@ -55,6 +55,9 @@ import StoreKit
             self.sendDiagnostic()
         }
 
+        // Manage out-of-app purchase
+        startUpdateTransactionTask()
+
         // Log device info
         Logger.d("[Device Info] OS = iOS \(DeviceInfo.getOSVersion())")
         Logger.d("[Device Info] deviceModel = \(DeviceInfo.getDeviceModelName())")
@@ -63,11 +66,10 @@ import StoreKit
     }
 
     @objc public func close() {
-        self.customer = nil
-        diagnostics.customerId = nil
-        self.updateTxTask?.cancel()
+        self.logout()
         self.syncer.close()
         self.lifecycleManager.unregisterAll()
+        self.updateTxTask?.cancel()
     }
 
     deinit {
@@ -79,17 +81,17 @@ import StoreKit
     /* ******************************************************************* */
 
     @objc public func login(externalRef: String) async throws -> MobilyCustomer {
-        // 1. Login
+        // 1. Logout previous customer
+        self.logout()
+
+        // 2. Login
         let loginResponse = try await self.API.login(externalRef: externalRef)
         self.customer = MobilyCustomer.parse(jsonCustomer: loginResponse.customer, isForwardingEnable: loginResponse.isForwardingEnable)
         diagnostics.customerId = self.customer?.id
         try await self.syncer.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
-        // 2. Sync
+        // 3. Sync
         try await syncer.ensureSync(force: true)
-
-        // 3. Manage out-of-app purchase
-        startUpdateTransactionTask()
 
         // 4. Map transaction that are not known by the server
         let transactionToMap = await MobilyPurchaseSDKHelper.getTransactionToMap(loginResponse.platformOriginalTransactionIds)
@@ -110,6 +112,12 @@ import StoreKit
         }
 
         return self.customer!
+    }
+
+    @objc public func logout() {
+        self.customer = nil
+        diagnostics.customerId = nil
+        self.syncer.logout()
     }
 
     /* ******************************************************************* */

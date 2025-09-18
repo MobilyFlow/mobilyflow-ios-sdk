@@ -28,6 +28,7 @@ class MobilyPurchaseSDKSyncer {
         syncExecutor.sync {
             self.customer = customer
             self.entitlements = nil
+            self.lastSyncTime = nil
         }
         if self.customer != nil && jsonEntitlements != nil {
             try await syncExecutor.execute {
@@ -35,6 +36,14 @@ class MobilyPurchaseSDKSyncer {
                 try await self._syncEntitlements(currentRegion: currentRegion, jsonEntitlements: jsonEntitlements)
                 self.lastSyncTime = Date().timeIntervalSince1970
             }
+        }
+    }
+
+    func logout() {
+        syncExecutor.sync {
+            self.customer = nil
+            self.entitlements = nil
+            self.lastSyncTime = nil
         }
     }
 
