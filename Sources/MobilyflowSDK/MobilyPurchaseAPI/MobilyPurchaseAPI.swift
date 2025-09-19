@@ -209,6 +209,30 @@ class MobilyPurchaseAPI {
     }
 
     /**
+     Take a customerId and an offerId (offerId from MobilyFlow) and return an offer code with redeemURL
+
+     Throws on error.
+     */
+    public func appleOfferCode(customerId: UUID, offerId: String) async throws -> [String: Any] {
+        let request = ApiRequest(method: "POST", url: "/apps/me/products/offer-code/ios")
+        _ = request.setData(["customerId": customerId.uuidString.lowercased(), "offerId": offerId])
+
+        guard let res = try? await self.helper.request(request) else {
+            throw MobilyError.server_unavailable
+        }
+
+        if res.success {
+            return res.json()["data"] as! [String: Any]
+        } else {
+            if res.status == 404 {
+                throw MobilyInternalError.no_offer_code_available
+            } else {
+                throw MobilyError.unknown_error
+            }
+        }
+    }
+
+    /**
      Map transaction to this customer.
      Throws on error.
      */

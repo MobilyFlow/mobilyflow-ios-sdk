@@ -31,11 +31,8 @@ class MobilyPurchaseSDKDiagnostics {
             }
 
             for await signedTx in Transaction.currentEntitlements {
-                switch signedTx {
-                case .verified(let transaction):
+                if case .verified(let transaction) = signedTx {
                     Logger.d("Purchase \(transaction.productType.rawValue): productId: \(transaction.productID), transactionId \(transaction.id), originalId: \(transaction.originalID)")
-                case .unverified:
-                    break
                 }
             }
 

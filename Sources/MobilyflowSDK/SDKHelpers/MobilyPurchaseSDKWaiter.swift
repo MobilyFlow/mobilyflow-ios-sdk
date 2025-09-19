@@ -42,7 +42,7 @@ class MobilyPurchaseSDKWaiter {
                     throw MobilyPurchaseError.webhook_not_processed
                 }
 
-                usleep(calcWaitWebhookTime(retry)) // 2 seconds
+                usleep(calcWaitWebhookTime(retry))
                 retry += 1
             }
         }

@@ -101,6 +101,16 @@ func getTopViewController(_ parent: UIViewController? = nil) -> UIViewController
     return baseVC
 }
 
+func getAllIosSkuForJsonProducts(jsonProducts: [[String: Any]]) -> [String] {
+    var skus: [String] = []
+
+    for jsonProduct in jsonProducts {
+        skus.append(jsonProduct["ios_sku"] as! String)
+    }
+
+    return skus
+}
+
 func printTransaction(transaction: Transaction) async {
     print("==== TX \(transaction.id) ====")
 

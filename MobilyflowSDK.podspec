@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'MobilyflowSDK'
   s.module_name      = 'MobilyflowSDK'
-  s.version          =                        '0.1.1-alpha.30'
+  s.version          = '0.2.0-alpha.1'
   s.summary          = 'MobilyFlow SDK for iOS'
   s.description      = 'Mobilyflow SDK for iOS'
 
