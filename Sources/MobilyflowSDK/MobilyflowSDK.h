@@ -347,14 +347,28 @@ SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement15ItemEntitlement")
 @end
 
 enum Platform : NSInteger;
+@class MobilySubscriptionOffer;
 SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement23SubscriptionEntitlement")
 @interface SubscriptionEntitlement : Serializable
 @property (nonatomic, readonly, copy) NSDate * _Nonnull startDate;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull endDate;
 @property (nonatomic, readonly) BOOL autoRenewEnable;
+@property (nonatomic, readonly) BOOL isInGracePeriod;
+@property (nonatomic, readonly) BOOL isInBillingIssue;
+@property (nonatomic, readonly) BOOL isExpiredOrRevoked;
+@property (nonatomic, readonly) BOOL isPaused;
+@property (nonatomic, readonly) BOOL hasPauseScheduled;
+@property (nonatomic, readonly, copy) NSDate * _Nullable resumeDate;
+@property (nonatomic, readonly, copy) NSDate * _Nullable offerExpiryDate;
+@property (nonatomic, readonly) NSInteger offerRemainingCycle;
+@property (nonatomic, readonly, copy) NSString * _Nonnull currency;
+@property (nonatomic, readonly) NSInteger lastPriceMillis;
+@property (nonatomic, readonly) NSInteger regularPriceMillis;
+@property (nonatomic, readonly) NSInteger renewPriceMillis;
 @property (nonatomic, readonly) enum Platform platform;
 @property (nonatomic, readonly) BOOL isManagedByThisStoreAccount;
 @property (nonatomic, readonly, strong) MobilyProduct * _Nullable renewProduct;
+@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable renewProductOffer;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end

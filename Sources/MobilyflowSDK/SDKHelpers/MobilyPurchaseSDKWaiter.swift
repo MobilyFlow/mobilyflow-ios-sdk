@@ -25,7 +25,7 @@ class MobilyPurchaseSDKWaiter {
     func waitWebhook(transaction: Transaction) async throws -> WebhookStatus {
         let isSandbox = isSandboxTransaction(transaction: transaction)
 
-        Logger.d("Wait webhook for \(transaction.id)")
+        Logger.d("Wait webhook for \(transaction.id) (original: \(transaction.originalID))")
 
         var result = WebhookStatus.pending
         let startTime = Date().timeIntervalSince1970
