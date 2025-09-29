@@ -260,6 +260,7 @@ import StoreKit
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
     @objc public func openRefundDialog(product: MobilyProduct) async -> RefundDialogResult {
+        // TODO: We may have a function openRefundDialog(transactionId: ...)
         if product.oneTimeProduct?.isConsumable ?? false {
             do {
                 let lastTxId = try await self.API.getLastTxPlatformIdForProduct(customerId: self.customer!.id, productId: product.id)

@@ -62,6 +62,9 @@ import StoreKit
             let renewProductJson = jsonEntity["RenewProduct"] as? [String: Any]
             let renewProductOfferJson = jsonEntity["RenewProductOffer"] as? [String: Any]
 
+            let resumeDateStr = jsonEntity["resumeDate"] as? String
+            let offerExpiryDateStr = jsonEntity["offerExpiryDate"] as? String
+
             subscription = SubscriptionEntitlement(
                 startDate: dateFormatter.date(from: jsonEntity["startDate"]! as! String)!,
                 endDate: dateFormatter.date(from: jsonEntity["endDate"]! as! String)!,
@@ -71,8 +74,8 @@ import StoreKit
                 isExpiredOrRevoked: jsonEntity["isExpiredOrRevoked"] as! Bool,
                 isPaused: jsonEntity["isPaused"] as! Bool,
                 hasPauseScheduled: jsonEntity["hasPauseScheduled"] as! Bool,
-                resumeDate: jsonEntity["resumeDate"] == nil ? nil : dateFormatter.date(from: jsonEntity["resumeDate"]! as! String)!,
-                offerExpiryDate: jsonEntity["offerExpiryDate"] == nil ? nil : dateFormatter.date(from: jsonEntity["offerExpiryDate"]! as! String)!,
+                resumeDate: resumeDateStr == nil ? nil : dateFormatter.date(from: resumeDateStr!)!,
+                offerExpiryDate: offerExpiryDateStr == nil ? nil : dateFormatter.date(from: offerExpiryDateStr!)!,
                 offerRemainingCycle: jsonEntity["offerRemainingCycle"] as! Int,
                 currency: jsonEntity["currency"] as! String,
                 lastPriceMillis: jsonEntity["lastPriceMillis"] as! Int,
