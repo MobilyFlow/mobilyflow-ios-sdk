@@ -367,6 +367,7 @@ SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement23SubscriptionEntitl
 @property (nonatomic, readonly) NSInteger renewPriceMillis;
 @property (nonatomic, readonly) enum Platform platform;
 @property (nonatomic, readonly) BOOL isManagedByThisStoreAccount;
+@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable offer;
 @property (nonatomic, readonly, strong) MobilyProduct * _Nullable renewProduct;
 @property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable renewProductOffer;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;

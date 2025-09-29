@@ -59,6 +59,7 @@ import StoreKit
                 autoRenewEnable = renewalInfo!.willAutoRenew
             }
 
+            let productOfferJson = jsonEntity["ProductOffer"] as? [String: Any]
             let renewProductJson = jsonEntity["RenewProduct"] as? [String: Any]
             let renewProductOfferJson = jsonEntity["RenewProductOffer"] as? [String: Any]
 
@@ -83,6 +84,13 @@ import StoreKit
                 renewPriceMillis: jsonEntity["renewPriceMillis"] as! Int,
                 platform: Platform.parse(jsonEntity["platform"]! as! String)!,
                 isManagedByThisStoreAccount: storeAccountTx != nil,
+                offer: productOfferJson != nil ?
+                    await MobilySubscriptionOffer.parse(
+                        jsonBase: jsonEntity["Product"] as! [String: Any],
+                        jsonOffer: productOfferJson,
+                        iosProduct: MobilyPurchaseRegistry.getIOSProduct(product.ios_sku),
+                        currentRegion: currentRegion
+                    ) : nil,
                 renewProduct: renewProductJson != nil ? await MobilyProduct.parse(jsonProduct: renewProductJson!, currentRegion: currentRegion) : nil,
                 renewProductOffer: renewProductJson != nil && renewProductOfferJson != nil ?
                     await MobilySubscriptionOffer.parse(
@@ -131,6 +139,7 @@ import StoreKit
         @objc public let renewPriceMillis: Int
         @objc public let platform: Platform
         @objc public let isManagedByThisStoreAccount: Bool
+        @objc public let offer: MobilySubscriptionOffer?
         @objc public let renewProduct: MobilyProduct?
         @objc public let renewProductOffer: MobilySubscriptionOffer?
 
@@ -152,6 +161,7 @@ import StoreKit
             renewPriceMillis: Int,
             platform: Platform,
             isManagedByThisStoreAccount: Bool,
+            offer: MobilySubscriptionOffer?,
             renewProduct: MobilyProduct?,
             renewProductOffer: MobilySubscriptionOffer?
         ) {
@@ -172,6 +182,7 @@ import StoreKit
             self.renewPriceMillis = renewPriceMillis
             self.platform = platform
             self.isManagedByThisStoreAccount = isManagedByThisStoreAccount
+            self.offer = offer
             self.renewProduct = renewProduct
             self.renewProductOffer = renewProductOffer
 
