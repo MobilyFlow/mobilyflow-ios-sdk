@@ -97,8 +97,10 @@ class MobilyPurchaseSDKHelper {
             throw MobilyPurchaseError.product_unavailable
         }
 
+        var isDowngrade = false
         var redeemUrl: URL?
         var iosOffer: Product.SubscriptionOffer?
+
         if product.type == .subscription && options?.offer != nil {
             if options!.offer!.type == "free_trial" {
                 iosOffer = iosProduct.subscription!.introductoryOffer
@@ -138,8 +140,9 @@ class MobilyPurchaseSDKHelper {
             }
         } else {
             let entitlement = try! await syncer.getEntitlement(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId)
-
             let storeAccountTransaction = syncer.getStoreAccountTransaction(forIosSubscriptionGroup: product.subscriptionProduct!.ios_subscriptionGroupId)
+
+            Logger.d("entitlement = \(entitlement?.product.identifier ?? "null")")
 
             if entitlement != nil {
                 if !entitlement!.subscription!.isManagedByThisStoreAccount {
@@ -147,17 +150,22 @@ class MobilyPurchaseSDKHelper {
                     throw MobilyPurchaseError.not_managed_by_this_store_account
                 }
 
-                let renewalInfo = await getRenewalInfo(tx: storeAccountTransaction)
-                if renewalInfo != nil {
-                    let renewalIosSku = renewalInfo!.autoRenewPreference
+                let currentRenewProduct = entitlement!.subscription!.renewProduct ?? entitlement!.product
+                let currentRenewSku = currentRenewProduct.ios_sku
 
-                    if renewalIosSku == product.ios_sku {
-                        if entitlement?.product.ios_sku == product.ios_sku {
-                            throw MobilyPurchaseError.already_purchased
-                        } else {
-                            throw MobilyPurchaseError.renew_already_on_this_plan
-                        }
+                Logger.d("currentRenewProduct = \(currentRenewProduct.identifier)")
+                Logger.d("renewProduct = \(entitlement!.subscription!.renewProduct?.identifier ?? "null")")
+
+                if currentRenewSku == product.ios_sku {
+                    if entitlement!.product.ios_sku == product.ios_sku {
+                        throw MobilyPurchaseError.already_purchased
+                    } else {
+                        throw MobilyPurchaseError.renew_already_on_this_plan
                     }
+                }
+
+                if product.subscriptionProduct!.groupLevel >= entitlement!.product.subscriptionProduct!.groupLevel {
+                    isDowngrade = true
                 }
             } else {
                 if storeAccountTransaction != nil {
@@ -186,7 +194,7 @@ class MobilyPurchaseSDKHelper {
         }
 
         if redeemUrl != nil {
-            return InternalPurchaseOptions(redeemUrl: redeemUrl!)
+            return InternalPurchaseOptions(redeemUrl: redeemUrl!, isDowngrade: isDowngrade)
         }
 
         var iosOptions = Set<Product.PurchaseOption>()
@@ -208,7 +216,7 @@ class MobilyPurchaseSDKHelper {
             iosOptions.insert(Product.PurchaseOption.quantity(options!.quantity!))
         }
 
-        return InternalPurchaseOptions(product: iosProduct, options: iosOptions)
+        return InternalPurchaseOptions(product: iosProduct, isDowngrade: isDowngrade, options: iosOptions)
     }
 
     static func isTransactionFinished(id: UInt64) async -> Bool {

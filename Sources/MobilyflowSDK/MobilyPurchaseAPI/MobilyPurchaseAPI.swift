@@ -336,11 +336,18 @@ class MobilyPurchaseAPI {
     /**
      Get webhook status from transactionID
      */
-    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool) async throws -> WebhookStatus {
+    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: String?, downgradeAfterDate: Date?) async throws -> WebhookStatus {
         let request = ApiRequest(method: "GET", url: "/apps/me/events/webhook-status/ios")
         _ = request.addParam("isSandbox", String(isSandbox))
         _ = request.addParam("platformTxOriginalId", String(transactionOriginalId))
         _ = request.addParam("platformTxId", String(transactionId))
+
+        if downgradeToProductId != nil {
+            _ = request.addParam("downgradeToProductId", downgradeToProductId!)
+        }
+        if downgradeAfterDate != nil {
+            _ = request.addParam("downgradeAfterDate", Int(downgradeAfterDate!.timeIntervalSince1970 * 1000))
+        }
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable

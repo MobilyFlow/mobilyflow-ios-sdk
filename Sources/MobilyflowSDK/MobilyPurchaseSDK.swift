@@ -433,9 +433,13 @@ import StoreKit
                 case .success(let signedTx):
                     switch signedTx {
                     case .verified(let transaction):
-                        Logger.d("Force webhook for \(transaction.id)")
-                        try? await self.API.forceWebhook(transactionId: transaction.id, productId: product.id, isSandbox: isSandboxTransaction(transaction: transaction))
-                        resultStatus = await self.finishTransaction(signedTx: signedTx)
+                        if internalPurchaseOptions.isDowngrade {
+                            resultStatus = await self.finishTransaction(signedTx: signedTx, downgradeToProductId: product.id)
+                        } else {
+                            Logger.d("Force webhook for \(transaction.id) (original: \(transaction.originalID)")
+                            try? await self.API.forceWebhook(transactionId: transaction.id, productId: product.id, isSandbox: isSandboxTransaction(transaction: transaction))
+                            resultStatus = await self.finishTransaction(signedTx: signedTx)
+                        }
                     case .unverified:
                         Logger.e("purchaseProduct unverified")
                         try? Monitoring.exportDiagnostic(sinceDays: 1)
@@ -484,10 +488,10 @@ import StoreKit
         }
     }
 
-    private func finishTransaction(signedTx: VerificationResult<Transaction>) async -> WebhookStatus {
+    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: String? = nil) async -> WebhookStatus {
         var resultStatus: WebhookStatus = .error
         if case .verified(let transaction) = signedTx {
-            Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
+            Logger.d("[\(transaction.signedDate)] Finish transaction: \(transaction.id) (\(transaction.productID))")
             await transaction.finish()
 
             if let customer = self.customer {
@@ -497,7 +501,7 @@ import StoreKit
                     Logger.e("Map transaction error", error: error)
                 }
                 if !customer.isForwardingEnable {
-                    resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction)) ?? .error
+                    resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? .error
                 }
                 try? await syncer.ensureSync(force: true)
             }

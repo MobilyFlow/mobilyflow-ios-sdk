@@ -11,15 +11,18 @@ class InternalPurchaseOptions {
     private let product: Product?
     private let options: Set<Product.PurchaseOption>?
     private let redeemUrl: URL?
+    public let isDowngrade: Bool
     
-    init(product: Product, options: Set<Product.PurchaseOption>) {
+    init(product: Product, isDowngrade: Bool, options: Set<Product.PurchaseOption>) {
         self.product = product
+        self.isDowngrade = isDowngrade
         self.options = options
         self.redeemUrl = nil
     }
     
-    init(redeemUrl: URL) {
+    init(redeemUrl: URL, isDowngrade: Bool) {
         self.product = nil
+        self.isDowngrade = isDowngrade
         self.options = nil
         self.redeemUrl = redeemUrl
     }

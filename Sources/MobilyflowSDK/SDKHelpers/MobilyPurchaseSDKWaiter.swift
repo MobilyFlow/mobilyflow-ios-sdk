@@ -20,9 +20,10 @@ class MobilyPurchaseSDKWaiter {
     /**
      * Wait the webhook to be processed.
      *
-     * upgradeOrDowngrade is 0 for purchase, -1 for downgrade, 1 for upgrade (subscription only).
+     *  - transaction: the transaction that refer to the webhook
+     *  - downgradeToProductId: in case of a downgrade, this is the MobilyFlow productId of the renew product
      */
-    func waitWebhook(transaction: Transaction) async throws -> WebhookStatus {
+    func waitWebhook(transaction: Transaction, downgradeToProductId: String? = nil) async throws -> WebhookStatus {
         let isSandbox = isSandboxTransaction(transaction: transaction)
 
         Logger.d("Wait webhook for \(transaction.id) (original: \(transaction.originalID))")
@@ -32,7 +33,14 @@ class MobilyPurchaseSDKWaiter {
         var retry = 0
 
         while result == .pending {
-            result = try await self.API.getWebhookStatus(transactionOriginalId: transaction.originalID, transactionId: transaction.id, isSandbox: isSandbox)
+            result = try await self.API.getWebhookStatus(
+                transactionOriginalId: transaction.originalID,
+                transactionId: transaction.id,
+                isSandbox: isSandbox,
+                // Remove 5s to the signed date for safety
+                downgradeToProductId: downgradeToProductId,
+                downgradeAfterDate: downgradeToProductId == nil ? nil : transaction.signedDate.addingTimeInterval(-5.0)
+            )
 
             if result == .pending {
                 // Exit the wait function after 1 minute
