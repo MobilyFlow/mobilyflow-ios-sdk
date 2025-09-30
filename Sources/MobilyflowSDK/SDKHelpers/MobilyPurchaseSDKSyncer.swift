@@ -31,11 +31,7 @@ class MobilyPurchaseSDKSyncer {
             self.lastSyncTime = nil
         }
         if self.customer != nil && jsonEntitlements != nil {
-            try await syncExecutor.execute {
-                let currentRegion = await StorePrice.getMostRelevantRegion()
-                try await self._syncEntitlements(currentRegion: currentRegion, jsonEntitlements: jsonEntitlements)
-                self.lastSyncTime = Date().timeIntervalSince1970
-            }
+            try await self.ensureSync(force: true)
         }
     }
 
@@ -58,6 +54,8 @@ class MobilyPurchaseSDKSyncer {
     func ensureSync(force: Bool = false) async throws {
         try await syncExecutor.execute {
             if self.customer != nil && self.customer!.isForwardingEnable {
+                // If a customer is flag as forwarded, we double check if it's still the case (so if we disable forwarding
+                // on the backoffice, it's take effect instantly)
                 if let isForwardingEnable = try? await self.API.isForwardingEnable(externalRef: self.customer!.externalRef) {
                     self.customer!.isForwardingEnable = isForwardingEnable
                 }
@@ -68,13 +66,14 @@ class MobilyPurchaseSDKSyncer {
                 self.lastSyncTime == nil ||
                 (self.lastSyncTime! + self.CACHE_DURATION_SEC) < Date().timeIntervalSince1970
             {
-                Logger.d("Run Sync")
+                Logger.d("Run Sync expected...")
                 if self.customer != nil {
+                    Logger.d("Run Sync for customer \(self.customer!.id) (externalRef: \(self.customer!.externalRef))")
                     let currentRegion = await StorePrice.getMostRelevantRegion()
                     try await self._syncEntitlements(currentRegion: currentRegion)
                     self.lastSyncTime = Date().timeIntervalSince1970
+                    Logger.d("End Sync")
                 }
-                Logger.d("End Sync")
             }
         }
     }

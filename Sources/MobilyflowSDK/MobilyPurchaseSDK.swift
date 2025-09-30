@@ -90,10 +90,7 @@ import StoreKit
         diagnostics.customerId = self.customer?.id
         try await self.syncer.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
-        // 3. Sync
-        try await syncer.ensureSync(force: true)
-
-        // 4. Map transaction that are not known by the server
+        // 3. Map transaction that are not known by the server
         let transactionToMap = await MobilyPurchaseSDKHelper.getTransactionToMap(loginResponse.platformOriginalTransactionIds)
         if !transactionToMap.isEmpty {
             do {
@@ -103,7 +100,7 @@ import StoreKit
             }
         }
 
-        // 5. Send Refund Requests Notifications
+        // 4. Send Refund Requests Notifications
         Task(priority: .background) {
             // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
             if let refundRequests = loginResponse.appleRefundRequests {
