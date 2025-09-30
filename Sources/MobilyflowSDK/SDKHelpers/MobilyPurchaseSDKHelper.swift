@@ -153,9 +153,6 @@ class MobilyPurchaseSDKHelper {
                 let currentRenewProduct = entitlement!.subscription!.renewProduct ?? entitlement!.product
                 let currentRenewSku = currentRenewProduct.ios_sku
 
-                Logger.d("currentRenewProduct = \(currentRenewProduct.identifier)")
-                Logger.d("renewProduct = \(entitlement!.subscription!.renewProduct?.identifier ?? "null")")
-
                 if currentRenewSku == product.ios_sku {
                     if entitlement!.product.ios_sku == product.ios_sku {
                         throw MobilyPurchaseError.already_purchased
