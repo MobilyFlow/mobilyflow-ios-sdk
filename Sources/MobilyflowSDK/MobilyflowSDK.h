@@ -383,7 +383,7 @@ typedef SWIFT_ENUM(NSInteger, MobilyEnvironment, closed) {
 enum ProductStatus : NSInteger;
 SWIFT_CLASS("_TtC13MobilyflowSDK20MobilyOneTimeProduct")
 @interface MobilyOneTimeProduct : Serializable
-@property (nonatomic, readonly) NSDecimal price;
+@property (nonatomic, readonly) NSInteger priceMillis;
 @property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
 @property (nonatomic, readonly, copy) NSString * _Nonnull priceFormatted;
 @property (nonatomic, readonly) BOOL isConsumable;
@@ -481,7 +481,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionOffer")
 @property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
 @property (nonatomic, readonly, copy) NSString * _Nullable referenceName;
 @property (nonatomic, readonly, copy) NSString * _Nullable name;
-@property (nonatomic, readonly) NSDecimal price;
+@property (nonatomic, readonly) NSInteger priceMillis;
 @property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
 @property (nonatomic, readonly, copy) NSString * _Nonnull priceFormatted;
 @property (nonatomic, readonly, copy) NSString * _Nullable type;
