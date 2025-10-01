@@ -14,7 +14,7 @@ import StoreKit
     @objc public let externalRef: String? // null for base offer
     @objc public let referenceName: String?
     @objc public let name: String?
-    @objc public let price: Decimal
+    @objc public let priceMillis: Int
     @objc public let currencyCode: String
     @objc public let priceFormatted: String
     @objc public let type: String?
@@ -25,13 +25,13 @@ import StoreKit
     @objc public let extras: [String: Any]?
     @objc public let status: ProductStatus
 
-    @objc init(id: String?, identifier: String?, externalRef: String?, referenceName: String?, name: String?, price: Decimal, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: PeriodUnit, countBillingCycle: Int, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
+    @objc init(id: String?, identifier: String?, externalRef: String?, referenceName: String?, name: String?, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: PeriodUnit, countBillingCycle: Int, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
         self.id = id
         self.identifier = identifier
         self.externalRef = externalRef
         self.referenceName = referenceName
         self.name = name
-        self.price = price
+        self.priceMillis = priceMillis
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
         self.type = type
@@ -51,7 +51,7 @@ import StoreKit
         var externalRef: String? = nil
         var referenceName: String? = nil
         var name: String? = nil
-        let price: Decimal
+        let priceMillis: Int
         let currencyCode: String
         let priceFormatted: String
         var type = "recurring"
@@ -95,15 +95,10 @@ import StoreKit
         if jsonOffer == nil && iosProduct == nil {
             // Base offer but unavailable
             let storePrice = StorePrice.getDefaultPrice(jsonBase["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
-            if storePrice == nil {
-                price = Decimal(floatLiteral: 0.0)
-                currencyCode = ""
-            } else {
-                price = Decimal(floatLiteral: Double(storePrice!.priceMillis) / 1000.0)
-                currencyCode = storePrice!.currency
-            }
+            priceMillis = storePrice?.priceMillis ?? 0
+            currencyCode = storePrice?.currency ?? ""
 
-            priceFormatted = formatPrice(price, currencyCode: currencyCode)
+            priceFormatted = formatPrice(priceMillis, currencyCode: currencyCode)
 
             periodCount = jsonBase["subscriptionPeriodCount"] as! Int
             periodUnit = PeriodUnit.parse(jsonBase["subscriptionPeriodUnit"] as! String)!
@@ -111,15 +106,10 @@ import StoreKit
         } else if (jsonOffer != nil && iosOffer == nil) || status == .invalid {
             // Promotionnal offer but unavailable
             let storePrice = StorePrice.getDefaultPrice(jsonOffer!["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
-            if storePrice == nil {
-                price = Decimal(floatLiteral: 0.0)
-                currencyCode = ""
-            } else {
-                price = Decimal(floatLiteral: Double(storePrice!.priceMillis) / 1000.0)
-                currencyCode = storePrice!.currency
-            }
+            priceMillis = storePrice?.priceMillis ?? 0
+            currencyCode = storePrice?.currency ?? ""
 
-            priceFormatted = formatPrice(price, currencyCode: currencyCode)
+            priceFormatted = formatPrice(priceMillis, currencyCode: currencyCode)
 
             if type == "free_trial" {
                 periodCount = jsonOffer!["offerPeriodCount"] as! Int
@@ -144,7 +134,7 @@ import StoreKit
                     }
                 }
 
-                price = iosOffer!.price
+                priceMillis = NSDecimalNumber(decimal: iosOffer!.price * 1000.0).intValue
                 priceFormatted = iosOffer!.displayPrice
 
                 let parsedPeriod = try! PeriodUnit.parseSubscriptionPeriod(iosOffer!.period)
@@ -153,7 +143,7 @@ import StoreKit
                 countBillingCycle = iosOffer!.periodCount
             } else {
                 // Base offer, use iosProduct
-                price = iosProduct!.price
+                priceMillis = NSDecimalNumber(decimal: iosProduct!.price * 1000.0).intValue
                 priceFormatted = iosProduct!.displayPrice
 
                 let parsedPeriod = try! PeriodUnit.parseSubscriptionPeriod(iosProduct!.subscription!.subscriptionPeriod)
@@ -169,7 +159,7 @@ import StoreKit
             externalRef: externalRef,
             referenceName: referenceName,
             name: name,
-            price: price,
+            priceMillis: priceMillis,
             currencyCode: currencyCode,
             priceFormatted: priceFormatted,
             type: type,

@@ -20,15 +20,17 @@ func coalesce(_ values: Any?...) -> Any? {
     return nil
 }
 
-func formatPrice(_ price: Decimal, currencyCode: String) -> String {
+func formatPrice(_ priceMillis: Int, currencyCode: String) -> String {
     let formatter = NumberFormatter()
     formatter.currencyCode = currencyCode
     formatter.numberStyle = .currency
 
+    let price = Decimal(integerLiteral: priceMillis) / 1000.0
+
     if let formatted = formatter.string(from: price as NSDecimalNumber) {
         return formatted
     } else {
-        Logger.e("formatPrice fail for args \(price) \(currencyCode) -> fallback")
+        Logger.e("formatPrice fail for args \(priceMillis) \(currencyCode) -> fallback")
         return price.formatted() + currencyCode
     }
 }

@@ -9,7 +9,7 @@ import Foundation
 import StoreKit
 
 @objc public class MobilyOneTimeProduct: Serializable {
-    @objc public let price: Decimal
+    @objc public let priceMillis: Int
     @objc public let currencyCode: String
     @objc public let priceFormatted: String
     @objc public let isConsumable: Bool
@@ -17,8 +17,8 @@ import StoreKit
     @objc public let isMultiQuantity: Bool
     @objc public let status: ProductStatus
 
-    @objc init(price: Decimal, currencyCode: String, priceFormatted: String, isConsumable: Bool, isNonRenewableSub: Bool, isMultiQuantity: Bool, status: ProductStatus) {
-        self.price = price
+    @objc init(priceMillis: Int, currencyCode: String, priceFormatted: String, isConsumable: Bool, isNonRenewableSub: Bool, isMultiQuantity: Bool, status: ProductStatus) {
+        self.priceMillis = priceMillis
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
         self.isConsumable = isConsumable
@@ -30,7 +30,7 @@ import StoreKit
     }
 
     static func parse(jsonProduct: [String: Any], currentRegion: String?) -> MobilyOneTimeProduct {
-        let price: Decimal
+        let priceMillis: Int
         let currencyCode: String
         let priceFormatted: String
         let status: ProductStatus
@@ -41,24 +41,19 @@ import StoreKit
             status = iosProduct == nil ? .unavailable : .invalid
 
             let storePrice = StorePrice.getDefaultPrice(jsonProduct["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
-            if storePrice == nil {
-                price = Decimal(floatLiteral: 0.0)
-                currencyCode = ""
-            } else {
-                price = Decimal(floatLiteral: Double(storePrice!.priceMillis) / 1000.0)
-                currencyCode = storePrice!.currency
-            }
+            priceMillis = storePrice?.priceMillis ?? 0
+            currencyCode = storePrice?.currency ?? ""
 
-            priceFormatted = formatPrice(price, currencyCode: currencyCode)
+            priceFormatted = formatPrice(priceMillis, currencyCode: currencyCode)
         } else {
             status = .available
-            price = iosProduct!.price
+            priceMillis = NSDecimalNumber(decimal: iosProduct!.price * 1000.0).intValue
             currencyCode = iosProduct!.priceFormatStyle.currencyCode
             priceFormatted = iosProduct!.displayPrice
         }
 
         return MobilyOneTimeProduct(
-            price: price,
+            priceMillis: priceMillis,
             currencyCode: currencyCode,
             priceFormatted: priceFormatted,
             isConsumable: jsonProduct["isConsumable"]! as! Bool,
