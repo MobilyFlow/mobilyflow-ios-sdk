@@ -32,6 +32,7 @@ class MobilyPurchaseSDKSyncer {
         }
         if self.customer != nil && jsonEntitlements != nil {
             try await syncExecutor.execute {
+                Logger.d("Sync Entitlement with login data")
                 let currentRegion = await StorePrice.getMostRelevantRegion()
                 try await self._syncEntitlements(currentRegion: currentRegion, jsonEntitlements: jsonEntitlements)
             }
