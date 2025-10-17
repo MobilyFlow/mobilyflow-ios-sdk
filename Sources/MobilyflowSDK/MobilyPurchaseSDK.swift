@@ -59,7 +59,7 @@ import StoreKit
         startUpdateTransactionTask()
 
         // Log device info
-        Logger.d("[Device Info] OS = iOS \(DeviceInfo.getOSVersion())")
+        Logger.d("[Device Info] OS = \(DeviceInfo.getOSName()) \(DeviceInfo.getOSVersion())")
         Logger.d("[Device Info] deviceModel = \(DeviceInfo.getDeviceModelName())")
         Logger.d("[Device Info] appBundleIdentifier = \(DeviceInfo.getAppBundleIdentifier())")
         Logger.d("[Device Info] appVersion = \(DeviceInfo.getAppVersionName()) (\(DeviceInfo.getAppBuildNumber()))")
@@ -379,12 +379,10 @@ import StoreKit
                 } catch let error as Product.PurchaseError {
                     Logger.e("[purchaseProduct] PurchaseError", error: error)
                     Logger.d("[purchaseProduct] error.localizedDescription \(error.localizedDescription)")
-                    if #available(iOS 15.4, *) {
-                        Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription ?? "nil")")
-                        Logger.d("[purchaseProduct] error.failureReason \(error.failureReason ?? "nil")")
-                        Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion ?? "nil")")
-                        Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor ?? "nil")")
-                    }
+                    Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription)")
+                    Logger.d("[purchaseProduct] error.failureReason \(error.failureReason ?? "nil")")
+                    Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion ?? "nil")")
+                    Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor ?? "nil")")
                     self.sendDiagnostic()
                     throw MobilyPurchaseError.product_unavailable
                 } catch StoreKitError.notAvailableInStorefront {
@@ -468,13 +466,6 @@ import StoreKit
     private func startUpdateTransactionTask() {
         self.updateTxTask?.cancel()
         self.updateTxTask = Task(priority: .background) {
-            do {
-                try await syncer.ensureSync()
-            } catch {
-                Logger.e("Error in sync, handleUpdate later...", error: error)
-                return
-            }
-
             // Note: `Transaction.updates` never returns and continuously send updates on transaction during the whole lifetime of the app
             for await signedTx in Transaction.updates {
                 if case .verified(let tx) = signedTx {
@@ -491,7 +482,7 @@ import StoreKit
     private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: String? = nil) async -> WebhookStatus {
         var resultStatus: WebhookStatus = .error
         if case .verified(let transaction) = signedTx {
-            Logger.d("[\(transaction.signedDate)] Finish transaction: \(transaction.id) (\(transaction.productID))")
+            Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
             await transaction.finish()
 
             if let customer = self.customer {
@@ -501,7 +492,17 @@ import StoreKit
                     Logger.e("Map transaction error", error: error)
                 }
                 if !customer.isForwardingEnable {
-                    resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? .error
+                    if transaction.purchaseDate > Date().addingTimeInterval(60.0) {
+                        /*
+                         In case of a RENEW, it can happen that the purchaseDate is in the future.
+                         We notice Transaction.updates can sometime return a RENEW 3 days before it was effective,
+                         this mean the backend won't receive RENEW info until 3 days.
+                         In that case waiting for webhook will always result in "Webhook still pending after 1 minutes"
+                         */
+                        Logger.w("finishTransaction with future purchaseDate -> skip waitWebhook")
+                    } else {
+                        resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction)) ?? .error
+                    }
                 }
                 try? await syncer.ensureSync(force: true)
             }

@@ -175,8 +175,12 @@ class DeviceInfo {
         "RealityDevice14,1": "Apple Vision Pro" // Apple Vision Pro
     ]
 
-    static func getOSVersion() -> String {
+    static func getOSName() -> String {
         return UIDevice.current.systemName
+    }
+
+    static func getOSVersion() -> String {
+        return UIDevice.current.systemVersion
     }
 
     static func getDeviceModelId() -> String {

@@ -68,12 +68,15 @@ class MobilyPurchaseSDKSyncer {
             {
                 Logger.d("Run Sync expected...")
                 if self.customer != nil {
-                    Logger.d("Run Sync for customer \(self.customer!.id) (externalRef: \(self.customer!.externalRef))")
+                    Logger.d("Run Sync for customer \(self.customer!.id) (externalRef: \(self.customer!.externalRef ?? "null"))")
+
                     let currentRegion = await StorePrice.getMostRelevantRegion()
                     try await self._syncEntitlements(currentRegion: currentRegion)
                     self.lastSyncTime = Date().timeIntervalSince1970
-                    Logger.d("End Sync")
+                } else {
+                    Logger.d(" -> Sync skipped (no customer)")
                 }
+                Logger.d("End Sync")
             }
         }
     }

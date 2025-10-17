@@ -366,6 +366,7 @@ class MobilyPurchaseAPI {
      */
     public func uploadMonitoring(customerId: UUID?, file: URL) async throws {
         let request = ApiRequest(method: "POST", url: "/apps/me/monitoring/upload")
+        _ = request.addData("platform", "ios")
         if customerId != nil {
             _ = request.addData("customerId", customerId!.uuidString.lowercased())
         }
