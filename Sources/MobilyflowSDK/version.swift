@@ -1,3 +1,3 @@
 struct MobilyFlowVersion {
-    static let current = "0.2.0-alpha.8"
+    static let current = "0.3.0-alpha.1"
 }
