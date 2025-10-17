@@ -8,6 +8,12 @@
 import Foundation
 import UIKit
 
+enum LogFolderType: String {
+    case RAW_LOGS = "raw"
+    case EXPORT_LOGS = "export"
+    case PROCESSING_LOGS = "processing"
+}
+
 class Logger {
     private static var allowLogging = false
     private static var tag = ""
@@ -74,12 +80,15 @@ class Logger {
         }
     }
     
-    static func getLogFolder(forExport: Bool) throws -> URL {
+    static func getLogFolder(type: LogFolderType?) throws -> URL {
         let fileManager = FileManager.default
         
         var baseFolder = try fileManager.url(for: .libraryDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
-        baseFolder = baseFolder.appendingPathComponent("mobilyflow")
-        baseFolder = baseFolder.appendingPathComponent(forExport ? "exported-logs" : "logs")
+        baseFolder = baseFolder.appendingPathComponent("mobilyflow").appendingPathComponent("logs")
+        
+        if let type = type {
+            baseFolder = baseFolder.appendingPathComponent(type.rawValue)
+        }
         
         if !fileManager.fileExists(atPath: baseFolder.path) {
             try fileManager.createDirectory(at: baseFolder, withIntermediateDirectories: true, attributes: nil)
@@ -100,7 +109,7 @@ class Logger {
             
         do {
             if self.fileHandle == nil || nowDate.isAfterDay(self.lastWritingDate) {
-                let logFolder = try getLogFolder(forExport: false)
+                let logFolder = try getLogFolder(type: .RAW_LOGS)
                 let logFile = logFolder.appendingPathComponent(getLogFileName())
             
                 try self.queue.sync {

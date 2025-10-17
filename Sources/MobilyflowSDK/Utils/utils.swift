@@ -128,3 +128,35 @@ func printTransaction(transaction: Transaction) async {
     print("isUpgraded = ", transaction.isUpgraded)
     print("==============================")
 }
+
+func dumpFolderToString(path: URL, prefix: String = "") throws -> String {
+    var dump = ""
+    if FileManager.default.fileExists(atPath: path.path) {
+        let listFiles = try FileManager.default.contentsOfDirectory(at: path, includingPropertiesForKeys: [.isDirectoryKey])
+        for file in listFiles {
+            let isDirectory = try file.resourceValues(forKeys: [.isDirectoryKey]).isDirectory ?? false
+
+            if !dump.isEmpty {
+                dump += "\n"
+            }
+
+            if isDirectory {
+                dump += "\(prefix)\(file.lastPathComponent):\n"
+                dump += try dumpFolderToString(path: file.absoluteURL, prefix: prefix + "  ")
+            } else {
+                dump += "\(prefix)\(file.lastPathComponent)"
+            }
+        }
+    }
+    return dump
+}
+
+func dumpFolder(_ msg: String, path: URL) {
+    do {
+        var dump = "\(msg)\n\(path.absoluteString):\n"
+        dump += try dumpFolderToString(path: path, prefix: "  ")
+        Logger.d(dump)
+    } catch {
+        Logger.e("Can't dump folder \(path.absoluteString)", error: error)
+    }
+}

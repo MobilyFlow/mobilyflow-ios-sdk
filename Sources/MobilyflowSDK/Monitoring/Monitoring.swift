@@ -16,6 +16,35 @@ public class Monitoring {
     public static func initialize(tag: String, allowLogging: Bool, sendHandler: @escaping ((URL) async throws -> Void)) {
         self.sendHandler = sendHandler
         Logger.initialize(tag: tag, allowLogging: allowLogging)
+        
+        // TODO: This should be removed and is here for retro-compatibility
+        
+        // Move old log to new structure
+        do {
+            let baseLogFolder = try Logger.getLogFolder(type: nil)
+            let rawLogFolder = try Logger.getLogFolder(type: .RAW_LOGS)
+            
+            let listFiles = try FileManager.default.contentsOfDirectory(at: baseLogFolder, includingPropertiesForKeys: nil)
+            for oldFile in listFiles {
+                if FileManager.default.isReadableFile(atPath: oldFile.path) && oldFile.path.hasSuffix(".log") {
+                    let newFile = rawLogFolder.appendingPathComponent(oldFile.lastPathComponent)
+                    
+                    if FileManager.default.fileExists(atPath: newFile.path) {
+                        // New file already exists, remove the old one
+                        Logger.d("Remove old log file \(oldFile.path)")
+                        try FileManager.default.removeItem(at: oldFile)
+                    } else {
+                        Logger.d("Move old log file \(oldFile.path) to \(newFile.path)")
+                        try FileManager.default.moveItem(at: oldFile, to: newFile)
+                    }
+                }
+            }
+        } catch {
+            Logger.e("Can't move log to new structure", error: error)
+        }
+        
+        // ----------------------------------------------------------------
+        
         startSendTask()
     }
     
@@ -34,7 +63,7 @@ public class Monitoring {
         
         let sendAction = { () async in
             do {
-                let exportFolder = try Logger.getLogFolder(forExport: true)
+                let exportFolder = try Logger.getLogFolder(type: .EXPORT_LOGS)
                 if FileManager.default.fileExists(atPath: exportFolder.path) {
                     let listFiles = try FileManager.default.contentsOfDirectory(at: exportFolder, includingPropertiesForKeys: nil)
                     for file in listFiles {
@@ -42,17 +71,13 @@ public class Monitoring {
                             await self.sendLogFile(file)
                         }
                     }
-                
-                    if isDirectoryEmpty(exportFolder) {
-                        try? FileManager.default.removeItem(at: exportFolder)
-                    }
                 }
             } catch {
                 Logger.e("Error in Monitoring sendTask", error: error)
             }
         }
         
-        // Execute first after 2s, thenevery 60s
+        // Execute first after 2s, then, every 60s
         Timer.scheduledTimer(withTimeInterval: 2, repeats: false) { _ in
             Task(priority: .background) {
                 await sendAction()
@@ -88,17 +113,20 @@ public class Monitoring {
         var from = fromDate ?? Date()
         let to = toDate ?? Date()
         
-        let logFolder = try Logger.getLogFolder(forExport: false)
-        let exportFolder = try Logger.getLogFolder(forExport: true)
-        let targetFile = exportFolder.appendingPathComponent(String(Int(Date().timeIntervalSince1970 * 1000)) + ".log")
+        let rawLogFolder = try Logger.getLogFolder(type: .RAW_LOGS)
+        let processingLogFolder = try Logger.getLogFolder(type: .PROCESSING_LOGS)
+        let exportLogFolder = try Logger.getLogFolder(type: .EXPORT_LOGS)
         
-        if !FileManager.default.fileExists(atPath: targetFile.path) {
-            FileManager.default.createFile(atPath: targetFile.path, contents: nil, attributes: nil)
+        let processingFile = processingLogFolder.appendingPathComponent(String(Int(Date().timeIntervalSince1970 * 1000)) + ".log")
+        let exportFile = exportLogFolder.appendingPathComponent(String(Int(Date().timeIntervalSince1970 * 1000)) + ".log")
+        
+        if !FileManager.default.fileExists(atPath: processingFile.path) {
+            FileManager.default.createFile(atPath: processingFile.path, contents: nil, attributes: nil)
         }
-        let writer = try FileHandle(forWritingTo: targetFile)
+        let writer = try FileHandle(forWritingTo: processingFile)
         
         while !from.isAfterDay(to) { // Is before or equal
-            let logFile = logFolder.appendingPathComponent(Logger.getLogFileName(date: from))
+            let logFile = rawLogFolder.appendingPathComponent(Logger.getLogFileName(date: from))
             
             if FileManager.default.fileExists(atPath: logFile.path) && FileManager.default.isReadableFile(atPath: logFile.path) {
                 if Logger.lastWritingDate.isSameDay(from) {
@@ -145,7 +173,11 @@ public class Monitoring {
         }
         
         try writer.close()
-        return targetFile
+        
+        // Move file from processing to export folder
+        try FileManager.default.moveItem(at: processingFile, to: exportFile)
+        
+        return exportFile
     }
     
     /*
