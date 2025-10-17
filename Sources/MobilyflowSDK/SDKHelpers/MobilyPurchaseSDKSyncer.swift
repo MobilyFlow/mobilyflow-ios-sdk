@@ -31,8 +31,12 @@ class MobilyPurchaseSDKSyncer {
             self.lastSyncTime = nil
         }
         if self.customer != nil && jsonEntitlements != nil {
-            try await self.ensureSync(force: true)
+            try await syncExecutor.execute {
+                let currentRegion = await StorePrice.getMostRelevantRegion()
+                try await self._syncEntitlements(currentRegion: currentRegion, jsonEntitlements: jsonEntitlements)
+            }
         }
+        self.lastSyncTime = Date().timeIntervalSince1970
     }
 
     func logout() {

@@ -15,7 +15,7 @@ class MobilyPurchaseSDKDiagnostics {
         self.customerId = customerId
     }
 
-    func sendDiagnostic() {
+    func sendDiagnostic(sinceDays: Int = 1) {
         Task(priority: .background) {
             // 1. Write maximum info we can get
             let bundleID = Bundle.main.bundleIdentifier
@@ -37,7 +37,7 @@ class MobilyPurchaseSDKDiagnostics {
             }
 
             // 2. Send diagnostics
-            try? Monitoring.exportDiagnostic(sinceDays: 1)
+            try? Monitoring.exportDiagnostic(sinceDays: sinceDays)
         }
     }
 }

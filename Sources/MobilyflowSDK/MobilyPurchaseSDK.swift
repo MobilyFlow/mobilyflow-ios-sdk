@@ -101,10 +101,19 @@ import StoreKit
         }
 
         // 4. Send Refund Requests Notifications
-        Task(priority: .background) {
-            // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
-            if let refundRequests = loginResponse.appleRefundRequests {
+        if let refundRequests = loginResponse.appleRefundRequests {
+            Task(priority: .background) {
+                // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
                 await self.refundRequestManager.manageRefundRequests(refundRequests)
+            }
+        }
+
+        // 5. Send monitoring if requested
+        if loginResponse.haveMonitoringRequests {
+            Task(priority: .background) {
+                // When monitoring is requested, send 10 days
+                Logger.d("Send monitoring as requested by the server")
+                await self.sendDiagnostic(sinceDays: 10)
             }
         }
 
@@ -514,8 +523,8 @@ import StoreKit
     /* *********************** DIAGNOSTICS *********************** */
     /* *********************************************************** */
 
-    @objc public func sendDiagnostic() {
-        diagnostics.sendDiagnostic()
+    @objc public func sendDiagnostic(sinceDays: Int = 1) {
+        diagnostics.sendDiagnostic(sinceDays: sinceDays)
     }
 
     /* ************************************************************** */

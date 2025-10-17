@@ -7,10 +7,11 @@
 
 import Foundation
 
-struct LoginResponse {
+struct LoginResponse: Sendable {
     let customer: [String: Any]
     let entitlements: [[String: Any]]
     let platformOriginalTransactionIds: [String]
     let isForwardingEnable: Bool
     let appleRefundRequests: [[String: Any]]?
+    let haveMonitoringRequests: Bool
 }
