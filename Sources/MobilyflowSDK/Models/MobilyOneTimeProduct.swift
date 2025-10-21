@@ -40,7 +40,7 @@ import StoreKit
         if iosProduct == nil || iosProduct?.subscription != nil {
             status = iosProduct == nil ? .unavailable : .invalid
 
-            let storePrice = StorePrice.getDefaultPrice(jsonProduct["StorePrices"] as! [[String: Any]], currentRegion: currentRegion)
+            let storePrice = StorePrice.getDefaultPrice(jsonProduct["StorePrices"] as? [[String: Any]], currentRegion: currentRegion)
             priceMillis = storePrice?.priceMillis ?? 0
             currencyCode = storePrice?.currency ?? ""
 

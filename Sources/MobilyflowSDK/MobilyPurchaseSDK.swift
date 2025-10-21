@@ -113,7 +113,7 @@ import StoreKit
             Task(priority: .background) {
                 // When monitoring is requested, send 10 days
                 Logger.d("Send monitoring as requested by the server")
-                await self.sendDiagnostic(sinceDays: 10)
+                await self.diagnostics.sendDiagnostic(sinceDays: 10)
             }
         }
 
@@ -523,8 +523,8 @@ import StoreKit
     /* *********************** DIAGNOSTICS *********************** */
     /* *********************************************************** */
 
-    @objc public func sendDiagnostic(sinceDays: Int = 1) {
-        diagnostics.sendDiagnostic(sinceDays: sinceDays)
+    @objc public func sendDiagnostic() {
+        diagnostics.sendDiagnostic()
     }
 
     /* ************************************************************** */

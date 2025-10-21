@@ -30,27 +30,29 @@ class StorePrice {
         )
     }
 
-    static func getDefaultPrice(_ storePrices: [[String: Any]], currentRegion: String?) -> StorePrice? {
-        let currentRegionPrice = storePrices.first {
-            $0["regionCode"] as? String == currentRegion && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
-        }
-        if currentRegionPrice != nil {
-            return StorePrice.parse(currentRegionPrice!)
-        }
+    static func getDefaultPrice(_ storePrices: [[String: Any]]?, currentRegion: String?) -> StorePrice? {
+        if let storePrices = storePrices {
+            let currentRegionPrice = storePrices.first {
+                $0["regionCode"] as? String == currentRegion && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
+            }
+            if currentRegionPrice != nil {
+                return StorePrice.parse(currentRegionPrice!)
+            }
 
-        let defaultStorePrice = storePrices.first {
-            ($0["isDefault"] as? Bool ?? false) && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
-        }
+            let defaultStorePrice = storePrices.first {
+                ($0["isDefault"] as? Bool ?? false) && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
+            }
 
-        if defaultStorePrice != nil {
-            return StorePrice.parse(defaultStorePrice!)
-        }
+            if defaultStorePrice != nil {
+                return StorePrice.parse(defaultStorePrice!)
+            }
 
-        let firstStorePrice = storePrices.first {
-            $0["platform"] as? String == nil || $0["platform"] as? String == "ios"
-        }
-        if firstStorePrice != nil {
-            return StorePrice.parse(firstStorePrice!)
+            let firstStorePrice = storePrices.first {
+                $0["platform"] as? String == nil || $0["platform"] as? String == "ios"
+            }
+            if firstStorePrice != nil {
+                return StorePrice.parse(firstStorePrice!)
+            }
         }
 
         return nil
