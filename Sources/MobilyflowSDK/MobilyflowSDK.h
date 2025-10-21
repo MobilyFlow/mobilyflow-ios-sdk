@@ -443,7 +443,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 /// Pro tips: to test declined refund in sandbox, once the dialog appear, select “other” and write “REJECT” in the text box.
 - (void)openRefundDialogWithProduct:(MobilyProduct * _Nonnull)product completionHandler:(void (^ _Nonnull)(enum RefundDialogResult))completionHandler;
 - (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(enum WebhookStatus, NSError * _Nullable))completionHandler;
-- (void)sendDiagnosticSinceDays:(NSInteger)sinceDays;
+- (void)sendDiagnostic;
 - (void)getStoreCountryWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable))completionHandler;
 - (void)isForwardingEnableWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(BOOL, NSError * _Nullable))completionHandler;
 - (void)getCustomerWithCompletionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
