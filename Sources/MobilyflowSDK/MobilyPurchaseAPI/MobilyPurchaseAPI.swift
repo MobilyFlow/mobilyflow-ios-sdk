@@ -122,6 +122,26 @@ class MobilyPurchaseAPI {
     }
 
     /**
+     Get products in JSON Array format
+     */
+    public func getSubscriptionGroupById(id: String) async throws -> [String: Any] {
+        let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app/\(id)")
+        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("locale", self.locale)
+        _ = request.addParam("platform", "ios")
+
+        guard let res = try? await self.helper.request(request) else {
+            throw MobilyError.server_unavailable
+        }
+
+        if res.success {
+            return res.json()["data"] as! [String: Any]
+        } else {
+            throw MobilyError.unknown_error
+        }
+    }
+
+    /**
      Get entitlements
      */
     public func getCustomerEntitlements(customerId: UUID) async throws -> [[String: Any]] {

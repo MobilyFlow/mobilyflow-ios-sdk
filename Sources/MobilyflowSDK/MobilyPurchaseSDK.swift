@@ -189,6 +189,27 @@ import StoreKit
         return groups
     }
 
+    @objc public func getSubscriptionGroupById(id: String) async throws -> MobilySubscriptionGroup {
+        try await syncer.ensureSync()
+
+        // 1. Get groups from Mobily API
+        let jsonGroup = try await self.API.getSubscriptionGroupById(id: id)
+
+        // 2. Get product from App Store
+        let iosIdentifiers = getAllIosSkuForJsonProducts(jsonProducts: jsonGroup["Products"] as! [[String: Any]])
+        await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
+
+        // 3. Parse to MobilySubscriptionGroup
+        let currentRegion = await StorePrice.getMostRelevantRegion()
+        let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, currentRegion: currentRegion, onlyAvailableProducts: false)
+
+        for product in mobilyGroup.products {
+            productsCaches[product.id] = product
+        }
+
+        return mobilyGroup
+    }
+
     @objc public func getProductFromCacheWithId(id: String) -> MobilyProduct? {
         return productsCaches[id]
     }
