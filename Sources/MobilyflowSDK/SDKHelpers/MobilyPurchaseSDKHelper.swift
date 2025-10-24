@@ -142,7 +142,7 @@ class MobilyPurchaseSDKHelper {
             let entitlement = try! await syncer.getEntitlement(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId)
             let storeAccountTransaction = syncer.getStoreAccountTransaction(forIosSubscriptionGroup: product.subscriptionProduct!.ios_subscriptionGroupId)
 
-            Logger.d("entitlement = \(entitlement?.product.identifier ?? "null")")
+            Logger.d("[createPurchaseOptions] entitlement = \(entitlement?.product.identifier ?? "null")")
 
             if entitlement != nil {
                 if !entitlement!.subscription!.isManagedByThisStoreAccount {
@@ -155,7 +155,9 @@ class MobilyPurchaseSDKHelper {
 
                 if currentRenewSku == product.ios_sku {
                     if entitlement!.product.ios_sku == product.ios_sku {
-                        throw MobilyPurchaseError.already_purchased
+                        if entitlement!.subscription!.autoRenewEnable {
+                            throw MobilyPurchaseError.already_purchased
+                        }
                     } else {
                         throw MobilyPurchaseError.renew_already_on_this_plan
                     }
@@ -172,22 +174,6 @@ class MobilyPurchaseSDKHelper {
                     }
                 }
             }
-
-            // TODO: If subscription is owned but autoRenew disable, allow to re-enable autoRenew
-            /* let entitlement = syncer!.getEntitlement(productId: product.id)
-             if entitlement != nil {
-                 let currentTx = await syncer!.getTransactionForOriginalTxId(originalTxId: UInt64(entitlement!.platformOriginalTransactionId!)!)
-                  if currentTx != nil {
-                      let subStatus = await currentTx!.subscriptionStatus
-                      if subStatus != nil, case .verified(let verifiedSub) = subStatus!.renewalInfo {
-                          if verifiedSub.willAutoRenew {
-                              throw MobilyPurchaseError.already_purchased
-                          } else {
-                              isSusbscriptionReEnable = true
-                          }
-                      }
-                  }
-             } */
         }
 
         if redeemUrl != nil {

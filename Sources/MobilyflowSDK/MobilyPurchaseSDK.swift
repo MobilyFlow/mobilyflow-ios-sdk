@@ -464,7 +464,7 @@ import StoreKit
                         if internalPurchaseOptions.isDowngrade {
                             resultStatus = await self.finishTransaction(signedTx: signedTx, downgradeToProductId: product.id)
                         } else {
-                            Logger.d("Force webhook for \(transaction.id) (original: \(transaction.originalID)")
+                            Logger.d("Force webhook for \(transaction.id) (original: \(transaction.originalID))")
                             try? await self.API.forceWebhook(transactionId: transaction.id, productId: product.id, isSandbox: isSandboxTransaction(transaction: transaction))
                             resultStatus = await self.finishTransaction(signedTx: signedTx)
                         }
@@ -531,7 +531,7 @@ import StoreKit
                          */
                         Logger.w("finishTransaction with future purchaseDate -> skip waitWebhook")
                     } else {
-                        resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction)) ?? .error
+                        resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? .error
                     }
                 }
                 try? await syncer.ensureSync(force: true)
