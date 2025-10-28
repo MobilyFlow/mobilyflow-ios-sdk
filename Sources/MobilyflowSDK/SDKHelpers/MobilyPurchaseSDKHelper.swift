@@ -150,16 +150,17 @@ class MobilyPurchaseSDKHelper {
                     throw MobilyPurchaseError.not_managed_by_this_store_account
                 }
 
-                let currentRenewProduct = entitlement!.subscription!.renewProduct ?? entitlement!.product
-                let currentRenewSku = currentRenewProduct.ios_sku
+                // If auto-renew is disabled, allow re-purchase in app
+                if entitlement!.subscription!.autoRenewEnable {
+                    let currentRenewProduct = entitlement!.subscription!.renewProduct ?? entitlement!.product
+                    let currentRenewSku = currentRenewProduct.ios_sku
 
-                if currentRenewSku == product.ios_sku {
-                    if entitlement!.product.ios_sku == product.ios_sku {
-                        if entitlement!.subscription!.autoRenewEnable {
+                    if currentRenewSku == product.ios_sku {
+                        if entitlement!.product.ios_sku == product.ios_sku {
                             throw MobilyPurchaseError.already_purchased
+                        } else {
+                            throw MobilyPurchaseError.renew_already_on_this_plan
                         }
-                    } else {
-                        throw MobilyPurchaseError.renew_already_on_this_plan
                     }
                 }
 
