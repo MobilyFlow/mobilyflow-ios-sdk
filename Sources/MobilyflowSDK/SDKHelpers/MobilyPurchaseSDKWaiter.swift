@@ -24,6 +24,25 @@ class MobilyPurchaseSDKWaiter {
      *  - downgradeToProductId: in case of a downgrade, this is the MobilyFlow productId of the renew product
      */
     func waitWebhook(transaction: Transaction, downgradeToProductId: String? = nil) async throws -> WebhookStatus {
+        // TODO: In case of an old transaction (more than a week), it may be not necessary to waitWebhook
+        // -> Actually, very old transaction related to IAPHub are trigerring error "Webhook still pending after 1 minutes"
+        // We should also add this check on Android
+
+        if transaction.purchaseDate > Date().addingTimeInterval(60.0) {
+            /*
+             In case of a RENEW, it can happen that the purchaseDate is in the future.
+             We notice Transaction.updates can sometime return a RENEW 3 days before it was effective,
+             this mean the backend won't receive RENEW info until 3 days.
+             In that case waiting for webhook will always result in "Webhook still pending after 1 minutes"
+             */
+            Logger.w("finishTransaction with future purchaseDate -> skip waitWebhook")
+            return .success
+        } else if transaction.purchaseDate < Date().addingTimeInterval(-7.0 * 24.0 * 3600.0) {
+            // In case of a PURCHASE older than 1 week, assume the webhook is already done.
+            Logger.w("finishTransaction with old purchaseDate -> skip waitWebhook")
+            return .success
+        }
+
         let isSandbox = isSandboxTransaction(transaction: transaction)
 
         Logger.d("Wait webhook for \(transaction.id) (original: \(transaction.originalID))")

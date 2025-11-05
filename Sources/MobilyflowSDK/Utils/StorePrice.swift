@@ -30,34 +30,6 @@ class StorePrice {
         )
     }
 
-    static func getDefaultPrice(_ storePrices: [[String: Any]]?, currentRegion: String?) -> StorePrice? {
-        if let storePrices = storePrices {
-            let currentRegionPrice = storePrices.first {
-                $0["regionCode"] as? String == currentRegion && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
-            }
-            if currentRegionPrice != nil {
-                return StorePrice.parse(currentRegionPrice!)
-            }
-
-            let defaultStorePrice = storePrices.first {
-                ($0["isDefault"] as? Bool ?? false) && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
-            }
-
-            if defaultStorePrice != nil {
-                return StorePrice.parse(defaultStorePrice!)
-            }
-
-            let firstStorePrice = storePrices.first {
-                $0["platform"] as? String == nil || $0["platform"] as? String == "ios"
-            }
-            if firstStorePrice != nil {
-                return StorePrice.parse(firstStorePrice!)
-            }
-        }
-
-        return nil
-    }
-
     static func getMostRelevantRegion() async -> String? {
         if let alpha3 = (await Storefront.current)?.countryCode {
             return CountryCodes.alpha3ToAlpha2(alpha3)

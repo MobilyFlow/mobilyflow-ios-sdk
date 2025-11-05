@@ -94,7 +94,9 @@ import StoreKit
         // 2. Populate
         if jsonOffer == nil && iosProduct == nil {
             // Base offer but unavailable
-            let storePrice = StorePrice.getDefaultPrice(jsonBase["StorePrices"] as? [[String: Any]], currentRegion: currentRegion)
+            let jsonStorePrice = jsonBase["StorePrices"] as? [[String: Any]]
+            let storePrice = (jsonStorePrice?.count ?? 0) > 0 ? StorePrice.parse(jsonStorePrice![0]) : nil
+
             priceMillis = storePrice?.priceMillis ?? 0
             currencyCode = storePrice?.currency ?? ""
 
@@ -105,7 +107,9 @@ import StoreKit
             countBillingCycle = 0
         } else if (jsonOffer != nil && iosOffer == nil) || status == .invalid {
             // Promotionnal offer but unavailable
-            let storePrice = StorePrice.getDefaultPrice(jsonOffer!["StorePrices"] as? [[String: Any]], currentRegion: currentRegion)
+            let jsonStorePrice = jsonOffer!["StorePrices"] as? [[String: Any]]
+            let storePrice = (jsonStorePrice?.count ?? 0) > 0 ? StorePrice.parse(jsonStorePrice![0]) : nil
+
             priceMillis = storePrice?.priceMillis ?? 0
             currencyCode = storePrice?.currency ?? ""
 

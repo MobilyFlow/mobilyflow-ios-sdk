@@ -218,16 +218,29 @@ import StoreKit
     /* ************************** ENTITLEMENTS *************************** */
     /* ******************************************************************* */
 
+    private func _cacheEntitlement(_ entitlement: MobilyCustomerEntitlement?) -> MobilyCustomerEntitlement? {
+        if let entitlement = entitlement {
+            productsCaches[entitlement.product.id] = entitlement.product
+
+            if entitlement.subscription?.renewProduct != nil {
+                productsCaches[entitlement.subscription!.renewProduct!.id] = entitlement.subscription!.renewProduct
+            }
+        }
+        return entitlement
+    }
+
     @objc public func getEntitlementForSubscription(subscriptionGroupId: String) async throws -> MobilyCustomerEntitlement? {
-        return try await syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId)
+        return try self._cacheEntitlement(await syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId))
     }
 
     @objc public func getEntitlement(productId: String) async throws -> MobilyCustomerEntitlement? {
-        return try await syncer.getEntitlement(forProductId: productId)
+        return try self._cacheEntitlement(await syncer.getEntitlement(forProductId: productId))
     }
 
     @objc public func getEntitlements(productIds: [String]?) async throws -> [MobilyCustomerEntitlement] {
-        return try syncer.getEntitlements(forProductIds: productIds)
+        let result = try syncer.getEntitlements(forProductIds: productIds)
+        result.forEach { self._cacheEntitlement($0) }
+        return result
     }
 
     @objc public func getExternalEntitlements() async throws -> [MobilyCustomerEntitlement] {
@@ -522,17 +535,7 @@ import StoreKit
                     Logger.e("Map transaction error", error: error)
                 }
                 if !customer.isForwardingEnable {
-                    if transaction.purchaseDate > Date().addingTimeInterval(60.0) {
-                        /*
-                         In case of a RENEW, it can happen that the purchaseDate is in the future.
-                         We notice Transaction.updates can sometime return a RENEW 3 days before it was effective,
-                         this mean the backend won't receive RENEW info until 3 days.
-                         In that case waiting for webhook will always result in "Webhook still pending after 1 minutes"
-                         */
-                        Logger.w("finishTransaction with future purchaseDate -> skip waitWebhook")
-                    } else {
-                        resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? .error
-                    }
+                    resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? .error
                 }
                 try? await syncer.ensureSync(force: true)
             }
@@ -551,6 +554,10 @@ import StoreKit
     /* ************************************************************** */
     /* *************************** OTHERS *************************** */
     /* ************************************************************** */
+
+    @objc public func isBillingAvailable() -> Bool {
+        return AppStore.canMakePayments
+    }
 
     // TODO: onStorefrontChange
     @objc public func getStoreCountry() async -> String? {
