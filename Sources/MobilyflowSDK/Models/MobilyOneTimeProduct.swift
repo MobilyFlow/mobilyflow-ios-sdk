@@ -29,7 +29,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonProduct: [String: Any], currentRegion: String?) -> MobilyOneTimeProduct {
+    static func parse(jsonProduct: [String: Any]) -> MobilyOneTimeProduct {
         let priceMillis: Int
         let currencyCode: String
         let priceFormatted: String

@@ -81,8 +81,11 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "GET", url: "/apps/me/products/for-app")
         _ = request.addParam("environment", environment.toString())
         _ = request.addParam("locale", self.locale)
-        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
         _ = request.addParam("platform", "ios")
+
+        if let region = await StorePrice.getMostRelevantRegion() {
+            _ = request.addParam("region", region)
+        }
 
         if identifiers != nil {
             _ = request.addParam("identifiers", identifiers!.joined(separator: ","))
@@ -110,8 +113,11 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app")
         _ = request.addParam("environment", environment.toString())
         _ = request.addParam("locale", self.locale)
-        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
         _ = request.addParam("platform", "ios")
+
+        if let region = await StorePrice.getMostRelevantRegion() {
+            _ = request.addParam("region", region)
+        }
 
         if identifiers != nil {
             _ = request.addParam("identifiers", identifiers!.joined(separator: ","))
@@ -135,8 +141,11 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app/\(id)")
         _ = request.addParam("environment", environment.toString())
         _ = request.addParam("locale", self.locale)
-        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
         _ = request.addParam("platform", "ios")
+
+        if let region = await StorePrice.getMostRelevantRegion() {
+            _ = request.addParam("region", region)
+        }
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -155,8 +164,11 @@ class MobilyPurchaseAPI {
     public func getCustomerEntitlements(customerId: UUID) async throws -> [[String: Any]] {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/entitlements")
         _ = request.addParam("locale", self.locale)
-        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
         _ = request.addParam("loadProduct", "true")
+
+        if let region = await StorePrice.getMostRelevantRegion() {
+            _ = request.addParam("region", region)
+        }
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -377,7 +389,7 @@ class MobilyPurchaseAPI {
             _ = request.addParam("downgradeToProductId", downgradeToProductId!)
         }
         if downgradeAfterDate != nil {
-            _ = request.addParam("downgradeAfterDate", Int(downgradeAfterDate!.timeIntervalSince1970 * 1000))
+            _ = request.addParam("downgradeAfterDate", String(Int(downgradeAfterDate!.timeIntervalSince1970 * 1000)))
         }
 
         guard let res = try? await self.helper.request(request) else {

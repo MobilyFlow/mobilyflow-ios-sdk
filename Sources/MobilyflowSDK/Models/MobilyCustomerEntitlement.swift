@@ -27,10 +27,10 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction], currentRegion: String?) async -> MobilyCustomerEntitlement {
+    static func parse(jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyCustomerEntitlement {
         let type = ProductType.parse(jsonEntitlement["type"]! as! String)!
         let jsonEntity = jsonEntitlement["entity"] as! [String: Any]
-        let product = await MobilyProduct.parse(jsonProduct: jsonEntity["Product"] as! [String: Any], currentRegion: currentRegion)
+        let product = await MobilyProduct.parse(jsonProduct: jsonEntity["Product"] as! [String: Any])
         let platformOriginalTransactionId = jsonEntitlement["platformOriginalTransactionId"] as? String
 
         var item: ItemEntitlement? = nil
@@ -88,16 +88,14 @@ import StoreKit
                     await MobilySubscriptionOffer.parse(
                         jsonBase: jsonEntity["Product"] as! [String: Any],
                         jsonOffer: productOfferJson,
-                        iosProduct: MobilyPurchaseRegistry.getIOSProduct(product.ios_sku),
-                        currentRegion: currentRegion
+                        iosProduct: MobilyPurchaseRegistry.getIOSProduct(product.ios_sku)
                     ) : nil,
-                renewProduct: renewProductJson != nil ? await MobilyProduct.parse(jsonProduct: renewProductJson!, currentRegion: currentRegion) : nil,
+                renewProduct: renewProductJson != nil ? await MobilyProduct.parse(jsonProduct: renewProductJson!) : nil,
                 renewProductOffer: renewProductJson != nil && renewProductOfferJson != nil ?
                     await MobilySubscriptionOffer.parse(
                         jsonBase: renewProductJson!,
                         jsonOffer: renewProductOfferJson,
-                        iosProduct: MobilyPurchaseRegistry.getIOSProduct(renewProductJson!["ios_sku"]! as! String),
-                        currentRegion: currentRegion
+                        iosProduct: MobilyPurchaseRegistry.getIOSProduct(renewProductJson!["ios_sku"]! as! String)
                     ) : nil,
             )
         }

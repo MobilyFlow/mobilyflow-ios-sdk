@@ -45,7 +45,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonBase: [String: Any], jsonOffer: [String: Any]?, iosProduct: Product?, currentRegion: String?) async -> MobilySubscriptionOffer {
+    static func parse(jsonBase: [String: Any], jsonOffer: [String: Any]?, iosProduct: Product?) async -> MobilySubscriptionOffer {
         var id: String? = nil
         var identifier: String? = nil
         var externalRef: String? = nil

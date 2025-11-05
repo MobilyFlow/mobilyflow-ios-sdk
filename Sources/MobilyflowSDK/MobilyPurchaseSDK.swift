@@ -143,10 +143,8 @@ import StoreKit
         // 3. Parse to MobilyProduct
         var mobilyProducts: [MobilyProduct] = []
 
-        let currentRegion = await StorePrice.getMostRelevantRegion()
-
         for jsonProduct in jsonProducts {
-            let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct, currentRegion: currentRegion)
+            let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct)
             productsCaches[mobilyProduct.id] = mobilyProduct
 
             if !onlyAvailable || mobilyProduct.status == .available {
@@ -172,10 +170,8 @@ import StoreKit
         // 3. Parse to MobilySubscriptionGroup
         var groups: [MobilySubscriptionGroup] = []
 
-        let currentRegion = await StorePrice.getMostRelevantRegion()
-
         for jsonGroup in jsonGroups {
-            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, currentRegion: currentRegion, onlyAvailableProducts: onlyAvailable)
+            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, onlyAvailableProducts: onlyAvailable)
 
             for product in mobilyGroup.products {
                 productsCaches[product.id] = product
@@ -200,8 +196,7 @@ import StoreKit
         await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
 
         // 3. Parse to MobilySubscriptionGroup
-        let currentRegion = await StorePrice.getMostRelevantRegion()
-        let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, currentRegion: currentRegion, onlyAvailableProducts: false)
+        let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, onlyAvailableProducts: false)
 
         for product in mobilyGroup.products {
             productsCaches[product.id] = product
@@ -254,9 +249,8 @@ import StoreKit
         if !transactionToClaim.isEmpty {
             let jsonEntitlements = try await self.API.getCustomerExternalEntitlements(customerId: customer!.id, transactions: transactionToClaim)
 
-            let currentRegion = await StorePrice.getMostRelevantRegion()
             for jsonEntitlement in jsonEntitlements {
-                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: storeAccountTransactions, currentRegion: currentRegion))
+                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: storeAccountTransactions))
             }
         }
 
