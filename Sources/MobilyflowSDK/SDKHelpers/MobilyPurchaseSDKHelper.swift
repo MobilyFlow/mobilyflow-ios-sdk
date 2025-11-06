@@ -114,7 +114,7 @@ class MobilyPurchaseSDKHelper {
                 } else {
                     // Promotional Offer not available, use offerCode instead
                     do {
-                        let offerCode = try await API.appleOfferCode(customerId: customerId, offerId: options!.offer!.id!)
+                        let offerCode = try await API.appleOfferCode(customerId: customerId, offerId: options!.offer!.id)
                         redeemUrl = URL(string: offerCode["redeemUrl"] as! String)!
                     } catch {
                         Logger.e("Can't get appleOfferCode", error: error)
@@ -125,7 +125,7 @@ class MobilyPurchaseSDKHelper {
 
         // Manage already purchased
         if product.type == ProductType.ONE_TIME {
-            if !product.oneTimeProduct!.isConsumable {
+            if !product.oneTime!.isConsumable {
                 let entitlement = try! await syncer.getEntitlement(forProductId: product.id)
                 if entitlement != nil {
                     throw MobilyPurchaseError.already_purchased
@@ -139,24 +139,24 @@ class MobilyPurchaseSDKHelper {
                 }
             }
         } else {
-            let entitlement = try! await syncer.getEntitlement(forSubscriptionGroup: product.subscriptionProduct!.subscriptionGroupId)
-            let storeAccountTransaction = syncer.getStoreAccountTransaction(forIosSubscriptionGroup: product.subscriptionProduct!.ios_subscriptionGroupId)
+            let entitlement = try! await syncer.getEntitlement(forSubscriptionGroup: product.subscription!.groupId)
+            let storeAccountTransaction = syncer.getStoreAccountTransaction(forIosSubscriptionGroup: product.subscription!.ios_groupId)
 
-            Logger.d("[createPurchaseOptions] entitlement = \(entitlement?.product.identifier ?? "null")")
+            Logger.d("[createPurchaseOptions] entitlement = \(entitlement?.Product.identifier ?? "null")")
 
             if entitlement != nil {
-                if !entitlement!.subscription!.isManagedByThisStoreAccount {
+                if !entitlement!.Subscription!.isManagedByThisStoreAccount {
                     // Customer subscribe under another store account
                     throw MobilyPurchaseError.not_managed_by_this_store_account
                 }
 
                 // If auto-renew is disabled, allow re-purchase in app
-                if entitlement!.subscription!.autoRenewEnable {
-                    let currentRenewProduct = entitlement!.subscription!.renewProduct ?? entitlement!.product
+                if entitlement!.Subscription!.autoRenewEnable {
+                    let currentRenewProduct = entitlement!.Subscription!.RenewProduct ?? entitlement!.Product
                     let currentRenewSku = currentRenewProduct.ios_sku
 
                     if currentRenewSku == product.ios_sku {
-                        if entitlement!.product.ios_sku == product.ios_sku {
+                        if entitlement!.Product.ios_sku == product.ios_sku {
                             throw MobilyPurchaseError.already_purchased
                         } else {
                             throw MobilyPurchaseError.renew_already_on_this_plan
@@ -164,7 +164,7 @@ class MobilyPurchaseSDKHelper {
                     }
                 }
 
-                if product.subscriptionProduct!.groupLevel >= entitlement!.product.subscriptionProduct!.groupLevel {
+                if product.subscription!.groupLevel >= entitlement!.Product.subscription!.groupLevel {
                     isDowngrade = true
                 }
             } else {
@@ -191,7 +191,7 @@ class MobilyPurchaseSDKHelper {
 
         if #available(iOS 17.4, *) {
             if options?.offer?.ios_offerId != nil && iosOffer != nil {
-                let signature = try await API.signOffer(customerId: customerId, offerId: options!.offer!.id!)
+                let signature = try await API.signOffer(customerId: customerId, offerId: options!.offer!.id)
                 iosOptions.insert(Product.PurchaseOption.promotionalOffer(offerID: options!.offer!.ios_offerId!, signature: signature))
             }
         }

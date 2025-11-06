@@ -160,3 +160,17 @@ func dumpFolder(_ msg: String, path: URL) {
         Logger.e("Can't dump folder \(path.absoluteString)", error: error)
     }
 }
+
+func parseDate(_ dateString: String) -> Date {
+    let dateFormatter = ISO8601DateFormatter()
+    dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
+
+    return dateFormatter.date(from: dateString)!
+}
+
+func parseDateOpt(_ dateString: String?) -> Date? {
+    if dateString == nil || dateString!.isEmpty {
+        return nil
+    }
+    return parseDate(dateString!)
+}

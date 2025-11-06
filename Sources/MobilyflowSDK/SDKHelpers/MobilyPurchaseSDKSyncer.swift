@@ -117,7 +117,7 @@ class MobilyPurchaseSDKSyncer {
         try await ensureSync()
 
         return entitlements?.first { entitlement in
-            entitlement.type == ProductType.SUBSCRIPTION && entitlement.product.subscriptionProduct?.subscriptionGroupId == subscriptionGroupId
+            entitlement.type == ProductType.SUBSCRIPTION && entitlement.Product.subscription?.groupId == subscriptionGroupId
         }
     }
 
@@ -129,7 +129,7 @@ class MobilyPurchaseSDKSyncer {
         try await ensureSync()
 
         return entitlements?.first { entitlement in
-            entitlement.product.id == productId
+            entitlement.Product.id == productId
         }
     }
 
@@ -143,7 +143,7 @@ class MobilyPurchaseSDKSyncer {
         }
 
         return entitlements?.filter { entitlement in
-            productIds!.contains(entitlement.product.id)
+            productIds!.contains(entitlement.Product.id)
         } ?? []
     }
 
@@ -159,7 +159,11 @@ class MobilyPurchaseSDKSyncer {
     /**
      Return the Storekit Transaction related to a product from a subscription group
      */
-    func getStoreAccountTransaction(forIosSubscriptionGroup subscriptionGroupId: String) -> Transaction? {
+    func getStoreAccountTransaction(forIosSubscriptionGroup subscriptionGroupId: String?) -> Transaction? {
+        if subscriptionGroupId == nil || subscriptionGroupId!.isEmpty {
+            return nil
+        }
+
         return self.storeAccountTransactions?.first { entitlement in
             if entitlement.value.subscriptionGroupID == subscriptionGroupId {
                 return true

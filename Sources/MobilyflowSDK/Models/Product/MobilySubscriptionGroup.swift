@@ -11,7 +11,6 @@ import StoreKit
 @objc public class MobilySubscriptionGroup: Serializable {
     @objc public let id: String
     @objc public let identifier: String
-
     @objc public let referenceName: String
     @objc public let name: String
     @objc public let details: String
@@ -49,7 +48,7 @@ import StoreKit
 
         if let jsonProducts = jsonGroup["Products"] as? [[String: Any]] {
             for jsonProduct in jsonProducts {
-                let product = await MobilyProduct.parse(jsonProduct: jsonProduct, fromSubscriptionGroup: group)
+                let product = await MobilyProduct.parse(jsonProduct: jsonProduct)
 
                 if !onlyAvailableProducts || product.status == ProductStatus.AVAILABLE {
                     group.products.append(product)

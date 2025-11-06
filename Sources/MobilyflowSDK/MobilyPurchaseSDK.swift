@@ -215,10 +215,10 @@ import StoreKit
 
     private func _cacheEntitlement(_ entitlement: MobilyCustomerEntitlement?) -> MobilyCustomerEntitlement? {
         if let entitlement = entitlement {
-            productsCaches[entitlement.product.id] = entitlement.product
+            productsCaches[entitlement.Product.id] = entitlement.Product
 
-            if entitlement.subscription?.renewProduct != nil {
-                productsCaches[entitlement.subscription!.renewProduct!.id] = entitlement.subscription!.renewProduct
+            if entitlement.Subscription?.RenewProduct != nil {
+                productsCaches[entitlement.Subscription!.RenewProduct!.id] = entitlement.Subscription!.RenewProduct
             }
         }
         return entitlement
@@ -234,7 +234,7 @@ import StoreKit
 
     @objc public func getEntitlements(productIds: [String]?) async throws -> [MobilyCustomerEntitlement] {
         let result = try syncer.getEntitlements(forProductIds: productIds)
-        result.forEach { self._cacheEntitlement($0) }
+        result.forEach { _ = self._cacheEntitlement($0) }
         return result
     }
 
@@ -295,7 +295,7 @@ import StoreKit
      */
     @objc public func openRefundDialog(product: MobilyProduct) async -> String {
         // TODO: We may have a function openRefundDialog(transactionId: ...)
-        if product.oneTimeProduct?.isConsumable ?? false {
+        if product.oneTime?.isConsumable ?? false {
             do {
                 let lastTxId = try await self.API.getLastTxPlatformIdForProduct(customerId: self.customer!.id, productId: product.id)
                 let result = try? await Transaction.beginRefundRequest(for: UInt64(lastTxId)!, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
