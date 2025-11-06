@@ -7,21 +7,10 @@
 
 import Foundation
 
-@objc public enum WebhookStatus: Int {
-    case pending = 0
-    case error = 1
-    case success = 2
+@objc public class WebhookStatus: NSObject {
+    @objc public static let PENDING = "pending"
+    @objc public static let ERROR = "error"
+    @objc public static let SUCCESS = "success"
 
-    static func parse(_ rawValue: String) -> WebhookStatus? {
-        switch rawValue.lowercased() {
-        case "pending":
-            return .pending
-        case "success":
-            return .success
-        case "error":
-            return .error
-        default:
-            return nil
-        }
-    }
+    override private init() {}
 }

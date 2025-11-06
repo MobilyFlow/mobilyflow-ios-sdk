@@ -9,14 +9,14 @@ import Foundation
 import StoreKit
 
 @objc public class MobilyCustomerEntitlement: Serializable {
-    @objc public let type: ProductType
+    @objc public let type: String
     @objc public let product: MobilyProduct
     @objc public let platformOriginalTransactionId: String?
     @objc public let item: ItemEntitlement?
     @objc public let subscription: SubscriptionEntitlement?
     @objc public let customerId: String
 
-    @objc init(type: ProductType, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?, customerId: String) {
+    @objc init(type: String, product: MobilyProduct, platformOriginalTransactionId: String?, item: ItemEntitlement?, subscription: SubscriptionEntitlement?, customerId: String) {
         self.type = type
         self.product = product
         self.platformOriginalTransactionId = platformOriginalTransactionId
@@ -28,7 +28,7 @@ import StoreKit
     }
 
     static func parse(jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyCustomerEntitlement {
-        let type = ProductType.parse(jsonEntitlement["type"]! as! String)!
+        let type = jsonEntitlement["type"]! as! String
         let jsonEntity = jsonEntitlement["entity"] as! [String: Any]
         let product = await MobilyProduct.parse(jsonProduct: jsonEntity["Product"] as! [String: Any])
         let platformOriginalTransactionId = jsonEntitlement["platformOriginalTransactionId"] as? String
@@ -37,17 +37,17 @@ import StoreKit
         var subscription: SubscriptionEntitlement? = nil
         let customerId = jsonEntity["customerId"] as! String
 
-        if type == .one_time {
+        if type == ProductType.ONE_TIME {
             item = ItemEntitlement(quantity: jsonEntity["quantity"] as! Int)
         } else {
             let dateFormatter = ISO8601DateFormatter()
             dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
 
-            let platform = Platform.parse(jsonEntity["platform"]! as! String)!
+            let platform = jsonEntity["platform"]! as! String
 
             var storeAccountTx: Transaction? = nil
             var autoRenewEnable = jsonEntity["autoRenewEnable"]! as! Bool
-            if platform == .ios && platformOriginalTransactionId != nil {
+            if platform == Platform.IOS && platformOriginalTransactionId != nil {
                 let platformTxIdInt = UInt64(platformOriginalTransactionId!)
                 if platformTxIdInt != nil {
                     storeAccountTx = storeAccountTransactions[platformTxIdInt!]
@@ -82,7 +82,7 @@ import StoreKit
                 lastPriceMillis: jsonEntity["lastPriceMillis"] as! Int,
                 regularPriceMillis: jsonEntity["regularPriceMillis"] as! Int,
                 renewPriceMillis: jsonEntity["renewPriceMillis"] as! Int,
-                platform: Platform.parse(jsonEntity["platform"]! as! String)!,
+                platform: jsonEntity["platform"]! as! String,
                 isManagedByThisStoreAccount: storeAccountTx != nil,
                 offer: productOfferJson != nil ?
                     await MobilySubscriptionOffer.parse(
@@ -135,7 +135,7 @@ import StoreKit
         @objc public let lastPriceMillis: Int
         @objc public let regularPriceMillis: Int
         @objc public let renewPriceMillis: Int
-        @objc public let platform: Platform
+        @objc public let platform: String
         @objc public let isManagedByThisStoreAccount: Bool
         @objc public let offer: MobilySubscriptionOffer?
         @objc public let renewProduct: MobilyProduct?
@@ -157,7 +157,7 @@ import StoreKit
             lastPriceMillis: Int,
             regularPriceMillis: Int,
             renewPriceMillis: Int,
-            platform: Platform,
+            platform: String,
             isManagedByThisStoreAccount: Bool,
             offer: MobilySubscriptionOffer?,
             renewProduct: MobilyProduct?,

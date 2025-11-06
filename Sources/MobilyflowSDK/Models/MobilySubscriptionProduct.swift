@@ -12,12 +12,12 @@ import StoreKit
     @objc public let baseOffer: MobilySubscriptionOffer
     @objc public let freeTrial: MobilySubscriptionOffer?
     @objc public let promotionalOffers: [MobilySubscriptionOffer]
-    @objc public let status: ProductStatus
+    @objc public let status: String
     @objc public let groupLevel: Int
     @objc public let ios_subscriptionGroupId: String
     @objc public let subscriptionGroupId: String
 
-    @objc init(baseOffer: MobilySubscriptionOffer, freeTrial: MobilySubscriptionOffer? = nil, promotionalOffers: [MobilySubscriptionOffer], status: ProductStatus, groupLevel: Int, ios_subscriptionGroupId: String, subscriptionGroupId: String) {
+    @objc init(baseOffer: MobilySubscriptionOffer, freeTrial: MobilySubscriptionOffer? = nil, promotionalOffers: [MobilySubscriptionOffer], status: String, groupLevel: Int, ios_subscriptionGroupId: String, subscriptionGroupId: String) {
         self.baseOffer = baseOffer
         self.freeTrial = freeTrial
         self.promotionalOffers = promotionalOffers

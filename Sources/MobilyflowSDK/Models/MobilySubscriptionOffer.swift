@@ -19,13 +19,13 @@ import StoreKit
     @objc public let priceFormatted: String
     @objc public let type: String?
     @objc public let periodCount: Int
-    @objc public let periodUnit: PeriodUnit
+    @objc public let periodUnit: String
     @objc public let countBillingCycle: Int
     @objc public let ios_offerId: String? // null for base offer
     @objc public let extras: [String: Any]?
-    @objc public let status: ProductStatus
+    @objc public let status: String
 
-    @objc init(id: String?, identifier: String?, externalRef: String?, referenceName: String?, name: String?, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: PeriodUnit, countBillingCycle: Int, ios_offerId: String?, extras: [String: Any]? = nil, status: ProductStatus) {
+    @objc init(id: String?, identifier: String?, externalRef: String?, referenceName: String?, name: String?, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String?, periodCount: Int, periodUnit: String, countBillingCycle: Int, ios_offerId: String?, extras: [String: Any]? = nil, status: String) {
         self.id = id
         self.identifier = identifier
         self.externalRef = externalRef
@@ -54,13 +54,13 @@ import StoreKit
         let priceMillis: Int
         let currencyCode: String
         let priceFormatted: String
-        var type = "recurring"
+        var type = "recurring" // TODO: Use Enum
         let periodCount: Int
-        let periodUnit: PeriodUnit
+        let periodUnit: String
         let countBillingCycle: Int
         var ios_offerId: String? = nil
         var extras: [String: Any]? = nil
-        var status: ProductStatus = .unavailable
+        var status = ProductStatus.UNAVAILABLE
 
         var iosOffer: Product.SubscriptionOffer?
 
@@ -87,7 +87,7 @@ import StoreKit
         if iosOffer != nil {
             if iosOffer?.paymentMode == .payUpFront {
                 Logger.w("Pay Up Front is not supported for subscription offers (ios offer \(iosOffer?.id))")
-                status = .invalid
+                status = ProductStatus.INVALID
             }
         }
 
@@ -103,9 +103,9 @@ import StoreKit
             priceFormatted = formatPrice(priceMillis, currencyCode: currencyCode)
 
             periodCount = jsonBase["subscriptionPeriodCount"] as! Int
-            periodUnit = PeriodUnit.parse(jsonBase["subscriptionPeriodUnit"] as! String)!
+            periodUnit = jsonBase["subscriptionPeriodUnit"] as! String
             countBillingCycle = 0
-        } else if (jsonOffer != nil && iosOffer == nil) || status == .invalid {
+        } else if (jsonOffer != nil && iosOffer == nil) || status == ProductStatus.INVALID {
             // Promotionnal offer but unavailable
             let jsonStorePrice = jsonOffer!["StorePrices"] as? [[String: Any]]
             let storePrice = (jsonStorePrice?.count ?? 0) > 0 ? StorePrice.parse(jsonStorePrice![0]) : nil
@@ -117,24 +117,24 @@ import StoreKit
 
             if type == "free_trial" {
                 periodCount = jsonOffer!["offerPeriodCount"] as! Int
-                periodUnit = PeriodUnit.parse(jsonOffer!["offerPeriodUnit"] as! String)!
+                periodUnit = jsonOffer!["offerPeriodUnit"] as! String
                 countBillingCycle = 1
             } else {
                 countBillingCycle = jsonOffer!["offerCountBillingCycle"] as! Int
 
                 // Inherit from baseOffer
                 periodCount = jsonBase["subscriptionPeriodCount"] as! Int
-                periodUnit = PeriodUnit.parse(jsonBase["subscriptionPeriodUnit"] as! String)!
+                periodUnit = jsonBase["subscriptionPeriodUnit"] as! String
             }
         } else {
-            status = .available
+            status = ProductStatus.AVAILABLE
             currencyCode = iosProduct!.priceFormatStyle.currencyCode
 
             if iosOffer != nil {
                 // Real offer
                 if type == "free_trial" {
                     if !(await iosProduct!.subscription!.isEligibleForIntroOffer) {
-                        status = .unavailable
+                        status = ProductStatus.UNAVAILABLE
                     }
                 }
 

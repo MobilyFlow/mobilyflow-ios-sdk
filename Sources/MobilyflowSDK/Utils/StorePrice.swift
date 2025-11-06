@@ -11,9 +11,9 @@ class StorePrice {
     let priceMillis: Int
     let currency: String
     let regionCode: String
-    let platform: Platform?
+    let platform: String
 
-    init(priceMillis: Int, currency: String, regionCode: String, platform: Platform?) {
+    init(priceMillis: Int, currency: String, regionCode: String, platform: String) {
         self.priceMillis = priceMillis
         self.currency = currency
         self.regionCode = regionCode
@@ -21,12 +21,11 @@ class StorePrice {
     }
 
     static func parse(_ storePrice: [String: Any]) -> StorePrice {
-        let platform = storePrice["platform"] as? String
         return StorePrice(
             priceMillis: storePrice["priceMillis"] as! Int,
             currency: storePrice["currency"] as! String,
             regionCode: storePrice["regionCode"] as! String,
-            platform: platform == nil ? nil : Platform.parse(platform!)
+            platform: storePrice["platform"] as! String
         )
     }
 

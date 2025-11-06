@@ -11,7 +11,7 @@ import StoreKit
 class MobilyPurchaseAPI {
     let appId: String
     let apiKey: String
-    let environment: MobilyEnvironment
+    let environment: String
     let locale: String
 
     let API_URL: String
@@ -20,7 +20,7 @@ class MobilyPurchaseAPI {
     init(
         appId: String,
         apiKey: String,
-        environment: MobilyEnvironment,
+        environment: String,
         locales: [String],
         apiURL: String?
     ) {
@@ -45,7 +45,7 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "POST", url: "/apps/me/customers/login/ios")
         _ = request.setData([
             "externalRef": externalRef,
-            "environment": environment.toString(),
+            "environment": environment,
             "locale": self.locale,
             "region": await StorePrice.getMostRelevantRegion(),
         ])
@@ -79,7 +79,7 @@ class MobilyPurchaseAPI {
         }
 
         let request = ApiRequest(method: "GET", url: "/apps/me/products/for-app")
-        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
 
@@ -111,7 +111,7 @@ class MobilyPurchaseAPI {
         }
 
         let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app")
-        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
 
@@ -139,7 +139,7 @@ class MobilyPurchaseAPI {
      */
     public func getSubscriptionGroupById(id: String) async throws -> [String: Any] {
         let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app/\(id)")
-        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
 
@@ -337,7 +337,7 @@ class MobilyPurchaseAPI {
     /**
      Get transfer ownership request status from requestId
      */
-    public func getTransferRequestStatus(requestId: String) async throws -> TransferOwnershipStatus {
+    public func getTransferRequestStatus(requestId: String) async throws -> String {
         let request = ApiRequest(method: "GET", url: "/apps/me/customer-transfer-ownerships/\(requestId)/status")
 
         guard let res = try? await self.helper.request(request) else {
@@ -346,11 +346,11 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            let statusString = jsonResponse["status"] as! String
-            if statusString == "error" {
+            let status = jsonResponse["status"] as! String
+            if status == "error" {
                 throw MobilyTransferOwnershipError.webhook_failed
             }
-            return TransferOwnershipStatus.parse(statusString)!
+            return status
         } else {
             throw MobilyError.unknown_error
         }
@@ -379,7 +379,7 @@ class MobilyPurchaseAPI {
     /**
      Get webhook status from transactionID
      */
-    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: String?, downgradeAfterDate: Date?) async throws -> WebhookStatus {
+    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: String?, downgradeAfterDate: Date?) async throws -> String {
         let request = ApiRequest(method: "GET", url: "/apps/me/events/webhook-status/ios")
         _ = request.addParam("isSandbox", String(isSandbox))
         _ = request.addParam("platformTxOriginalId", String(transactionOriginalId))
@@ -398,7 +398,7 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            return WebhookStatus.parse(jsonResponse["status"] as! String)!
+            return jsonResponse["status"] as! String
         } else {
             throw MobilyError.unknown_error
         }
@@ -429,7 +429,7 @@ class MobilyPurchaseAPI {
         if externalRef != nil {
             _ = request.addParam("externalRef", externalRef!)
         }
-        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("environment", environment)
         _ = request.addParam("platform", "ios")
 
         guard let res = try? await self.helper.request(request) else {

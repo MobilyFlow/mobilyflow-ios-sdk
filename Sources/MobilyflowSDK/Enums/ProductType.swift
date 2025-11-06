@@ -7,18 +7,9 @@
 
 import Foundation
 
-@objc public enum ProductType: Int {
-    case one_time = 0
-    case subscription = 1
+@objc public class ProductType: NSObject {
+    @objc public static let ONE_TIME = "one_time"
+    @objc public static let SUBSCRIPTION = "subsription"
 
-    static func parse(_ rawValue: String) -> ProductType? {
-        switch rawValue.lowercased() {
-        case "one_time":
-            return .one_time
-        case "subscription":
-            return .subscription
-        default:
-            return nil
-        }
-    }
+    override private init() {}
 }

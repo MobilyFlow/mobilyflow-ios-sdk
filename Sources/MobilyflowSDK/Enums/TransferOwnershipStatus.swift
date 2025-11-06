@@ -7,24 +7,11 @@
 
 import Foundation
 
-@objc public enum TransferOwnershipStatus: Int {
-    case pending = 0
-    case delayed = 1
-    case acknowledged = 2
-    case rejected = 3
+@objc public class TransferOwnershipStatus: NSObject {
+    @objc public static let PENDING = "pending"
+    @objc public static let DELAYED = "delayed"
+    @objc public static let ACKNOWLEDGED = "acknowledged"
+    @objc public static let REJECTED = "rejected"
 
-    static func parse(_ rawValue: String) -> TransferOwnershipStatus? {
-        switch rawValue.lowercased() {
-        case "pending":
-            return .pending
-        case "delayed":
-            return .delayed
-        case "acknowledged":
-            return .acknowledged
-        case "rejected":
-            return .rejected
-        default:
-            return nil
-        }
-    }
+    override private init() {}
 }

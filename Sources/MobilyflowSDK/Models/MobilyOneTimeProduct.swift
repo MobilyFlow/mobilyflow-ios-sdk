@@ -15,9 +15,9 @@ import StoreKit
     @objc public let isConsumable: Bool
     @objc public let isNonRenewableSub: Bool
     @objc public let isMultiQuantity: Bool
-    @objc public let status: ProductStatus
+    @objc public let status: String
 
-    @objc init(priceMillis: Int, currencyCode: String, priceFormatted: String, isConsumable: Bool, isNonRenewableSub: Bool, isMultiQuantity: Bool, status: ProductStatus) {
+    @objc init(priceMillis: Int, currencyCode: String, priceFormatted: String, isConsumable: Bool, isNonRenewableSub: Bool, isMultiQuantity: Bool, status: String) {
         self.priceMillis = priceMillis
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
@@ -33,12 +33,12 @@ import StoreKit
         let priceMillis: Int
         let currencyCode: String
         let priceFormatted: String
-        let status: ProductStatus
+        let status: String
 
         let iosProduct = MobilyPurchaseRegistry.getIOSProduct(jsonProduct["ios_sku"]! as! String)
 
         if iosProduct == nil || iosProduct?.subscription != nil {
-            status = iosProduct == nil ? .unavailable : .invalid
+            status = iosProduct == nil ? ProductStatus.UNAVAILABLE : ProductStatus.INVALID
 
             let jsonStorePrice = jsonProduct["StorePrices"] as? [[String: Any]]
             let storePrice = (jsonStorePrice?.count ?? 0) > 0 ? StorePrice.parse(jsonStorePrice![0]) : nil
@@ -48,7 +48,7 @@ import StoreKit
 
             priceFormatted = formatPrice(priceMillis, currencyCode: currencyCode)
         } else {
-            status = .available
+            status = ProductStatus.AVAILABLE
             priceMillis = NSDecimalNumber(decimal: iosProduct!.price * 1000.0).intValue
             currencyCode = iosProduct!.priceFormatStyle.currencyCode
             priceFormatted = iosProduct!.displayPrice

@@ -7,8 +7,10 @@
 
 import Foundation
 
-@objc public enum RefundDialogResult: Int {
-    case cancelled = 0
-    case success = 1
-    case transaction_not_found = 2
+@objc public class RefundDialogResult: NSObject {
+    @objc public static let CANCELLED = "cancelled"
+    @objc public static let SUCCESS = "success"
+    @objc public static let TRANSACTION_NOT_FOUND = "transaction_not_found"
+
+    override private init() {}
 }

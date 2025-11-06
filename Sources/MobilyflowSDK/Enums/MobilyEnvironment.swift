@@ -7,19 +7,10 @@
 
 import Foundation
 
-@objc public enum MobilyEnvironment: Int {
-    case development = 0
-    case staging = 1
-    case production = 2
+@objc public class MobilyEnvironment: NSObject {
+    @objc public static let DEVELOPMENT = "development"
+    @objc public static let STAGING = "staging"
+    @objc public static let PRODUCTION = "production"
 
-    public func toString() -> String {
-        switch self {
-        case .development:
-            return "development"
-        case .staging:
-            return "staging"
-        case .production:
-            return "production"
-        }
-    }
+    override private init() {}
 }

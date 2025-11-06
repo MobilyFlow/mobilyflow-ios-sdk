@@ -7,8 +7,10 @@
 
 import Foundation
 
-@objc public enum ProductStatus: Int {
-    case invalid = 0
-    case unavailable = 1
-    case available = 2
+@objc public class ProductStatus: NSObject {
+    @objc public static let INVALID = "invalid"
+    @objc public static let UNAVAILABLE = "unavailable"
+    @objc public static let AVAILABLE = "available"
+
+    override private init() {}
 }

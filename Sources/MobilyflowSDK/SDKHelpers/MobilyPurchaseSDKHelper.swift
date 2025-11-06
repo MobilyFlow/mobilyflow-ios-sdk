@@ -101,7 +101,7 @@ class MobilyPurchaseSDKHelper {
         var redeemUrl: URL?
         var iosOffer: Product.SubscriptionOffer?
 
-        if product.type == .subscription && options?.offer != nil {
+        if product.type == ProductType.SUBSCRIPTION && options?.offer != nil {
             if options!.offer!.type == "free_trial" {
                 iosOffer = iosProduct.subscription!.introductoryOffer
             } else if options!.offer!.ios_offerId != nil {
@@ -124,7 +124,7 @@ class MobilyPurchaseSDKHelper {
         }
 
         // Manage already purchased
-        if product.type == .one_time {
+        if product.type == ProductType.ONE_TIME {
             if !product.oneTimeProduct!.isConsumable {
                 let entitlement = try! await syncer.getEntitlement(forProductId: product.id)
                 if entitlement != nil {

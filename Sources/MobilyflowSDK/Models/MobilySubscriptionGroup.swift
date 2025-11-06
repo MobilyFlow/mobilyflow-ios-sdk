@@ -51,7 +51,7 @@ import StoreKit
             for jsonProduct in jsonProducts {
                 let product = await MobilyProduct.parse(jsonProduct: jsonProduct, fromSubscriptionGroup: group)
 
-                if !onlyAvailableProducts || product.status == .available {
+                if !onlyAvailableProducts || product.status == ProductStatus.AVAILABLE {
                     group.products.append(product)
                 }
             }

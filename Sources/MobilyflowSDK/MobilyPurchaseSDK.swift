@@ -12,7 +12,7 @@ import StoreKit
     let appId: String
     let API: MobilyPurchaseAPI
 
-    let environment: MobilyEnvironment
+    let environment: String
     var customer: MobilyCustomer?
 
     var isStoreAvailable = true
@@ -32,7 +32,7 @@ import StoreKit
     @objc public init(
         appId: String,
         apiKey: String,
-        environment: MobilyEnvironment,
+        environment: String,
         options: MobilyPurchaseSDKOptions? = nil
     ) {
         self.appId = appId
@@ -147,7 +147,7 @@ import StoreKit
             let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct)
             productsCaches[mobilyProduct.id] = mobilyProduct
 
-            if !onlyAvailable || mobilyProduct.status == .available {
+            if !onlyAvailable || mobilyProduct.status == ProductStatus.AVAILABLE {
                 mobilyProducts.append(mobilyProduct)
             }
         }
@@ -260,7 +260,7 @@ import StoreKit
     /**
      Request transfer ownership of local device transactions.
      */
-    @objc public func requestTransferOwnership() async throws -> TransferOwnershipStatus {
+    @objc public func requestTransferOwnership() async throws -> String {
         if customer == nil {
             throw MobilyError.no_customer_logged
         }
@@ -293,22 +293,22 @@ import StoreKit
      *
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
-    @objc public func openRefundDialog(product: MobilyProduct) async -> RefundDialogResult {
+    @objc public func openRefundDialog(product: MobilyProduct) async -> String {
         // TODO: We may have a function openRefundDialog(transactionId: ...)
         if product.oneTimeProduct?.isConsumable ?? false {
             do {
                 let lastTxId = try await self.API.getLastTxPlatformIdForProduct(customerId: self.customer!.id, productId: product.id)
                 let result = try? await Transaction.beginRefundRequest(for: UInt64(lastTxId)!, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                return (result ?? .userCancelled) == .success ? .success : .cancelled
+                return (result ?? .userCancelled) == .success ? RefundDialogResult.SUCCESS : RefundDialogResult.CANCELLED
             } catch {
-                return .transaction_not_found
+                return RefundDialogResult.TRANSACTION_NOT_FOUND
             }
         } else {
             if #available(iOS 18.4, *) {
                 for await signedTx in Transaction.currentEntitlements(for: product.ios_sku) {
                     if case .verified(let transaction) = signedTx {
                         let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                        return (result ?? .userCancelled) == .success ? .success : .cancelled
+                        return (result ?? .userCancelled) == .success ? RefundDialogResult.SUCCESS : RefundDialogResult.CANCELLED
                     }
                 }
             } else {
@@ -316,21 +316,21 @@ import StoreKit
                     if case .verified(let transaction) = signedTx {
                         if transaction.productID == product.ios_sku {
                             let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                            return (result ?? .userCancelled) == .success ? .success : .cancelled
+                            return (result ?? .userCancelled) == .success ? RefundDialogResult.SUCCESS : RefundDialogResult.CANCELLED
                         }
                     }
                 }
             }
         }
-        return .transaction_not_found
+        return RefundDialogResult.TRANSACTION_NOT_FOUND
     }
 
     /* ******************************************************************* */
     /* **************************** PURCHASE ***************************** */
     /* ******************************************************************* */
 
-    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
-        var resultStatus: WebhookStatus = .error
+    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> String {
+        var resultStatus = WebhookStatus.ERROR
 
         if self.customer == nil {
             throw MobilyError.no_customer_logged
@@ -382,7 +382,7 @@ import StoreKit
                                     if transaction.productID == product.ios_sku && !knownTransactionIdsForSku.contains(transaction.id) {
                                         Logger.d("[purchaseProduct] Receive Offer Code Transaction: \(transaction.id)")
                                         if await MobilyPurchaseSDKHelper.isTransactionFinished(id: transaction.id) {
-                                            resultStatus = .success
+                                            resultStatus = WebhookStatus.SUCCESS
                                         } else {
                                             resultStatus = await self.finishTransaction(signedTx: signedTx)
                                         }
@@ -516,8 +516,8 @@ import StoreKit
         }
     }
 
-    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: String? = nil) async -> WebhookStatus {
-        var resultStatus: WebhookStatus = .error
+    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: String? = nil) async -> String {
+        var resultStatus = WebhookStatus.ERROR
         if case .verified(let transaction) = signedTx {
             Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
             await transaction.finish()
@@ -529,7 +529,7 @@ import StoreKit
                     Logger.e("Map transaction error", error: error)
                 }
                 if !customer.isForwardingEnable {
-                    resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? .error
+                    resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? WebhookStatus.ERROR
                 }
                 try? await syncer.ensureSync(force: true)
             }
