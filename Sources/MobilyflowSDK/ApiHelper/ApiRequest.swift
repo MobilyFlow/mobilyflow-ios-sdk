@@ -35,12 +35,14 @@ class ApiRequest {
         return self
     }
 
-    func addParam(_ key: String, _ value: String) -> ApiRequest {
+    func addParam(_ key: String, _ value: String?) -> ApiRequest {
         if self.params == nil {
             self.params = [:]
         }
 
-        self.params![key] = value
+        if let value = value {
+            self.params![key] = value
+        }
         return self
     }
 

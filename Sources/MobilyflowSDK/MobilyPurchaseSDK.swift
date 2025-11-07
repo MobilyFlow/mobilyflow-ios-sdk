@@ -9,14 +9,11 @@ import Foundation
 import StoreKit
 
 @objc public class MobilyPurchaseSDK: NSObject {
-    let appId: String
-    let API: MobilyPurchaseAPI
+    public let appId: String
+    public let environment: String
+    private var customer: MobilyCustomer?
 
-    let environment: String
-    var customer: MobilyCustomer?
-
-    var isStoreAvailable = true
-
+    private let API: MobilyPurchaseAPI // TODO: Make private
     private var syncer: MobilyPurchaseSDKSyncer
     private let waiter: MobilyPurchaseSDKWaiter
     private let diagnostics: MobilyPurchaseSDKDiagnostics

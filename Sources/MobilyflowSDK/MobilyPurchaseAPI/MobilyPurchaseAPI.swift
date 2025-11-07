@@ -81,10 +81,7 @@ class MobilyPurchaseAPI {
         _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
-
-        if let region = await StorePrice.getMostRelevantRegion() {
-            _ = request.addParam("region", region)
-        }
+        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
 
         if identifiers != nil {
             _ = request.addParam("identifiers", identifiers!.joined(separator: ","))
@@ -141,10 +138,7 @@ class MobilyPurchaseAPI {
         _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
-
-        if let region = await StorePrice.getMostRelevantRegion() {
-            _ = request.addParam("region", region)
-        }
+        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -164,10 +158,7 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/entitlements")
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("loadProduct", "true")
-
-        if let region = await StorePrice.getMostRelevantRegion() {
-            _ = request.addParam("region", region)
-        }
+        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
