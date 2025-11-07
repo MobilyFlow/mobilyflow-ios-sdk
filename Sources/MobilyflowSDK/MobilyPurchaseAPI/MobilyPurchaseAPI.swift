@@ -378,11 +378,12 @@ class MobilyPurchaseAPI {
     /**
      Get webhook status from transactionID
      */
-    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterDate: Date?) async throws -> String {
-        let request = ApiRequest(method: "GET", url: "/apps/me/events/webhook-status/ios")
+    public func getWebhookResult(signedTransaction: String, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterDate: Date?) async throws -> MobilyWebhookResult {
+        let request = ApiRequest(method: "GET", url: "/apps/me/events/webhook-result/ios")
         _ = request.addParam("isSandbox", String(isSandbox))
-        _ = request.addParam("platformTxOriginalId", String(transactionOriginalId))
+        _ = request.addParam("signedTransaction", signedTransaction)
         _ = request.addParam("platformTxId", String(transactionId))
+        _ = request.addParam("environment", environment)
 
         if downgradeToProductId != nil {
             _ = request.addParam("downgradeToProductId", downgradeToProductId!.uuidString)
@@ -397,7 +398,11 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            return jsonResponse["status"] as! String
+
+            return MobilyWebhookResult(
+                status: jsonResponse["status"] as! String,
+                event: jsonResponse["event"] as? [String: Any]
+            )
         } else {
             throw MobilyError.unknown_error
         }

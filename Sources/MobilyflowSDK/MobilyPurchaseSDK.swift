@@ -329,8 +329,8 @@ import StoreKit
     /* **************************** PURCHASE ***************************** */
     /* ******************************************************************* */
 
-    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> String {
-        var resultStatus = WebhookStatus.ERROR
+    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> MobilyEvent {
+        var event: MobilyEvent? = nil
 
         if self.customer == nil {
             throw MobilyError.no_customer_logged
@@ -381,11 +381,8 @@ import StoreKit
                                 if case .verified(let transaction) = signedTx {
                                     if transaction.productID == product.ios_sku && !knownTransactionIdsForSku.contains(transaction.id) {
                                         Logger.d("[purchaseProduct] Receive Offer Code Transaction: \(transaction.id)")
-                                        if await MobilyPurchaseSDKHelper.isTransactionFinished(id: transaction.id) {
-                                            resultStatus = WebhookStatus.SUCCESS
-                                        } else {
-                                            resultStatus = await self.finishTransaction(signedTx: signedTx)
-                                        }
+                                        let isFinished = await MobilyPurchaseSDKHelper.isTransactionFinished(id: transaction.id)
+                                        event = try await self.finishTransaction(signedTx: signedTx, downgradeToProductId: nil, skipFinish: isFinished)
                                         semaphore.signal()
                                         return
                                     }
@@ -435,6 +432,7 @@ import StoreKit
                     Logger.e("[purchaseProduct] systemError", error: error)
                     throw MobilyError.store_unavailable
                 } /* catch StoreKitError.unknown {
+                   // TODO: Manage re-enable subscription
                  /*
                   There is a tricky case:
                   - User buy the subscritpion
@@ -471,11 +469,11 @@ import StoreKit
                     switch signedTx {
                     case .verified(let transaction):
                         if internalPurchaseOptions.isDowngrade {
-                            resultStatus = await self.finishTransaction(signedTx: signedTx, downgradeToProductId: product.id)
+                            event = try await self.finishTransaction(signedTx: signedTx, downgradeToProductId: product.id)
                         } else {
                             Logger.d("Force webhook for \(transaction.id) (original: \(transaction.originalID))")
                             try? await self.API.forceWebhook(transactionId: transaction.id, productId: product.id, isSandbox: isSandboxTransaction(transaction: transaction))
-                            resultStatus = await self.finishTransaction(signedTx: signedTx)
+                            event = try await self.finishTransaction(signedTx: signedTx)
                         }
                     case .unverified:
                         Logger.e("purchaseProduct unverified")
@@ -495,7 +493,11 @@ import StoreKit
             throw MobilyPurchaseError.purchase_already_pending
         })
 
-        return resultStatus
+        if event == nil {
+            throw MobilyError.unknown_error
+        }
+
+        return event!
     }
 
     /* ******************************************************************* */
@@ -510,7 +512,7 @@ import StoreKit
                 if case .verified(let tx) = signedTx {
                     if !(await MobilyPurchaseSDKHelper.isTransactionFinished(id: tx.id)) {
                         Logger.d("[startUpdateTransactionTask] finishTransaction \(tx.id)")
-                        _ = await self.finishTransaction(signedTx: signedTx)
+                        _ = try? await self.finishTransaction(signedTx: signedTx)
                     }
                 }
             }
@@ -518,11 +520,14 @@ import StoreKit
         }
     }
 
-    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil) async -> String {
-        var resultStatus = WebhookStatus.ERROR
+    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil, skipFinish: Bool = false) async throws -> MobilyEvent? {
+        var event: MobilyEvent? = nil
+
         if case .verified(let transaction) = signedTx {
             Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
-            await transaction.finish()
+            if skipFinish {
+                await transaction.finish()
+            }
 
             if let customer = self.customer {
                 do {
@@ -531,12 +536,16 @@ import StoreKit
                     Logger.e("Map transaction error", error: error)
                 }
                 if !customer.forwardNotificationEnable {
-                    resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? WebhookStatus.ERROR
+                    let result = try await self.waiter.waitPurchaseWebhook(signedTx: signedTx, downgradeToProductId: downgradeToProductId)
+                    if result.event != nil {
+                        let (_, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
+                        event = await MobilyEvent.parse(result.event!, storeAccountTransactions: storeAccountTransactions)
+                    }
                 }
                 try? await syncer.ensureSync(force: true)
             }
         }
-        return resultStatus
+        return event
     }
 
     /* *********************************************************** */

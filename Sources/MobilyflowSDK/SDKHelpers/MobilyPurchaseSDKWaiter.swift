@@ -23,7 +23,11 @@ class MobilyPurchaseSDKWaiter {
      *  - transaction: the transaction that refer to the webhook
      *  - downgradeToProductId: in case of a downgrade, this is the MobilyFlow productId of the renew product
      */
-    func waitWebhook(transaction: Transaction, downgradeToProductId: UUID? = nil) async throws -> String {
+    func waitPurchaseWebhook(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil) async throws -> MobilyWebhookResult {
+        guard case .verified(let transaction) = signedTx else {
+            throw MobilyError.unknown_error
+        }
+
         // TODO: In case of an old transaction (more than a week), it may be not necessary to waitWebhook
         // -> Actually, very old transaction related to IAPHub are trigerring error "Webhook still pending after 1 minutes"
         // We should also add this check on Android
@@ -36,24 +40,24 @@ class MobilyPurchaseSDKWaiter {
              In that case waiting for webhook will always result in "Webhook still pending after 1 minutes"
              */
             Logger.w("finishTransaction with future purchaseDate -> skip waitWebhook")
-            return WebhookStatus.SUCCESS
+            return MobilyWebhookResult(status: WebhookStatus.SUCCESS, event: nil)
         } else if transaction.purchaseDate < Date().addingTimeInterval(-7.0 * 24.0 * 3600.0) {
             // In case of a PURCHASE older than 1 week, assume the webhook is already done.
             Logger.w("finishTransaction with old purchaseDate -> skip waitWebhook")
-            return WebhookStatus.SUCCESS
+            return MobilyWebhookResult(status: WebhookStatus.SUCCESS, event: nil)
         }
 
         let isSandbox = isSandboxTransaction(transaction: transaction)
 
         Logger.d("Wait webhook for \(transaction.id) (original: \(transaction.originalID))")
 
-        var result = WebhookStatus.PENDING
         let startTime = Date().timeIntervalSince1970
         var retry = 0
+        var result = MobilyWebhookResult(status: WebhookStatus.PENDING, event: nil)
 
-        while result == WebhookStatus.PENDING {
-            result = try await self.API.getWebhookStatus(
-                transactionOriginalId: transaction.originalID,
+        while result.status == WebhookStatus.PENDING {
+            result = try await self.API.getWebhookResult(
+                signedTransaction: signedTx.jwsRepresentation,
                 transactionId: transaction.id,
                 isSandbox: isSandbox,
                 // Remove 5s to the signed date for safety
@@ -61,7 +65,7 @@ class MobilyPurchaseSDKWaiter {
                 downgradeAfterDate: downgradeToProductId == nil ? nil : transaction.signedDate.addingTimeInterval(-5.0)
             )
 
-            if result == WebhookStatus.PENDING {
+            if result.status == WebhookStatus.PENDING {
                 // Exit the wait function after 1 minute
                 if startTime + 60 < Date().timeIntervalSince1970 {
                     Logger.e("Webhook still pending after 1 minutes (The user has probably paid without being credited)")
@@ -76,7 +80,7 @@ class MobilyPurchaseSDKWaiter {
 
         Logger.d("Webhook wait completed (\(result))")
 
-        if result == WebhookStatus.ERROR {
+        if result.status == WebhookStatus.ERROR {
             throw MobilyPurchaseError.webhook_failed
         }
 
