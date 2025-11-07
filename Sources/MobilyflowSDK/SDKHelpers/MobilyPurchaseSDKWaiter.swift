@@ -23,7 +23,7 @@ class MobilyPurchaseSDKWaiter {
      *  - transaction: the transaction that refer to the webhook
      *  - downgradeToProductId: in case of a downgrade, this is the MobilyFlow productId of the renew product
      */
-    func waitWebhook(transaction: Transaction, downgradeToProductId: String? = nil) async throws -> String {
+    func waitWebhook(transaction: Transaction, downgradeToProductId: UUID? = nil) async throws -> String {
         // TODO: In case of an old transaction (more than a week), it may be not necessary to waitWebhook
         // -> Actually, very old transaction related to IAPHub are trigerring error "Webhook still pending after 1 minutes"
         // We should also add this check on Android

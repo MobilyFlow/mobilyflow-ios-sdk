@@ -8,14 +8,14 @@
 import Foundation
 
 @objc public class MobilyItem: Serializable {
-    @objc public let id: String
+    @objc public let id: UUID
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
     @objc public let productId: String
     @objc public let quantity: Int
-    @objc public let Product: MobilyProduct
+    @objc public let Product: MobilyProduct?
 
-    @objc init(id: String, createdAt: Date, updatedAt: Date, productId: String, quantity: Int, Product: MobilyProduct) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, productId: String, quantity: Int, Product: MobilyProduct?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -26,16 +26,15 @@ import Foundation
     }
 
     static func parse(jsonItem: [String: Any]) async -> MobilyItem {
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
+        let jsonProduct = jsonItem["Product"] as? [String: Any]
 
         return MobilyItem(
-            id: jsonItem["id"] as! String,
-            createdAt: dateFormatter.date(from: jsonItem["createdAt"]! as! String)!,
-            updatedAt: dateFormatter.date(from: jsonItem["updatedAt"]! as! String)!,
+            id: UUID(uuidString: jsonItem["id"]! as! String)!,
+            createdAt: parseDate(jsonItem["createdAt"]! as! String),
+            updatedAt: parseDate(jsonItem["updatedAt"]! as! String),
             productId: jsonItem["productId"] as! String,
             quantity: jsonItem["quantity"] as! Int,
-            Product: await MobilyProduct.parse(jsonProduct: jsonItem["Product"] as! [String: Any]),
+            Product: jsonProduct != nil ? await MobilyProduct.parse(jsonProduct: jsonProduct!) : nil,
         )
     }
 }

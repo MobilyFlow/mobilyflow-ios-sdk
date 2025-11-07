@@ -92,7 +92,7 @@ class MobilyPurchaseSDKHelper {
         syncer: MobilyPurchaseSDKSyncer, API: MobilyPurchaseAPI,
         customerId: UUID, product: MobilyProduct, options: PurchaseOptions?
     ) async throws -> InternalPurchaseOptions {
-        guard var iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku) else {
+        guard let iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku) else {
             // Probably store_unavavaible but no way to check...
             throw MobilyPurchaseError.product_unavailable
         }
@@ -102,7 +102,7 @@ class MobilyPurchaseSDKHelper {
         var iosOffer: Product.SubscriptionOffer?
 
         if product.type == ProductType.SUBSCRIPTION && options?.offer != nil {
-            if options!.offer!.type == "free_trial" {
+            if options!.offer!.type == MobilyProductOfferType.FREE_TRIAL {
                 iosOffer = iosProduct.subscription!.introductoryOffer
             } else if options!.offer!.ios_offerId != nil {
                 if await isEligibleForPromotionnalOffer() {
@@ -191,7 +191,7 @@ class MobilyPurchaseSDKHelper {
 
         if #available(iOS 17.4, *) {
             if options?.offer?.ios_offerId != nil && iosOffer != nil {
-                let signature = try await API.signOffer(customerId: customerId, offerId: options!.offer!.id)
+                let signature = try await API.signOffer(customerId: customerId, offerId: options!.offer!.id.uuidString)
                 iosOptions.insert(Product.PurchaseOption.promotionalOffer(offerID: options!.offer!.ios_offerId!, signature: signature))
             }
         }

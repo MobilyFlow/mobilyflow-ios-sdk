@@ -9,7 +9,7 @@ import Foundation
 import StoreKit
 
 @objc public class MobilySubscriptionGroup: Serializable {
-    @objc public let id: String
+    @objc public let id: UUID
     @objc public let identifier: String
     @objc public let referenceName: String
     @objc public let name: String
@@ -20,9 +20,7 @@ import StoreKit
 
     @objc public var products: [MobilyProduct]
 
-    @objc init(
-        id: String, identifier: String, referenceName: String, name: String, details: String, ios_groupId: String, extras: [String: Any]? = nil
-    ) {
+    @objc init(id: UUID, identifier: String, referenceName: String, name: String, details: String, ios_groupId: String, extras: [String: Any]? = nil) {
         self.id = id
         self.identifier = identifier
         self.referenceName = referenceName
@@ -37,7 +35,7 @@ import StoreKit
 
     static func parse(jsonGroup: [String: Any], onlyAvailableProducts: Bool = false) async -> MobilySubscriptionGroup {
         let group = MobilySubscriptionGroup(
-            id: jsonGroup["id"]! as! String,
+            id: UUID(uuidString: jsonGroup["id"]! as! String)!,
             identifier: jsonGroup["identifier"]! as! String,
             referenceName: jsonGroup["referenceName"]! as! String,
             name: getTranslationValue(jsonGroup["_translations"] as! [[String: Any]], field: "name")!,

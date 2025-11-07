@@ -9,7 +9,7 @@ import Foundation
 import StoreKit
 
 @objc public class MobilyProduct: Serializable {
-    @objc public let id: String
+    @objc public let id: UUID
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
     @objc public let identifier: String
@@ -70,7 +70,7 @@ import StoreKit
     }
 
     @objc init(
-        id: String, createdAt: Date, updatedAt: Date, identifier: String, referenceName: String, externalRef: String?, android_sku: String?, android_basePlanId: String?, ios_sku: String, type: String, extras: [String: Any]?, priceMillis: Int, currencyCode: String, priceFormatted: String, status: String, name: String, details: String, oneTime: MobilyOneTimeProduct?, subscription: MobilySubscriptionProduct?,
+        id: UUID, createdAt: Date, updatedAt: Date, identifier: String, referenceName: String, externalRef: String?, android_sku: String?, android_basePlanId: String?, ios_sku: String, type: String, extras: [String: Any]?, priceMillis: Int, currencyCode: String, priceFormatted: String, status: String, name: String, details: String, oneTime: MobilyOneTimeProduct?, subscription: MobilySubscriptionProduct?,
     ) {
         self.id = id
         self.createdAt = createdAt
@@ -186,7 +186,7 @@ import StoreKit
         }
 
         let product = MobilyProduct(
-            id: jsonProduct["id"]! as! String,
+            id: UUID(uuidString: jsonProduct["id"]! as! String)!,
             createdAt: dateFormatter.date(from: jsonProduct["createdAt"]! as! String)!,
             updatedAt: dateFormatter.date(from: jsonProduct["updatedAt"]! as! String)!,
             identifier: jsonProduct["identifier"]! as! String,

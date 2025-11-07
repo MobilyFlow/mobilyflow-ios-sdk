@@ -9,7 +9,7 @@ import Foundation
 import StoreKit
 
 @objc public class MobilySubscription: Serializable {
-    @objc public let id: String
+    @objc public let id: UUID
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
     @objc public let productId: String
@@ -34,12 +34,12 @@ import StoreKit
     @objc public let isExpiredOrRevoked: Bool
     @objc public let isManagedByThisStoreAccount: Bool
     @objc public let lastPlatformTxOriginalId: String?
-    @objc public let Product: MobilyProduct
+    @objc public let Product: MobilyProduct?
     @objc public let ProductOffer: MobilySubscriptionOffer?
     @objc public let RenewProduct: MobilyProduct?
     @objc public let RenewProductOffer: MobilySubscriptionOffer?
 
-    @objc init(id: String, createdAt: Date, updatedAt: Date, productId: String, productOfferId: String, startDate: Date, endDate: Date, platform: String, renewProductId: String, renewProductOfferId: String, lastPriceMillis: Int, regularPriceMillis: Int, renewPriceMillis: Int, currency: String, offerExpiryDate: Date?, offerRemainingCycle: Int, autoRenewEnable: Bool, isInGracePeriod: Bool, isInBillingIssue: Bool, hasPauseScheduled: Bool, isPaused: Bool, resumeDate: Date?, isExpiredOrRevoked: Bool, isManagedByThisStoreAccount: Bool, lastPlatformTxOriginalId: String?, Product: MobilyProduct, ProductOffer: MobilySubscriptionOffer?, RenewProduct: MobilyProduct?, RenewProductOffer: MobilySubscriptionOffer?) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, productId: String, productOfferId: String, startDate: Date, endDate: Date, platform: String, renewProductId: String, renewProductOfferId: String, lastPriceMillis: Int, regularPriceMillis: Int, renewPriceMillis: Int, currency: String, offerExpiryDate: Date?, offerRemainingCycle: Int, autoRenewEnable: Bool, isInGracePeriod: Bool, isInBillingIssue: Bool, hasPauseScheduled: Bool, isPaused: Bool, resumeDate: Date?, isExpiredOrRevoked: Bool, isManagedByThisStoreAccount: Bool, lastPlatformTxOriginalId: String?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, RenewProduct: MobilyProduct?, RenewProductOffer: MobilySubscriptionOffer?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -89,8 +89,8 @@ import StoreKit
             lastPlatformTxOriginalId = nil
         }
 
-        let jsonProduct = jsonSubscription["Product"] as! [String: Any]
-        var product = await MobilyProduct.parse(jsonProduct: jsonProduct)
+        let jsonProduct = jsonSubscription["Product"] as? [String: Any]
+        let product = jsonProduct != nil ? await MobilyProduct.parse(jsonProduct: jsonProduct!) : nil
 
         let jsonProductOffer = jsonSubscription["ProductOffer"] as? [String: Any]
         let jsonRenewProduct = jsonSubscription["RenewProduct"] as? [String: Any]
@@ -100,9 +100,9 @@ import StoreKit
         var renewProduct: MobilyProduct? = nil
         var renewProductOffer: MobilySubscriptionOffer? = nil
 
-        if jsonProductOffer != nil {
-            let iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku)
-            productOffer = await MobilySubscriptionOffer.parse(jsonProduct: jsonProduct, jsonOffer: jsonProductOffer!, iosProduct: iosProduct)
+        if product != nil && jsonProductOffer != nil {
+            let iosProduct = MobilyPurchaseRegistry.getIOSProduct(product!.ios_sku)
+            productOffer = await MobilySubscriptionOffer.parse(jsonProduct: jsonProduct!, jsonOffer: jsonProductOffer!, iosProduct: iosProduct)
         }
 
         if jsonRenewProduct != nil {
@@ -116,7 +116,7 @@ import StoreKit
         }
 
         return MobilySubscription(
-            id: jsonSubscription["id"] as! String,
+            id: UUID(uuidString: jsonSubscription["id"]! as! String)!,
             createdAt: parseDate(jsonSubscription["createdAt"]! as! String),
             updatedAt: parseDate(jsonSubscription["updatedAt"]! as! String),
             productId: jsonSubscription["productId"] as! String,

@@ -27,7 +27,7 @@ import StoreKit
 
     private let lifecycleManager = AppLifecycleManager()
 
-    private var productsCaches: [String: MobilyProduct] = [:]
+    private var productsCaches: [UUID: MobilyProduct] = [:]
 
     @objc public init(
         appId: String,
@@ -86,7 +86,7 @@ import StoreKit
 
         // 2. Login
         let loginResponse = try await self.API.login(externalRef: externalRef)
-        self.customer = MobilyCustomer.parse(jsonCustomer: loginResponse.customer, isForwardingEnable: loginResponse.isForwardingEnable)
+        self.customer = MobilyCustomer.parse(jsonCustomer: loginResponse.customer)
         diagnostics.customerId = self.customer?.id
         try await self.syncer.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
@@ -113,7 +113,7 @@ import StoreKit
             Task(priority: .background) {
                 // When monitoring is requested, send 10 days
                 Logger.d("Send monitoring as requested by the server")
-                await self.diagnostics.sendDiagnostic(sinceDays: 10)
+                self.diagnostics.sendDiagnostic(sinceDays: 10)
             }
         }
 
@@ -205,7 +205,7 @@ import StoreKit
         return mobilyGroup
     }
 
-    @objc public func getProductFromCacheWithId(id: String) -> MobilyProduct? {
+    @objc public func getProductFromCacheWithId(id: UUID) -> MobilyProduct? {
         return productsCaches[id]
     }
 
@@ -228,11 +228,11 @@ import StoreKit
         return try self._cacheEntitlement(await syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId))
     }
 
-    @objc public func getEntitlement(productId: String) async throws -> MobilyCustomerEntitlement? {
+    @objc public func getEntitlement(productId: UUID) async throws -> MobilyCustomerEntitlement? {
         return try self._cacheEntitlement(await syncer.getEntitlement(forProductId: productId))
     }
 
-    @objc public func getEntitlements(productIds: [String]?) async throws -> [MobilyCustomerEntitlement] {
+    @objc public func getEntitlements(productIds: [UUID]?) async throws -> [MobilyCustomerEntitlement] {
         let result = try syncer.getEntitlements(forProductIds: productIds)
         result.forEach { _ = self._cacheEntitlement($0) }
         return result
@@ -339,7 +339,7 @@ import StoreKit
         try await purchaseExecutor.executeOrFallback({
             try await self.syncer.ensureSync()
 
-            if self.customer!.isForwardingEnable {
+            if self.customer!.forwardNotificationEnable {
                 throw MobilyPurchaseError.customer_forwarded
             }
 
@@ -416,10 +416,12 @@ import StoreKit
                 } catch let error as Product.PurchaseError {
                     Logger.e("[purchaseProduct] PurchaseError", error: error)
                     Logger.d("[purchaseProduct] error.localizedDescription \(error.localizedDescription)")
-                    Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription)")
-                    Logger.d("[purchaseProduct] error.failureReason \(error.failureReason ?? "nil")")
-                    Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion ?? "nil")")
-                    Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor ?? "nil")")
+                    if #available(iOS 15.4, *) {
+                        Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription ?? "nil")")
+                        Logger.d("[purchaseProduct] error.failureReason \(error.failureReason ?? "nil")")
+                        Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion ?? "nil")")
+                        Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor ?? "nil")")
+                    }
                     self.sendDiagnostic()
                     throw MobilyPurchaseError.product_unavailable
                 } catch StoreKitError.notAvailableInStorefront {
@@ -508,7 +510,7 @@ import StoreKit
                 if case .verified(let tx) = signedTx {
                     if !(await MobilyPurchaseSDKHelper.isTransactionFinished(id: tx.id)) {
                         Logger.d("[startUpdateTransactionTask] finishTransaction \(tx.id)")
-                        await self.finishTransaction(signedTx: signedTx)
+                        _ = await self.finishTransaction(signedTx: signedTx)
                     }
                 }
             }
@@ -516,7 +518,7 @@ import StoreKit
         }
     }
 
-    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: String? = nil) async -> String {
+    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil) async -> String {
         var resultStatus = WebhookStatus.ERROR
         if case .verified(let transaction) = signedTx {
             Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
@@ -528,7 +530,7 @@ import StoreKit
                 } catch {
                     Logger.e("Map transaction error", error: error)
                 }
-                if !customer.isForwardingEnable {
+                if !customer.forwardNotificationEnable {
                     resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? WebhookStatus.ERROR
                 }
                 try? await syncer.ensureSync(force: true)

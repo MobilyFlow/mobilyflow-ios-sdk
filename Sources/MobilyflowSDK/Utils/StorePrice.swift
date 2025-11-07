@@ -39,7 +39,5 @@ class StorePrice {
         } else {
             return NSLocale.current.regionCode
         }
-
-        return nil
     }
 }

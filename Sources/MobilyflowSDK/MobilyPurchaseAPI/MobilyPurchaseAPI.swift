@@ -47,7 +47,7 @@ class MobilyPurchaseAPI {
             "externalRef": externalRef,
             "environment": environment,
             "locale": self.locale,
-            "region": await StorePrice.getMostRelevantRegion(),
+            "region": await StorePrice.getMostRelevantRegion() ?? NSNull(), // TODO: Check this is not a problem
         ])
 
         guard let res = try? await self.helper.request(request) else {
@@ -61,7 +61,6 @@ class MobilyPurchaseAPI {
                 customer: data["customer"] as! [String: Any],
                 entitlements: data["entitlements"] as! [[String: Any]],
                 platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String],
-                isForwardingEnable: data["isForwardingEnable"] as! Bool,
                 appleRefundRequests: data["appleRefundRequests"] as? [[String: Any]],
                 haveMonitoringRequests: data["haveMonitoringRequests"] as? Bool ?? false
             )
@@ -188,7 +187,7 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "POST", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/external-entitlements")
         _ = request.setData([
             "locale": self.locale,
-            "region": await StorePrice.getMostRelevantRegion(),
+            "region": await StorePrice.getMostRelevantRegion() ?? NSNull(), // TODO: Check this is not a problem
             "platform": "ios",
             "loadProduct": true,
             "transactions": transactions,
@@ -208,8 +207,8 @@ class MobilyPurchaseAPI {
     /**
      Get products in JSON Array format
      */
-    public func getLastTxPlatformIdForProduct(customerId: UUID, productId: String) async throws -> String {
-        let request = ApiRequest(method: "GET", url: "/apps/me/transactions/last-platform-tx-id/ios/\(productId)")
+    public func getLastTxPlatformIdForProduct(customerId: UUID, productId: UUID) async throws -> String {
+        let request = ApiRequest(method: "GET", url: "/apps/me/transactions/last-platform-tx-id/ios/\(productId.uuidString)")
         _ = request.addParam("customerId", customerId.uuidString.lowercased())
 
         guard let res = try? await self.helper.request(request) else {
@@ -256,9 +255,9 @@ class MobilyPurchaseAPI {
 
      Throws on error.
      */
-    public func appleOfferCode(customerId: UUID, offerId: String) async throws -> [String: Any] {
+    public func appleOfferCode(customerId: UUID, offerId: UUID) async throws -> [String: Any] {
         let request = ApiRequest(method: "POST", url: "/apps/me/products/offer-code/ios")
-        _ = request.setData(["customerId": customerId.uuidString.lowercased(), "offerId": offerId])
+        _ = request.setData(["customerId": customerId.uuidString.lowercased(), "offerId": offerId.uuidString])
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -361,10 +360,10 @@ class MobilyPurchaseAPI {
 
      type is "purchase" | "upgrade"
      */
-    public func forceWebhook(transactionId: UInt64, productId: String, isSandbox: Bool) async throws {
+    public func forceWebhook(transactionId: UInt64, productId: UUID, isSandbox: Bool) async throws {
         let request = ApiRequest(method: "POST", url: "/apps/me/platform-notifications/force-webhook/ios")
         _ = request.addData("platformTxId", String(transactionId))
-        _ = request.addData("productId", productId)
+        _ = request.addData("productId", productId.uuidString)
         _ = request.addData("isSandbox", isSandbox)
 
         guard let res = try? await self.helper.request(request) else {
@@ -379,14 +378,14 @@ class MobilyPurchaseAPI {
     /**
      Get webhook status from transactionID
      */
-    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: String?, downgradeAfterDate: Date?) async throws -> String {
+    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterDate: Date?) async throws -> String {
         let request = ApiRequest(method: "GET", url: "/apps/me/events/webhook-status/ios")
         _ = request.addParam("isSandbox", String(isSandbox))
         _ = request.addParam("platformTxOriginalId", String(transactionOriginalId))
         _ = request.addParam("platformTxId", String(transactionId))
 
         if downgradeToProductId != nil {
-            _ = request.addParam("downgradeToProductId", downgradeToProductId!)
+            _ = request.addParam("downgradeToProductId", downgradeToProductId!.uuidString)
         }
         if downgradeAfterDate != nil {
             _ = request.addParam("downgradeAfterDate", String(Int(downgradeAfterDate!.timeIntervalSince1970 * 1000)))

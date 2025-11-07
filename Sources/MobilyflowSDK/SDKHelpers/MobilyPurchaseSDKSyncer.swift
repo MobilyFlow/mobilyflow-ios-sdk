@@ -57,11 +57,11 @@ class MobilyPurchaseSDKSyncer {
 
     func ensureSync(force: Bool = false) async throws {
         try await syncExecutor.execute {
-            if self.customer != nil && self.customer!.isForwardingEnable {
+            if self.customer != nil && self.customer!.forwardNotificationEnable {
                 // If a customer is flag as forwarded, we double check if it's still the case (so if we disable forwarding
                 // on the backoffice, it's take effect instantly)
                 if let isForwardingEnable = try? await self.API.isForwardingEnable(externalRef: self.customer!.externalRef) {
-                    self.customer!.isForwardingEnable = isForwardingEnable
+                    self.customer!.forwardNotificationEnable = isForwardingEnable
                 }
             }
 
@@ -121,7 +121,7 @@ class MobilyPurchaseSDKSyncer {
         }
     }
 
-    func getEntitlement(forProductId productId: String) async throws -> MobilyCustomerEntitlement? {
+    func getEntitlement(forProductId productId: UUID) async throws -> MobilyCustomerEntitlement? {
         if customer == nil {
             throw MobilyError.no_customer_logged
         }
@@ -133,7 +133,7 @@ class MobilyPurchaseSDKSyncer {
         }
     }
 
-    func getEntitlements(forProductIds productIds: [String]?) throws -> [MobilyCustomerEntitlement] {
+    func getEntitlements(forProductIds productIds: [UUID]?) throws -> [MobilyCustomerEntitlement] {
         if customer == nil {
             throw MobilyError.no_customer_logged
         }

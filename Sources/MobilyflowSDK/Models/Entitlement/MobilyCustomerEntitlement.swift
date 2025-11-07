@@ -35,10 +35,10 @@ import StoreKit
 
         if type == ProductType.ONE_TIME {
             item = await MobilyItem.parse(jsonItem: jsonEntity)
-            product = item!.Product
+            product = item!.Product!
         } else {
             subscription = await MobilySubscription.parse(jsonSubscription: jsonEntity, storeAccountTransactions: storeAccountTransactions)
-            product = subscription!.Product
+            product = subscription!.Product!
         }
 
         return MobilyCustomerEntitlement(
