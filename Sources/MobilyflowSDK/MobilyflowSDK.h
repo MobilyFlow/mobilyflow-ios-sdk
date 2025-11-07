@@ -317,133 +317,226 @@ SWIFT_CLASS("_TtC13MobilyflowSDK14MobilyCustomer")
 @property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
-@property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
-@property (nonatomic) BOOL isForwardingEnable;
+@property (nonatomic, readonly, copy) NSString * _Nonnull externalRef;
+@property (nonatomic) BOOL forwardNotificationEnable;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-enum ProductType : NSInteger;
 @class MobilyProduct;
-@class ItemEntitlement;
-@class SubscriptionEntitlement;
+@class MobilyItem;
+@class MobilySubscription;
 SWIFT_CLASS("_TtC13MobilyflowSDK25MobilyCustomerEntitlement")
 @interface MobilyCustomerEntitlement : Serializable
-@property (nonatomic, readonly) enum ProductType type;
-@property (nonatomic, readonly, strong) MobilyProduct * _Nonnull product;
-@property (nonatomic, readonly, copy) NSString * _Nullable platformOriginalTransactionId;
-@property (nonatomic, readonly, strong) ItemEntitlement * _Nullable item;
-@property (nonatomic, readonly, strong) SubscriptionEntitlement * _Nullable subscription;
+@property (nonatomic, readonly, copy) NSString * _Nonnull type;
+@property (nonatomic, readonly, strong) MobilyProduct * _Nonnull Product;
+@property (nonatomic, readonly, strong) MobilyItem * _Nullable Item;
+@property (nonatomic, readonly, strong) MobilySubscription * _Nullable Subscription;
 @property (nonatomic, readonly, copy) NSString * _Nonnull customerId;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement15ItemEntitlement")
-@interface ItemEntitlement : Serializable
-@property (nonatomic, readonly) NSInteger quantity;
+SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyEnvironment")
+@interface MobilyEnvironment : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull DEVELOPMENT;)
++ (NSString * _Nonnull)DEVELOPMENT SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull STAGING;)
++ (NSString * _Nonnull)STAGING SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PRODUCTION;)
++ (NSString * _Nonnull)PRODUCTION SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-enum Platform : NSInteger;
 @class MobilySubscriptionOffer;
-SWIFT_CLASS("_TtCC13MobilyflowSDK25MobilyCustomerEntitlement23SubscriptionEntitlement")
-@interface SubscriptionEntitlement : Serializable
-@property (nonatomic, readonly, copy) NSDate * _Nonnull startDate;
-@property (nonatomic, readonly, copy) NSDate * _Nonnull endDate;
-@property (nonatomic, readonly) BOOL autoRenewEnable;
-@property (nonatomic, readonly) BOOL isInGracePeriod;
-@property (nonatomic, readonly) BOOL isInBillingIssue;
-@property (nonatomic, readonly) BOOL isExpiredOrRevoked;
-@property (nonatomic, readonly) BOOL isPaused;
-@property (nonatomic, readonly) BOOL hasPauseScheduled;
-@property (nonatomic, readonly, copy) NSDate * _Nullable resumeDate;
-@property (nonatomic, readonly, copy) NSDate * _Nullable offerExpiryDate;
-@property (nonatomic, readonly) NSInteger offerRemainingCycle;
-@property (nonatomic, readonly, copy) NSString * _Nonnull currency;
-@property (nonatomic, readonly) NSInteger lastPriceMillis;
-@property (nonatomic, readonly) NSInteger regularPriceMillis;
-@property (nonatomic, readonly) NSInteger renewPriceMillis;
-@property (nonatomic, readonly) enum Platform platform;
-@property (nonatomic, readonly) BOOL isManagedByThisStoreAccount;
-@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable offer;
-@property (nonatomic, readonly, strong) MobilyProduct * _Nullable renewProduct;
-@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable renewProductOffer;
+@class MobilyTransaction;
+SWIFT_CLASS("_TtC13MobilyflowSDK11MobilyEvent")
+@interface MobilyEvent : Serializable
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
+@property (nonatomic, readonly, copy) NSString * _Nullable transactionId;
+@property (nonatomic, readonly, copy) NSString * _Nullable subscriptionId;
+@property (nonatomic, readonly, copy) NSString * _Nullable itemId;
+@property (nonatomic, readonly, copy) NSString * _Nonnull type;
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable extras;
+@property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+@property (nonatomic, readonly) BOOL isSandbox;
+@property (nonatomic, readonly, strong) MobilyCustomer * _Nullable Customer;
+@property (nonatomic, readonly, strong) MobilyProduct * _Nullable Product;
+@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable ProductOffer;
+@property (nonatomic, readonly, strong) MobilyTransaction * _Nullable Transaction;
+@property (nonatomic, readonly, strong) MobilySubscription * _Nullable Subscription;
+@property (nonatomic, readonly, strong) MobilyItem * _Nullable Item;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-typedef SWIFT_ENUM(NSInteger, MobilyEnvironment, closed) {
-  MobilyEnvironmentDevelopment = 0,
-  MobilyEnvironmentStaging = 1,
-  MobilyEnvironmentProduction = 2,
-};
-
-enum ProductStatus : NSInteger;
-SWIFT_CLASS("_TtC13MobilyflowSDK20MobilyOneTimeProduct")
-@interface MobilyOneTimeProduct : Serializable
-@property (nonatomic, readonly) NSInteger priceMillis;
-@property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
-@property (nonatomic, readonly, copy) NSString * _Nonnull priceFormatted;
-@property (nonatomic, readonly) BOOL isConsumable;
-@property (nonatomic, readonly) BOOL isNonRenewableSub;
-@property (nonatomic, readonly) BOOL isMultiQuantity;
-@property (nonatomic, readonly) enum ProductStatus status;
+SWIFT_CLASS("_TtC13MobilyflowSDK15MobilyEventType")
+@interface MobilyEventType : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TEST;)
++ (NSString * _Nonnull)TEST SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PURCHASE;)
++ (NSString * _Nonnull)PURCHASE SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CONSUMED;)
++ (NSString * _Nonnull)CONSUMED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull RENEW;)
++ (NSString * _Nonnull)RENEW SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull EXPIRED;)
++ (NSString * _Nonnull)EXPIRED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REVOKED;)
++ (NSString * _Nonnull)REVOKED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REFUNDED;)
++ (NSString * _Nonnull)REFUNDED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUBSCRIPTION_CHANGE_RENEW_PRODUCT;)
++ (NSString * _Nonnull)SUBSCRIPTION_CHANGE_RENEW_PRODUCT SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUBSCRIPTION_UPGRADE;)
++ (NSString * _Nonnull)SUBSCRIPTION_UPGRADE SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUBSCRIPTION_EXTENDED;)
++ (NSString * _Nonnull)SUBSCRIPTION_EXTENDED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CHANGE_AUTO_RENEW;)
++ (NSString * _Nonnull)CHANGE_AUTO_RENEW SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CHANGE_PAUSE_STATUS;)
++ (NSString * _Nonnull)CHANGE_PAUSE_STATUS SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull GRACE_PERIOD_RESOLVED;)
++ (NSString * _Nonnull)GRACE_PERIOD_RESOLVED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TRANSFER_OWNERSHIP_REQUEST;)
++ (NSString * _Nonnull)TRANSFER_OWNERSHIP_REQUEST SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TRANSFER_OWNERSHIP_ACKNOWLEDGED;)
++ (NSString * _Nonnull)TRANSFER_OWNERSHIP_ACKNOWLEDGED SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
+SWIFT_CLASS("_TtC13MobilyflowSDK10MobilyItem")
+@interface MobilyItem : Serializable
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
+@property (nonatomic, readonly, copy) NSString * _Nonnull productId;
+@property (nonatomic, readonly) NSInteger quantity;
+@property (nonatomic, readonly, strong) MobilyProduct * _Nullable Product;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+SWIFT_CLASS("_TtC13MobilyflowSDK14MobilyPlatform")
+@interface MobilyPlatform : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull IOS;)
++ (NSString * _Nonnull)IOS SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull ANDROID;)
++ (NSString * _Nonnull)ANDROID SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+@class MobilyOneTimeProduct;
 @class MobilySubscriptionProduct;
 SWIFT_CLASS("_TtC13MobilyflowSDK13MobilyProduct")
 @interface MobilyProduct : Serializable
-@property (nonatomic, readonly, copy) NSString * _Nonnull id;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
 @property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
-@property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
-@property (nonatomic, readonly, copy) NSString * _Nonnull appId;
 @property (nonatomic, readonly, copy) NSString * _Nonnull referenceName;
+@property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
+@property (nonatomic, readonly, copy) NSString * _Nullable android_sku;
+@property (nonatomic, readonly, copy) NSString * _Nullable android_basePlanId;
+@property (nonatomic, readonly, copy) NSString * _Nonnull ios_sku;
+@property (nonatomic, readonly, copy) NSString * _Nonnull type;
+@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable extras;
+@property (nonatomic, readonly) NSInteger priceMillis;
+@property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
+@property (nonatomic, readonly, copy) NSString * _Nonnull priceFormatted;
+@property (nonatomic, readonly, copy) NSString * _Nonnull status;
 @property (nonatomic, readonly, copy) NSString * _Nonnull name;
 @property (nonatomic, readonly, copy) NSString * _Nonnull details;
-@property (nonatomic, readonly, copy) NSString * _Nonnull ios_sku;
-@property (nonatomic, readonly) enum ProductType type;
-@property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable extras;
-@property (nonatomic, readonly) enum ProductStatus status;
-@property (nonatomic, readonly, strong) MobilyOneTimeProduct * _Nullable oneTimeProduct;
-@property (nonatomic, readonly, strong) MobilySubscriptionProduct * _Nullable subscriptionProduct;
+@property (nonatomic, readonly, strong) MobilyOneTimeProduct * _Nullable oneTime;
+@property (nonatomic, readonly, strong) MobilySubscriptionProduct * _Nullable subscription;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+SWIFT_CLASS("_TtCC13MobilyflowSDK13MobilyProduct20MobilyOneTimeProduct")
+@interface MobilyOneTimeProduct : Serializable
+@property (nonatomic, readonly) BOOL isConsumable;
+@property (nonatomic, readonly) BOOL isMultiQuantity;
+@property (nonatomic, readonly) BOOL ios_isNonRenewableSub;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+SWIFT_CLASS("_TtCC13MobilyflowSDK13MobilyProduct25MobilySubscriptionProduct")
+@interface MobilySubscriptionProduct : Serializable
+@property (nonatomic, readonly) NSInteger periodCount;
+@property (nonatomic, readonly, copy) NSString * _Nonnull periodUnit;
+@property (nonatomic, readonly) NSInteger groupLevel;
+@property (nonatomic, readonly, copy) NSString * _Nonnull groupId;
+@property (nonatomic, readonly, copy) NSString * _Nullable ios_groupId;
+@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable freeTrial;
+@property (nonatomic, readonly, copy) NSArray<MobilySubscriptionOffer *> * _Nonnull promotionalOffers;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+SWIFT_CLASS("_TtC13MobilyflowSDK22MobilyProductOfferType")
+@interface MobilyProductOfferType : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull FREE_TRIAL;)
++ (NSString * _Nonnull)FREE_TRIAL SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull RECURRING;)
++ (NSString * _Nonnull)RECURRING SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+SWIFT_CLASS("_TtC13MobilyflowSDK19MobilyProductStatus")
+@interface MobilyProductStatus : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull INVALID;)
++ (NSString * _Nonnull)INVALID SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull UNAVAILABLE;)
++ (NSString * _Nonnull)UNAVAILABLE SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull AVAILABLE;)
++ (NSString * _Nonnull)AVAILABLE SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyProductType")
+@interface MobilyProductType : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull ONE_TIME;)
++ (NSString * _Nonnull)ONE_TIME SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUBSCRIPTION;)
++ (NSString * _Nonnull)SUBSCRIPTION SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 @class MobilyPurchaseSDKOptions;
 @class MobilySubscriptionGroup;
-enum TransferOwnershipStatus : NSInteger;
-enum RefundDialogResult : NSInteger;
 @class PurchaseOptions;
-enum WebhookStatus : NSInteger;
 SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 @interface MobilyPurchaseSDK : NSObject
-- (nonnull instancetype)initWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(enum MobilyEnvironment)environment options:(MobilyPurchaseSDKOptions * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(NSString * _Nonnull)environment options:(MobilyPurchaseSDKOptions * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
 - (void)close;
 - (void)loginWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
 - (void)logout;
 - (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getSubscriptionGroupByIdWithId:(NSString * _Nonnull)id completionHandler:(void (^ _Nonnull)(MobilySubscriptionGroup * _Nullable, NSError * _Nullable))completionHandler;
-- (MobilyProduct * _Nullable)getProductFromCacheWithIdWithId:(NSString * _Nonnull)id SWIFT_WARN_UNUSED_RESULT;
+- (MobilyProduct * _Nullable)getProductFromCacheWithIdWithId:(NSUUID * _Nonnull)id SWIFT_WARN_UNUSED_RESULT;
 - (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
-- (void)getEntitlementWithProductId:(NSString * _Nonnull)productId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
-- (void)getEntitlementsWithProductIds:(NSArray<NSString *> * _Nullable)productIds completionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
+- (void)getEntitlementWithProductId:(NSUUID * _Nonnull)productId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
+- (void)getEntitlementsWithProductIds:(NSArray<NSUUID *> * _Nullable)productIds completionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
 - (void)getExternalEntitlementsWithCompletionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
 /// Request transfer ownership of local device transactions.
-- (void)requestTransferOwnershipWithCompletionHandler:(void (^ _Nonnull)(enum TransferOwnershipStatus, NSError * _Nullable))completionHandler;
+- (void)requestTransferOwnershipWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completionHandler;
 /// Open the manage subscription dialog
 - (void)openManageSubscriptionWithCompletionHandler:(void (^ _Nonnull)(void))completionHandler;
 /// Open a refund dialog for the last transaction on the given product.
 /// Pro tips: to test declined refund in sandbox, once the dialog appear, select “other” and write “REJECT” in the text box.
-- (void)openRefundDialogWithProduct:(MobilyProduct * _Nonnull)product completionHandler:(void (^ _Nonnull)(enum RefundDialogResult))completionHandler;
-- (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(enum WebhookStatus, NSError * _Nullable))completionHandler;
+- (void)openRefundDialogWithProduct:(MobilyProduct * _Nonnull)product completionHandler:(void (^ _Nonnull)(NSString * _Nonnull))completionHandler;
+- (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(MobilyEvent * _Nullable, NSError * _Nullable))completionHandler;
 - (void)sendDiagnostic;
 - (BOOL)isBillingAvailable SWIFT_WARN_UNUSED_RESULT;
 - (void)getStoreCountryWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable))completionHandler;
@@ -461,9 +554,56 @@ SWIFT_CLASS("_TtC13MobilyflowSDK24MobilyPurchaseSDKOptions")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
+SWIFT_CLASS("_TtC13MobilyflowSDK24MobilyRefundDialogResult")
+@interface MobilyRefundDialogResult : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CANCELLED;)
++ (NSString * _Nonnull)CANCELLED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUCCESS;)
++ (NSString * _Nonnull)SUCCESS SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TRANSACTION_NOT_FOUND;)
++ (NSString * _Nonnull)TRANSACTION_NOT_FOUND SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
+SWIFT_CLASS("_TtC13MobilyflowSDK18MobilySubscription")
+@interface MobilySubscription : Serializable
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
+@property (nonatomic, readonly, copy) NSString * _Nonnull productId;
+@property (nonatomic, readonly, copy) NSString * _Nullable productOfferId;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull startDate;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull endDate;
+@property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+@property (nonatomic, readonly, copy) NSString * _Nullable renewProductId;
+@property (nonatomic, readonly, copy) NSString * _Nullable renewProductOfferId;
+@property (nonatomic, readonly) NSInteger lastPriceMillis;
+@property (nonatomic, readonly) NSInteger regularPriceMillis;
+@property (nonatomic, readonly) NSInteger renewPriceMillis;
+@property (nonatomic, readonly, copy) NSString * _Nonnull currency;
+@property (nonatomic, readonly, copy) NSDate * _Nullable offerExpiryDate;
+@property (nonatomic, readonly) NSInteger offerRemainingCycle;
+@property (nonatomic, readonly) BOOL autoRenewEnable;
+@property (nonatomic, readonly) BOOL isInGracePeriod;
+@property (nonatomic, readonly) BOOL isInBillingIssue;
+@property (nonatomic, readonly) BOOL hasPauseScheduled;
+@property (nonatomic, readonly) BOOL isPaused;
+@property (nonatomic, readonly, copy) NSDate * _Nullable resumeDate;
+@property (nonatomic, readonly) BOOL isExpiredOrRevoked;
+@property (nonatomic, readonly) BOOL isManagedByThisStoreAccount;
+@property (nonatomic, readonly, copy) NSString * _Nullable lastPlatformTxOriginalId;
+@property (nonatomic, readonly, strong) MobilyProduct * _Nullable Product;
+@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable ProductOffer;
+@property (nonatomic, readonly, strong) MobilyProduct * _Nullable RenewProduct;
+@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable RenewProductOffer;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
+
 SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionGroup")
 @interface MobilySubscriptionGroup : Serializable
-@property (nonatomic, readonly, copy) NSString * _Nonnull id;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
 @property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
 @property (nonatomic, readonly, copy) NSString * _Nonnull referenceName;
 @property (nonatomic, readonly, copy) NSString * _Nonnull name;
@@ -475,88 +615,115 @@ SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionGroup")
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-enum PeriodUnit : NSInteger;
 SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionOffer")
 @interface MobilySubscriptionOffer : Serializable
-@property (nonatomic, readonly, copy) NSString * _Nullable id;
-@property (nonatomic, readonly, copy) NSString * _Nullable identifier;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
+@property (nonatomic, readonly, copy) NSString * _Nonnull identifier;
 @property (nonatomic, readonly, copy) NSString * _Nullable externalRef;
-@property (nonatomic, readonly, copy) NSString * _Nullable referenceName;
-@property (nonatomic, readonly, copy) NSString * _Nullable name;
+@property (nonatomic, readonly, copy) NSString * _Nonnull referenceName;
 @property (nonatomic, readonly) NSInteger priceMillis;
 @property (nonatomic, readonly, copy) NSString * _Nonnull currencyCode;
 @property (nonatomic, readonly, copy) NSString * _Nonnull priceFormatted;
-@property (nonatomic, readonly, copy) NSString * _Nullable type;
+@property (nonatomic, readonly, copy) NSString * _Nonnull type;
 @property (nonatomic, readonly) NSInteger periodCount;
-@property (nonatomic, readonly) enum PeriodUnit periodUnit;
+@property (nonatomic, readonly, copy) NSString * _Nonnull periodUnit;
 @property (nonatomic, readonly) NSInteger countBillingCycle;
+@property (nonatomic, readonly, copy) NSString * _Nullable android_offerId;
 @property (nonatomic, readonly, copy) NSString * _Nullable ios_offerId;
 @property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable extras;
-@property (nonatomic, readonly) enum ProductStatus status;
+@property (nonatomic, readonly, copy) NSString * _Nonnull status;
+@property (nonatomic, readonly, copy) NSString * _Nullable name;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-SWIFT_CLASS("_TtC13MobilyflowSDK25MobilySubscriptionProduct")
-@interface MobilySubscriptionProduct : Serializable
-@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nonnull baseOffer;
-@property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable freeTrial;
-@property (nonatomic, readonly, copy) NSArray<MobilySubscriptionOffer *> * _Nonnull promotionalOffers;
-@property (nonatomic, readonly) enum ProductStatus status;
-@property (nonatomic, readonly) NSInteger groupLevel;
-@property (nonatomic, readonly, copy) NSString * _Nonnull ios_subscriptionGroupId;
-@property (nonatomic, readonly, copy) NSString * _Nonnull subscriptionGroupId;
+SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyTransaction")
+@interface MobilyTransaction : Serializable
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
+@property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
+@property (nonatomic, readonly, copy) NSString * _Nonnull platformTxId;
+@property (nonatomic, readonly, copy) NSString * _Nullable platformTxOriginalId;
+@property (nonatomic, readonly, copy) NSString * _Nonnull customerId;
+@property (nonatomic, readonly) NSInteger quantity;
+@property (nonatomic, readonly, copy) NSString * _Nonnull country;
+@property (nonatomic, readonly) NSInteger priceMillis;
+@property (nonatomic, readonly, copy) NSString * _Nonnull currency;
+@property (nonatomic, readonly) NSInteger convertedPriceMillis;
+@property (nonatomic, readonly, copy) NSString * _Nonnull convertedCurrency;
+@property (nonatomic, readonly, copy) NSString * _Nonnull status;
+@property (nonatomic, readonly) double refundedPercent;
+@property (nonatomic, readonly, copy) NSString * _Nonnull productId;
+@property (nonatomic, readonly, copy) NSString * _Nullable subscriptionId;
+@property (nonatomic, readonly, copy) NSString * _Nullable itemId;
+@property (nonatomic, readonly, copy) NSString * _Nullable productOfferId;
+@property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+@property (nonatomic, readonly, copy) NSDate * _Nullable startDate;
+@property (nonatomic, readonly, copy) NSDate * _Nullable endDate;
+@property (nonatomic, readonly, copy) NSDate * _Nullable refundDate;
+@property (nonatomic, readonly) BOOL isSandbox;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
-typedef SWIFT_ENUM(NSInteger, PeriodUnit, closed) {
-  PeriodUnitWeek = 0,
-  PeriodUnitMonth = 1,
-  PeriodUnitYear = 2,
-};
+SWIFT_CLASS("_TtC13MobilyflowSDK23MobilyTransactionStatus")
+@interface MobilyTransactionStatus : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUCCESS;)
++ (NSString * _Nonnull)SUCCESS SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull BILLING_ERROR;)
++ (NSString * _Nonnull)BILLING_ERROR SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REFUNDED;)
++ (NSString * _Nonnull)REFUNDED SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
 
-typedef SWIFT_ENUM(NSInteger, Platform, closed) {
-  PlatformIos = 0,
-  PlatformAndroid = 1,
-};
+SWIFT_CLASS("_TtC13MobilyflowSDK29MobilyTransferOwnershipStatus")
+@interface MobilyTransferOwnershipStatus : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PENDING;)
++ (NSString * _Nonnull)PENDING SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull DELAYED;)
++ (NSString * _Nonnull)DELAYED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull ACKNOWLEDGED;)
++ (NSString * _Nonnull)ACKNOWLEDGED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REJECTED;)
++ (NSString * _Nonnull)REJECTED SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
 
-typedef SWIFT_ENUM(NSInteger, ProductStatus, closed) {
-  ProductStatusInvalid = 0,
-  ProductStatusUnavailable = 1,
-  ProductStatusAvailable = 2,
-};
+SWIFT_CLASS("_TtC13MobilyflowSDK19MobilyWebhookStatus")
+@interface MobilyWebhookStatus : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PENDING;)
++ (NSString * _Nonnull)PENDING SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull ERROR;)
++ (NSString * _Nonnull)ERROR SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUCCESS;)
++ (NSString * _Nonnull)SUCCESS SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
 
-typedef SWIFT_ENUM(NSInteger, ProductType, closed) {
-  ProductTypeOne_time = 0,
-  ProductTypeSubscription = 1,
-};
+SWIFT_CLASS("_TtC13MobilyflowSDK10PeriodUnit")
+@interface PeriodUnit : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull WEEK;)
++ (NSString * _Nonnull)WEEK SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull MONTH;)
++ (NSString * _Nonnull)MONTH SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull YEAR;)
++ (NSString * _Nonnull)YEAR SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+@end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK15PurchaseOptions")
 @interface PurchaseOptions : NSObject
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithOffer:(MobilySubscriptionOffer * _Nullable)offer OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithQuantity:(NSInteger)quantity OBJC_DESIGNATED_INITIALIZER;
 - (PurchaseOptions * _Nonnull)setOffer:(MobilySubscriptionOffer * _Nullable)offer SWIFT_WARN_UNUSED_RESULT;
 - (PurchaseOptions * _Nonnull)setQuantity:(NSInteger)quantity SWIFT_WARN_UNUSED_RESULT;
 @end
-
-typedef SWIFT_ENUM(NSInteger, RefundDialogResult, closed) {
-  RefundDialogResultCancelled = 0,
-  RefundDialogResultSuccess = 1,
-  RefundDialogResultTransaction_not_found = 2,
-};
-
-typedef SWIFT_ENUM(NSInteger, TransferOwnershipStatus, closed) {
-  TransferOwnershipStatusPending = 0,
-  TransferOwnershipStatusDelayed = 1,
-  TransferOwnershipStatusAcknowledged = 2,
-  TransferOwnershipStatusRejected = 3,
-};
-
-typedef SWIFT_ENUM(NSInteger, WebhookStatus, closed) {
-  WebhookStatusPending = 0,
-  WebhookStatusError = 1,
-  WebhookStatusSuccess = 2,
-};
 
 #endif
 #if __has_attribute(external_source_symbol)
