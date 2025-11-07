@@ -59,7 +59,7 @@ import Foundation
         super.init()
     }
 
-    static func parse(json: [String: Any]) -> MobilyTransaction {
+    static func parse(_ json: [String: Any]) -> MobilyTransaction {
         return MobilyTransaction(
             id: UUID(uuidString: json["id"]! as! String)!,
             createdAt: parseDate(json["createdAt"]! as! String),

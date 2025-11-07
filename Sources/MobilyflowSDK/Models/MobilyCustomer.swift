@@ -23,7 +23,7 @@ import Foundation
         super.init()
     }
 
-    static func parse(jsonCustomer: [String: Any]) -> MobilyCustomer {
+    static func parse(_ jsonCustomer: [String: Any]) -> MobilyCustomer {
         return MobilyCustomer(
             id: UUID(uuidString: jsonCustomer["id"] as! String)!,
             createdAt: parseDate(jsonCustomer["createdAt"] as! String),

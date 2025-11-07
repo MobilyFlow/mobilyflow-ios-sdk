@@ -72,7 +72,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonSubscription: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilySubscription {
+    static func parse(_ jsonSubscription: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilySubscription {
         let platform = jsonSubscription["platform"] as! String
         var autoRenewEnable = jsonSubscription["autoRenewEnable"] as! Bool
 
@@ -90,7 +90,7 @@ import StoreKit
         }
 
         let jsonProduct = jsonSubscription["Product"] as? [String: Any]
-        let product = jsonProduct != nil ? await MobilyProduct.parse(jsonProduct: jsonProduct!) : nil
+        let product = jsonProduct != nil ? await MobilyProduct.parse(jsonProduct!) : nil
 
         let jsonProductOffer = jsonSubscription["ProductOffer"] as? [String: Any]
         let jsonRenewProduct = jsonSubscription["RenewProduct"] as? [String: Any]
@@ -106,7 +106,7 @@ import StoreKit
         }
 
         if jsonRenewProduct != nil {
-            renewProduct = await MobilyProduct.parse(jsonProduct: jsonRenewProduct!)
+            renewProduct = await MobilyProduct.parse(jsonRenewProduct!)
 
             // TODO: What if jsonRenewProduct is NULL but renewOffer is defined (change renew to same product but with an offer)
             if jsonRenewProductOffer != nil {

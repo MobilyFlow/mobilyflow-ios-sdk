@@ -103,7 +103,7 @@ class MobilyPurchaseSDKSyncer {
         var entitlements: [MobilyCustomerEntitlement] = []
 
         for jsonEntitlement in jsonEntitlements {
-            entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: self.storeAccountTransactions!))
+            entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement, storeAccountTransactions: self.storeAccountTransactions!))
         }
 
         self.entitlements = entitlements

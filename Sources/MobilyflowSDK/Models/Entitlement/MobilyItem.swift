@@ -25,7 +25,7 @@ import Foundation
         super.init()
     }
 
-    static func parse(jsonItem: [String: Any]) async -> MobilyItem {
+    static func parse(_ jsonItem: [String: Any]) async -> MobilyItem {
         let jsonProduct = jsonItem["Product"] as? [String: Any]
 
         return MobilyItem(
@@ -34,7 +34,7 @@ import Foundation
             updatedAt: parseDate(jsonItem["updatedAt"]! as! String),
             productId: jsonItem["productId"] as! String,
             quantity: jsonItem["quantity"] as! Int,
-            Product: jsonProduct != nil ? await MobilyProduct.parse(jsonProduct: jsonProduct!) : nil,
+            Product: jsonProduct != nil ? await MobilyProduct.parse(jsonProduct!) : nil,
         )
     }
 }

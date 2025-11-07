@@ -94,7 +94,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonProduct: [String: Any]) async -> MobilyProduct {
+    static func parse(_ jsonProduct: [String: Any]) async -> MobilyProduct {
         let dateFormatter = ISO8601DateFormatter()
         dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
 

@@ -86,7 +86,7 @@ import StoreKit
 
         // 2. Login
         let loginResponse = try await self.API.login(externalRef: externalRef)
-        self.customer = MobilyCustomer.parse(jsonCustomer: loginResponse.customer)
+        self.customer = MobilyCustomer.parse(loginResponse.customer)
         diagnostics.customerId = self.customer?.id
         try await self.syncer.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
@@ -144,7 +144,7 @@ import StoreKit
         var mobilyProducts: [MobilyProduct] = []
 
         for jsonProduct in jsonProducts {
-            let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct)
+            let mobilyProduct = await MobilyProduct.parse(jsonProduct)
             productsCaches[mobilyProduct.id] = mobilyProduct
 
             if !onlyAvailable || mobilyProduct.status == ProductStatus.AVAILABLE {
@@ -171,7 +171,7 @@ import StoreKit
         var groups: [MobilySubscriptionGroup] = []
 
         for jsonGroup in jsonGroups {
-            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, onlyAvailableProducts: onlyAvailable)
+            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup, onlyAvailableProducts: onlyAvailable)
 
             for product in mobilyGroup.products {
                 productsCaches[product.id] = product
@@ -196,7 +196,7 @@ import StoreKit
         await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
 
         // 3. Parse to MobilySubscriptionGroup
-        let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, onlyAvailableProducts: false)
+        let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup, onlyAvailableProducts: false)
 
         for product in mobilyGroup.products {
             productsCaches[product.id] = product
@@ -250,7 +250,7 @@ import StoreKit
             let jsonEntitlements = try await self.API.getCustomerExternalEntitlements(customerId: customer!.id, transactions: transactionToClaim)
 
             for jsonEntitlement in jsonEntitlements {
-                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: storeAccountTransactions))
+                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement, storeAccountTransactions: storeAccountTransactions))
             }
         }
 

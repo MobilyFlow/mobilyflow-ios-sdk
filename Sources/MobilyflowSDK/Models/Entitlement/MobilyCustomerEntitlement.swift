@@ -25,7 +25,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyCustomerEntitlement {
+    static func parse(_ jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyCustomerEntitlement {
         let type = jsonEntitlement["type"]! as! String
         let jsonEntity = jsonEntitlement["entity"] as! [String: Any]
         let product: MobilyProduct
@@ -34,10 +34,10 @@ import StoreKit
         var subscription: MobilySubscription? = nil
 
         if type == ProductType.ONE_TIME {
-            item = await MobilyItem.parse(jsonItem: jsonEntity)
+            item = await MobilyItem.parse(jsonEntity)
             product = item!.Product!
         } else {
-            subscription = await MobilySubscription.parse(jsonSubscription: jsonEntity, storeAccountTransactions: storeAccountTransactions)
+            subscription = await MobilySubscription.parse(jsonEntity, storeAccountTransactions: storeAccountTransactions)
             product = subscription!.Product!
         }
 

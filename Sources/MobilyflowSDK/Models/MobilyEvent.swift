@@ -47,7 +47,7 @@ import StoreKit
         super.init()
     }
 
-    static func parse(json: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyEvent {
+    static func parse(_ json: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyEvent {
         let jsonCustomer = json["Customer"] as? [String: Any]
         let jsonProduct = json["Product"] as? [String: Any]
         let jsonProductOffer = json["ProductOffer"] as? [String: Any]
@@ -59,7 +59,7 @@ import StoreKit
         var productOffer: MobilySubscriptionOffer? = nil
 
         if let jsonProduct = jsonProduct {
-            product = await MobilyProduct.parse(jsonProduct: jsonProduct)
+            product = await MobilyProduct.parse(jsonProduct)
 
             if let jsonProductOffer = jsonProductOffer {
                 let iosProduct = MobilyPurchaseRegistry.getIOSProduct(product!.ios_sku)
@@ -79,12 +79,12 @@ import StoreKit
             platform: json["platform"] as! String,
             isSandbox: json["isSandbox"] as! Bool,
 
-            Customer: jsonCustomer != nil ? MobilyCustomer.parse(jsonCustomer: jsonCustomer!) : nil,
+            Customer: jsonCustomer != nil ? MobilyCustomer.parse(jsonCustomer!) : nil,
             Product: product,
             ProductOffer: productOffer,
-            Transaction: jsonTransaction != nil ? MobilyTransaction.parse(json: jsonTransaction!) : nil,
-            Subscription: jsonSubscription != nil ? await MobilySubscription.parse(jsonSubscription: jsonSubscription!, storeAccountTransactions: storeAccountTransactions) : nil,
-            Item: jsonItem != nil ? await MobilyItem.parse(jsonItem: jsonItem!) : nil,
+            Transaction: jsonTransaction != nil ? MobilyTransaction.parse(jsonTransaction!) : nil,
+            Subscription: jsonSubscription != nil ? await MobilySubscription.parse(jsonSubscription!, storeAccountTransactions: storeAccountTransactions) : nil,
+            Item: jsonItem != nil ? await MobilyItem.parse(jsonItem!) : nil,
         )
     }
 }
