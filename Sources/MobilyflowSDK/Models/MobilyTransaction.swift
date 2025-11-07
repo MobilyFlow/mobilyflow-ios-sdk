@@ -12,7 +12,7 @@ import Foundation
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
     @objc public let platformTxId: String
-    @objc public let platformTxOriginalId: String
+    @objc public let platformTxOriginalId: String?
     @objc public let customerId: String
     @objc public let quantity: Int
     @objc public let country: String
@@ -20,7 +20,7 @@ import Foundation
     @objc public let currency: String
     @objc public let convertedPriceMillis: Int
     @objc public let convertedCurrency: String
-    @objc public let status: String // TODO: MobilyTransactionStatus
+    @objc public let status: String
     @objc public let refundedPercent: Double
     @objc public let productId: String
     @objc public let subscriptionId: String?
@@ -32,7 +32,7 @@ import Foundation
     @objc public let refundDate: Date?
     @objc public let isSandbox: Bool
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String, customerId: String, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: String, subscriptionId: String?, itemId: String?, productOfferId: String?, platform: String, startDate: Date, endDate: Date, refundDate: Date?, isSandbox: Bool) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String?, customerId: String, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: String, subscriptionId: String?, itemId: String?, productOfferId: String?, platform: String, startDate: Date, endDate: Date, refundDate: Date?, isSandbox: Bool) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -60,12 +60,19 @@ import Foundation
     }
 
     static func parse(_ json: [String: Any]) -> MobilyTransaction {
+        let platform = json["platform"] as! String
+        var platformTxOriginalId = json["platformTxOriginalId"] as? String
+
+        if platform == Platform.ANDROID {
+            platformTxOriginalId = nil
+        }
+
         return MobilyTransaction(
             id: UUID(uuidString: json["id"] as! String)!,
             createdAt: parseDate(json["createdAt"] as! String),
             updatedAt: parseDate(json["updatedAt"] as! String),
             platformTxId: json["platformTxId"] as! String,
-            platformTxOriginalId: json["platformTxOriginalId"] as! String,
+            platformTxOriginalId: platformTxOriginalId,
             customerId: json["customerId"] as! String,
             quantity: (json["quantity"] as? Int) ?? 1,
             country: json["country"] as! String,
@@ -79,7 +86,7 @@ import Foundation
             subscriptionId: json["subscriptionId"] as? String,
             itemId: json["itemId"] as? String,
             productOfferId: json["productOfferId"] as? String,
-            platform: json["platform"] as! String,
+            platform: platform,
             startDate: parseDate(json["startDate"] as! String),
             endDate: parseDate(json["endDate"] as! String),
             refundDate: parseDateOpt(json["refundDate"] as? String),
