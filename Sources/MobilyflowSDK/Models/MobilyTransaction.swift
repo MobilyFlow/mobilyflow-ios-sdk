@@ -27,12 +27,12 @@ import Foundation
     @objc public let itemId: String?
     @objc public let productOfferId: String?
     @objc public let platform: String
-    @objc public let startDate: Date
-    @objc public let endDate: Date
+    @objc public let startDate: Date?
+    @objc public let endDate: Date?
     @objc public let refundDate: Date?
     @objc public let isSandbox: Bool
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String?, customerId: String, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: String, subscriptionId: String?, itemId: String?, productOfferId: String?, platform: String, startDate: Date, endDate: Date, refundDate: Date?, isSandbox: Bool) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String?, customerId: String, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: String, subscriptionId: String?, itemId: String?, productOfferId: String?, platform: String, startDate: Date?, endDate: Date?, refundDate: Date?, isSandbox: Bool) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -87,8 +87,8 @@ import Foundation
             itemId: json["itemId"] as? String,
             productOfferId: json["productOfferId"] as? String,
             platform: platform,
-            startDate: parseDate(json["startDate"] as! String),
-            endDate: parseDate(json["endDate"] as! String),
+            startDate: parseDateOpt(json["startDate"] as? String),
+            endDate: parseDateOpt(json["endDate"] as? String),
             refundDate: parseDateOpt(json["refundDate"] as? String),
             isSandbox: json["isSandbox"] as! Bool,
         )

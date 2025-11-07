@@ -47,7 +47,7 @@ class MobilyPurchaseAPI {
             "externalRef": externalRef,
             "environment": environment,
             "locale": self.locale,
-            "region": await StorePrice.getMostRelevantRegion() ?? NSNull(), // TODO: Check this is not a problem
+            "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
         ])
 
         guard let res = try? await self.helper.request(request) else {
@@ -178,7 +178,7 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "POST", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/external-entitlements")
         _ = request.setData([
             "locale": self.locale,
-            "region": await StorePrice.getMostRelevantRegion() ?? NSNull(), // TODO: Check this is not a problem
+            "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
             "platform": "ios",
             "loadProduct": true,
             "transactions": transactions,

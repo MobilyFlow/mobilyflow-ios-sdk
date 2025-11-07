@@ -108,7 +108,6 @@ import StoreKit
         if jsonRenewProduct != nil {
             renewProduct = await MobilyProduct.parse(jsonRenewProduct!)
 
-            // TODO: What if jsonRenewProduct is NULL but renewOffer is defined (change renew to same product but with an offer)
             if jsonRenewProductOffer != nil {
                 let iosProduct = MobilyPurchaseRegistry.getIOSProduct(renewProduct!.ios_sku)
                 renewProductOffer = await MobilySubscriptionOffer.parse(jsonProduct: jsonRenewProduct!, jsonOffer: jsonRenewProductOffer!, iosProduct: iosProduct)

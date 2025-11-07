@@ -13,7 +13,7 @@ import StoreKit
     public let environment: String
     private var customer: MobilyCustomer?
 
-    private let API: MobilyPurchaseAPI // TODO: Make private
+    private let API: MobilyPurchaseAPI
     private var syncer: MobilyPurchaseSDKSyncer
     private let waiter: MobilyPurchaseSDKWaiter
     private let diagnostics: MobilyPurchaseSDKDiagnostics
@@ -379,7 +379,7 @@ import StoreKit
                                     if transaction.productID == product.ios_sku && !knownTransactionIdsForSku.contains(transaction.id) {
                                         Logger.d("[purchaseProduct] Receive Offer Code Transaction: \(transaction.id)")
                                         let isFinished = await MobilyPurchaseSDKHelper.isTransactionFinished(id: transaction.id)
-                                        event = try await self.finishTransaction(signedTx: signedTx, downgradeToProductId: nil, skipFinish: isFinished)
+                                        event = try await self.finishTransaction(signedTx: signedTx, downgradeToProductId: nil)
                                         semaphore.signal()
                                         return
                                     }
@@ -428,30 +428,7 @@ import StoreKit
                 } catch StoreKitError.systemError(let error) {
                     Logger.e("[purchaseProduct] systemError", error: error)
                     throw MobilyError.store_unavailable
-                } /* catch StoreKitError.unknown {
-                   // TODO: Manage re-enable subscription
-                 /*
-                  There is a tricky case:
-                  - User buy the subscritpion
-                  - He disable the auto-renew
-                  - He re-open the app and try to re-purchase (his subscription is still active, but this should re-enable auto-renew)
-                  - In that case the Product.purchase method throw StoreKitError.unknown but the subscription is well re-enable (at least in sandbox, maybe it work in production).
-
-                  The error: Received error that does not have a corresponding StoreKit Error: Error Domain=ASDErrorDomain Code=825 "No transactions in response" UserInfo={NSDebugDescription=No transactions in response}
-
-                  Check this post: https://developer.apple.com/forums/thread/770662
-
-                  This case is not managed but is ready to be use by uncommenting things related to isSusbscriptionReEnable
-                  */
-                 if isSusbscriptionReEnable {
-                 Logger.d("Subscription re-enable fix -> Ignore error")
-                 return
-                 } else {
-                 Logger.d("Other error = unknown")
-                 throw MobilyPurchaseError.failed
-                 }
-                 } */
-                catch {
+                } catch {
                     Logger.e("[purchaseProduct] Other error", error: error)
                     throw MobilyPurchaseError.failed
                 }
@@ -517,14 +494,12 @@ import StoreKit
         }
     }
 
-    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil, skipFinish: Bool = false) async throws -> MobilyEvent? {
+    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil) async throws -> MobilyEvent? {
         var event: MobilyEvent? = nil
 
         if case .verified(let transaction) = signedTx {
             Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
-            if skipFinish {
-                await transaction.finish()
-            }
+            await transaction.finish()
 
             if let customer = self.customer {
                 do {

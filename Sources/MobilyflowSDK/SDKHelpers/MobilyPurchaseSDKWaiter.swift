@@ -28,10 +28,6 @@ class MobilyPurchaseSDKWaiter {
             throw MobilyError.unknown_error
         }
 
-        // TODO: In case of an old transaction (more than a week), it may be not necessary to waitWebhook
-        // -> Actually, very old transaction related to IAPHub are trigerring error "Webhook still pending after 1 minutes"
-        // We should also add this check on Android
-
         if transaction.purchaseDate > Date().addingTimeInterval(60.0) {
             /*
              In case of a RENEW, it can happen that the purchaseDate is in the future.
