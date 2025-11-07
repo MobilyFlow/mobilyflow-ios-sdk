@@ -11,7 +11,7 @@ import StoreKit
 @objc public class MobilySubscriptionOffer: Serializable {
     @objc public let id: UUID
     @objc public let identifier: String
-    @objc public let externalRef: String
+    @objc public let externalRef: String?
     @objc public let referenceName: String
     @objc public let priceMillis: Int
     @objc public let currencyCode: String
@@ -26,7 +26,7 @@ import StoreKit
     @objc public let status: String
     @objc public let name: String?
 
-    @objc init(id: UUID, identifier: String, externalRef: String, referenceName: String, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String, periodCount: Int, periodUnit: String, countBillingCycle: Int, android_offerId: String?, ios_offerId: String?, extras: [String: Any]? = nil, status: String, name: String) {
+    @objc init(id: UUID, identifier: String, externalRef: String?, referenceName: String, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String, periodCount: Int, periodUnit: String, countBillingCycle: Int, android_offerId: String?, ios_offerId: String?, extras: [String: Any]? = nil, status: String, name: String) {
         self.id = id
         self.identifier = identifier
         self.externalRef = externalRef
@@ -57,9 +57,9 @@ import StoreKit
 
         var iosOffer: Product.SubscriptionOffer?
 
-        let id = UUID(uuidString: jsonOffer["id"]! as! String)!
+        let id = UUID(uuidString: jsonOffer["id"] as! String)!
         let identifier = jsonOffer["identifier"] as! String
-        let externalRef = jsonOffer["externalRef"] as! String
+        let externalRef = jsonOffer["externalRef"] as? String
         let referenceName = jsonOffer["referenceName"] as! String
         let extras = jsonOffer["extras"] as? [String: Any]
         let type = jsonOffer["type"] as! String

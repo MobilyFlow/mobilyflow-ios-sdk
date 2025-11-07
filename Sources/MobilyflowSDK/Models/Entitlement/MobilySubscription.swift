@@ -116,9 +116,9 @@ import StoreKit
         }
 
         return MobilySubscription(
-            id: UUID(uuidString: jsonSubscription["id"]! as! String)!,
-            createdAt: parseDate(jsonSubscription["createdAt"]! as! String),
-            updatedAt: parseDate(jsonSubscription["updatedAt"]! as! String),
+            id: UUID(uuidString: jsonSubscription["id"] as! String)!,
+            createdAt: parseDate(jsonSubscription["createdAt"] as! String),
+            updatedAt: parseDate(jsonSubscription["updatedAt"] as! String),
             productId: jsonSubscription["productId"] as! String,
             productOfferId: jsonSubscription["productOfferId"] as! String,
             startDate: parseDate(jsonSubscription["startDate"] as! String),

@@ -61,9 +61,9 @@ import Foundation
 
     static func parse(_ json: [String: Any]) -> MobilyTransaction {
         return MobilyTransaction(
-            id: UUID(uuidString: json["id"]! as! String)!,
-            createdAt: parseDate(json["createdAt"]! as! String),
-            updatedAt: parseDate(json["updatedAt"]! as! String),
+            id: UUID(uuidString: json["id"] as! String)!,
+            createdAt: parseDate(json["createdAt"] as! String),
+            updatedAt: parseDate(json["updatedAt"] as! String),
             platformTxId: json["platformTxId"] as! String,
             platformTxOriginalId: json["platformTxOriginalId"] as! String,
             customerId: json["customerId"] as! String,

@@ -26,7 +26,7 @@ import StoreKit
     }
 
     static func parse(_ jsonEntitlement: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilyCustomerEntitlement {
-        let type = jsonEntitlement["type"]! as! String
+        let type = jsonEntitlement["type"] as! String
         let jsonEntity = jsonEntitlement["entity"] as! [String: Any]
         let product: MobilyProduct
 

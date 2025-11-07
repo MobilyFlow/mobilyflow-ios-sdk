@@ -95,11 +95,8 @@ import StoreKit
     }
 
     static func parse(_ jsonProduct: [String: Any]) async -> MobilyProduct {
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
-
         let ios_sku = jsonProduct["ios_sku"] as! String
-        let type = jsonProduct["type"]! as! String
+        let type = jsonProduct["type"] as! String
 
         var status: String
         var priceMillis = 0
@@ -122,9 +119,9 @@ import StoreKit
             }
 
             oneTime = MobilyOneTimeProduct(
-                isConsumable: jsonProduct["isConsumable"]! as! Bool,
-                isMultiQuantity: jsonProduct["isMultiQuantity"]! as! Bool,
-                ios_isNonRenewableSub: jsonProduct["ios_isNonRenewableSub"]! as! Bool,
+                isConsumable: jsonProduct["isConsumable"] as! Bool,
+                isMultiQuantity: jsonProduct["isMultiQuantity"] as! Bool,
+                ios_isNonRenewableSub: jsonProduct["ios_isNonRenewableSub"] as! Bool,
             )
         } else {
             var periodCount: Int
@@ -186,17 +183,17 @@ import StoreKit
         }
 
         let product = MobilyProduct(
-            id: UUID(uuidString: jsonProduct["id"]! as! String)!,
-            createdAt: dateFormatter.date(from: jsonProduct["createdAt"]! as! String)!,
-            updatedAt: dateFormatter.date(from: jsonProduct["updatedAt"]! as! String)!,
-            identifier: jsonProduct["identifier"]! as! String,
-            referenceName: jsonProduct["referenceName"]! as! String,
-            externalRef: jsonProduct["externalRef"]! as? String,
-            android_sku: jsonProduct["android_sku"]! as? String,
-            android_basePlanId: jsonProduct["android_basePlanId"]! as? String,
+            id: UUID(uuidString: jsonProduct["id"] as! String)!,
+            createdAt: parseDate(jsonProduct["createdAt"] as! String),
+            updatedAt: parseDate(jsonProduct["updatedAt"] as! String),
+            identifier: jsonProduct["identifier"] as! String,
+            referenceName: jsonProduct["referenceName"] as! String,
+            externalRef: jsonProduct["externalRef"] as? String,
+            android_sku: jsonProduct["android_sku"] as? String,
+            android_basePlanId: jsonProduct["android_basePlanId"] as? String,
             ios_sku: ios_sku,
             type: type,
-            extras: jsonProduct["extras"]! as! [String: Any]?,
+            extras: jsonProduct["extras"] as! [String: Any]?,
             priceMillis: priceMillis,
             currencyCode: currencyCode,
             priceFormatted: priceFormatted,

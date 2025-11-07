@@ -68,9 +68,9 @@ import StoreKit
         }
 
         return MobilyEvent(
-            id: UUID(uuidString: json["id"]! as! String)!,
-            createdAt: parseDate(json["createdAt"]! as! String),
-            updatedAt: parseDate(json["updatedAt"]! as! String),
+            id: UUID(uuidString: json["id"] as! String)!,
+            createdAt: parseDate(json["createdAt"] as! String),
+            updatedAt: parseDate(json["updatedAt"] as! String),
             transactionId: json["transactionId"] as? String,
             subscriptionId: json["subscriptionId"] as? String,
             itemId: json["itemId"] as? String,

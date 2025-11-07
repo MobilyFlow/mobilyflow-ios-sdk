@@ -322,7 +322,7 @@ class MobilyPurchaseAPI {
 
         let jsonResponse = res.json()
         if res.success {
-            return (jsonResponse["data"] as! [String: Any])["id"]! as! String
+            return (jsonResponse["data"] as! [String: Any])["id"] as! String
         } else {
             if let errorCode = jsonResponse["errorCode"] as? String {
                 if let error = MobilyTransferOwnershipError.parse(errorCode) {
