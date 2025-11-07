@@ -33,7 +33,7 @@ import StoreKit
         var item: MobilyItem? = nil
         var subscription: MobilySubscription? = nil
 
-        if type == ProductType.ONE_TIME {
+        if type == MobilyProductType.ONE_TIME {
             item = await MobilyItem.parse(jsonEntity)
             product = item!.Product!
         } else {

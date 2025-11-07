@@ -108,11 +108,11 @@ import StoreKit
 
         let iosProduct = MobilyPurchaseRegistry.getIOSProduct(ios_sku)
 
-        if type == ProductType.ONE_TIME {
+        if type == MobilyProductType.ONE_TIME {
             if iosProduct == nil || iosProduct?.subscription != nil {
-                status = iosProduct == nil ? ProductStatus.UNAVAILABLE : ProductStatus.INVALID
+                status = iosProduct == nil ? MobilyProductStatus.UNAVAILABLE : MobilyProductStatus.INVALID
             } else {
-                status = ProductStatus.AVAILABLE
+                status = MobilyProductStatus.AVAILABLE
                 priceMillis = NSDecimalNumber(decimal: iosProduct!.price * 1000.0).intValue
                 currencyCode = iosProduct!.priceFormatStyle.currencyCode
                 priceFormatted = iosProduct!.displayPrice
@@ -130,7 +130,7 @@ import StoreKit
             var promotionalOffers: [MobilySubscriptionOffer] = []
 
             if iosProduct != nil {
-                status = ProductStatus.AVAILABLE
+                status = MobilyProductStatus.AVAILABLE
 
                 // Base offer, use iosProduct
                 priceMillis = NSDecimalNumber(decimal: iosProduct!.price * 1000.0).intValue
@@ -141,7 +141,7 @@ import StoreKit
                 periodCount = parsedPeriod.count
                 periodUnit = parsedPeriod.unit
             } else {
-                status = ProductStatus.UNAVAILABLE
+                status = MobilyProductStatus.UNAVAILABLE
                 periodUnit = jsonProduct["subscriptionPeriodUnit"] as! String
                 periodCount = jsonProduct["subscriptionPeriodCount"] as! Int
             }
@@ -173,7 +173,7 @@ import StoreKit
             )
         }
 
-        if status != ProductStatus.AVAILABLE {
+        if status != MobilyProductStatus.AVAILABLE {
             let jsonStorePrice = jsonProduct["StorePrices"] as? [[String: Any]]
             let storePrice = (jsonStorePrice?.count ?? 0) > 0 ? StorePrice.parse(jsonStorePrice![0]) : nil
 

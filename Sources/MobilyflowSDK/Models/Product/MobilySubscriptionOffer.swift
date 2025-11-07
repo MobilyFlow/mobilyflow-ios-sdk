@@ -53,7 +53,7 @@ import StoreKit
         let periodCount: Int
         let periodUnit: String
         let countBillingCycle: Int
-        var status = ProductStatus.UNAVAILABLE
+        var status = MobilyProductStatus.UNAVAILABLE
 
         var iosOffer: Product.SubscriptionOffer?
 
@@ -78,12 +78,12 @@ import StoreKit
         if iosOffer != nil {
             if iosOffer?.paymentMode == .payUpFront {
                 Logger.w("Pay Up Front is not supported for subscription offers (ios offer \(iosOffer?.id ?? "nil"))")
-                status = ProductStatus.INVALID
+                status = MobilyProductStatus.INVALID
             }
         }
 
         // 2. Populate
-        if iosOffer == nil || status == ProductStatus.INVALID {
+        if iosOffer == nil || status == MobilyProductStatus.INVALID {
             // Promotionnal offer but unavailable
             let jsonStorePrice = jsonOffer["StorePrices"] as? [[String: Any]]
             let storePrice = (jsonStorePrice?.count ?? 0) > 0 ? StorePrice.parse(jsonStorePrice![0]) : nil
@@ -105,12 +105,12 @@ import StoreKit
                 periodUnit = jsonProduct["subscriptionPeriodUnit"] as! String
             }
         } else {
-            status = ProductStatus.AVAILABLE
+            status = MobilyProductStatus.AVAILABLE
             currencyCode = iosProduct!.priceFormatStyle.currencyCode
 
             if type == MobilyProductOfferType.FREE_TRIAL {
                 if !(await iosProduct!.subscription!.isEligibleForIntroOffer) {
-                    status = ProductStatus.UNAVAILABLE
+                    status = MobilyProductStatus.UNAVAILABLE
                 }
             }
 

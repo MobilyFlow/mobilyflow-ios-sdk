@@ -1,5 +1,5 @@
 //
-//  MobilyProduct.swift
+//  MobilySubscriptionGroup.swift
 //  MobilyPurchaseSDK
 //
 //  Created by Gregoire Taja on 17/07/2024.
@@ -48,7 +48,7 @@ import StoreKit
             for jsonProduct in jsonProducts {
                 let product = await MobilyProduct.parse(jsonProduct)
 
-                if !onlyAvailableProducts || product.status == ProductStatus.AVAILABLE {
+                if !onlyAvailableProducts || product.status == MobilyProductStatus.AVAILABLE {
                     group.products.append(product)
                 }
             }

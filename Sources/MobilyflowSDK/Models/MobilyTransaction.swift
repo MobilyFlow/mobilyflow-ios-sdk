@@ -63,7 +63,7 @@ import Foundation
         let platform = json["platform"] as! String
         var platformTxOriginalId = json["platformTxOriginalId"] as? String
 
-        if platform == Platform.ANDROID {
+        if platform == MobilyPlatform.ANDROID {
             platformTxOriginalId = nil
         }
 

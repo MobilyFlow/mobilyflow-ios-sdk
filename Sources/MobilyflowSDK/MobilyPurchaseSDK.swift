@@ -144,7 +144,7 @@ import StoreKit
             let mobilyProduct = await MobilyProduct.parse(jsonProduct)
             productsCaches[mobilyProduct.id] = mobilyProduct
 
-            if !onlyAvailable || mobilyProduct.status == ProductStatus.AVAILABLE {
+            if !onlyAvailable || mobilyProduct.status == MobilyProductStatus.AVAILABLE {
                 mobilyProducts.append(mobilyProduct)
             }
         }
@@ -296,16 +296,16 @@ import StoreKit
             do {
                 let lastTxId = try await self.API.getLastTxPlatformIdForProduct(customerId: self.customer!.id, productId: product.id)
                 let result = try? await Transaction.beginRefundRequest(for: UInt64(lastTxId)!, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                return (result ?? .userCancelled) == .success ? RefundDialogResult.SUCCESS : RefundDialogResult.CANCELLED
+                return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
             } catch {
-                return RefundDialogResult.TRANSACTION_NOT_FOUND
+                return MobilyRefundDialogResult.TRANSACTION_NOT_FOUND
             }
         } else {
             if #available(iOS 18.4, *) {
                 for await signedTx in Transaction.currentEntitlements(for: product.ios_sku) {
                     if case .verified(let transaction) = signedTx {
                         let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                        return (result ?? .userCancelled) == .success ? RefundDialogResult.SUCCESS : RefundDialogResult.CANCELLED
+                        return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
                     }
                 }
             } else {
@@ -313,13 +313,13 @@ import StoreKit
                     if case .verified(let transaction) = signedTx {
                         if transaction.productID == product.ios_sku {
                             let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                            return (result ?? .userCancelled) == .success ? RefundDialogResult.SUCCESS : RefundDialogResult.CANCELLED
+                            return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
                         }
                     }
                 }
             }
         }
-        return RefundDialogResult.TRANSACTION_NOT_FOUND
+        return MobilyRefundDialogResult.TRANSACTION_NOT_FOUND
     }
 
     /* ******************************************************************* */

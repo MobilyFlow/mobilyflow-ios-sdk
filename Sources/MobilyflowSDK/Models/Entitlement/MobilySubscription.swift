@@ -1,5 +1,5 @@
 //
-//  MobilyItem.swift
+//  MobilySubscription.swift
 //  MobilyflowSDK
 //
 //  Created by Gregoire Taja on 06/11/2025.
@@ -79,13 +79,13 @@ import StoreKit
         var lastPlatformTxOriginalId = jsonSubscription["lastPlatformTxOriginalId"] as? String
         var storeAccountTx: Transaction?
 
-        if platform == Platform.IOS && lastPlatformTxOriginalId != nil && !lastPlatformTxOriginalId!.isEmpty {
+        if platform == MobilyPlatform.IOS && lastPlatformTxOriginalId != nil && !lastPlatformTxOriginalId!.isEmpty {
             storeAccountTx = storeAccountTransactions[UInt64(lastPlatformTxOriginalId!)!]
 
             if storeAccountTx != nil {
                 autoRenewEnable = (await getRenewalInfo(tx: storeAccountTx!))?.willAutoRenew ?? autoRenewEnable
             }
-        } else if platform == Platform.ANDROID {
+        } else if platform == MobilyPlatform.ANDROID {
             lastPlatformTxOriginalId = nil
         }
 
