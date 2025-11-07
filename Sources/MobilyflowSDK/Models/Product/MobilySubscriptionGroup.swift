@@ -18,7 +18,7 @@ import StoreKit
     @objc public let ios_groupId: String
     @objc public let extras: [String: Any]?
 
-    @objc public var products: [MobilyProduct]
+    @objc public var Products: [MobilyProduct]
 
     @objc init(id: UUID, identifier: String, referenceName: String, name: String, details: String, ios_groupId: String, extras: [String: Any]? = nil) {
         self.id = id
@@ -28,7 +28,7 @@ import StoreKit
         self.details = details
         self.ios_groupId = ios_groupId
         self.extras = extras
-        self.products = []
+        self.Products = []
 
         super.init()
     }
@@ -49,7 +49,7 @@ import StoreKit
                 let product = await MobilyProduct.parse(jsonProduct)
 
                 if !onlyAvailableProducts || product.status == MobilyProductStatus.AVAILABLE {
-                    group.products.append(product)
+                    group.Products.append(product)
                 }
             }
         }

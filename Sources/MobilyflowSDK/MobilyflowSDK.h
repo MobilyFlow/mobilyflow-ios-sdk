@@ -610,7 +610,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK23MobilySubscriptionGroup")
 @property (nonatomic, readonly, copy) NSString * _Nonnull details;
 @property (nonatomic, readonly, copy) NSString * _Nonnull ios_groupId;
 @property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable extras;
-@property (nonatomic, copy) NSArray<MobilyProduct *> * _Nonnull products;
+@property (nonatomic, copy) NSArray<MobilyProduct *> * _Nonnull Products;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end

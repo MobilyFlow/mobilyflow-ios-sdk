@@ -170,11 +170,11 @@ import StoreKit
         for jsonGroup in jsonGroups {
             let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup, onlyAvailableProducts: onlyAvailable)
 
-            for product in mobilyGroup.products {
+            for product in mobilyGroup.Products {
                 productsCaches[product.id] = product
             }
 
-            if !onlyAvailable || mobilyGroup.products.count > 0 {
+            if !onlyAvailable || mobilyGroup.Products.count > 0 {
                 groups.append(mobilyGroup)
             }
         }
@@ -195,7 +195,7 @@ import StoreKit
         // 3. Parse to MobilySubscriptionGroup
         let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup, onlyAvailableProducts: false)
 
-        for product in mobilyGroup.products {
+        for product in mobilyGroup.Products {
             productsCaches[product.id] = product
         }
 
