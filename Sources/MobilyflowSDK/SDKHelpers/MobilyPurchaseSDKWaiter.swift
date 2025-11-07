@@ -78,7 +78,7 @@ class MobilyPurchaseSDKWaiter {
             }
         }
 
-        Logger.d("Webhook wait completed (\(result))")
+        Logger.d("Webhook wait completed (\(result.status))")
 
         if result.status == WebhookStatus.ERROR {
             throw MobilyPurchaseError.webhook_failed

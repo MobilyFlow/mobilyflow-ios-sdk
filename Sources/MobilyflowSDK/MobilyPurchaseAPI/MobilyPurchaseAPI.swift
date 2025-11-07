@@ -370,17 +370,18 @@ class MobilyPurchaseAPI {
      Get webhook status from transactionID
      */
     public func getWebhookResult(signedTransaction: String, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterDate: Date?) async throws -> MobilyWebhookResult {
-        let request = ApiRequest(method: "GET", url: "/apps/me/events/webhook-result/ios")
-        _ = request.addParam("isSandbox", String(isSandbox))
-        _ = request.addParam("signedTransaction", signedTransaction)
-        _ = request.addParam("platformTxId", String(transactionId))
-        _ = request.addParam("environment", environment)
+        let request = ApiRequest(method: "POST", url: "/apps/me/events/webhook-result/ios")
+        request.setData([
+            "signedTransaction": signedTransaction,
+            "platformTxId": String(transactionId),
+            "environment": environment,
+        ])
 
         if downgradeToProductId != nil {
-            _ = request.addParam("downgradeToProductId", downgradeToProductId!.uuidString)
+            _ = request.addData("downgradeToProductId", downgradeToProductId!.uuidString)
         }
         if downgradeAfterDate != nil {
-            _ = request.addParam("downgradeAfterDate", String(Int(downgradeAfterDate!.timeIntervalSince1970 * 1000)))
+            _ = request.addData("downgradeAfterDate", String(Int(downgradeAfterDate!.timeIntervalSince1970 * 1000)))
         }
 
         guard let res = try? await self.helper.request(request) else {

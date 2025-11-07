@@ -13,12 +13,12 @@ import StoreKit
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
     @objc public let productId: String
-    @objc public let productOfferId: String
+    @objc public let productOfferId: String?
     @objc public let startDate: Date
     @objc public let endDate: Date
     @objc public let platform: String
-    @objc public let renewProductId: String
-    @objc public let renewProductOfferId: String
+    @objc public let renewProductId: String?
+    @objc public let renewProductOfferId: String?
     @objc public let lastPriceMillis: Int
     @objc public let regularPriceMillis: Int
     @objc public let renewPriceMillis: Int
@@ -39,7 +39,7 @@ import StoreKit
     @objc public let RenewProduct: MobilyProduct?
     @objc public let RenewProductOffer: MobilySubscriptionOffer?
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, productId: String, productOfferId: String, startDate: Date, endDate: Date, platform: String, renewProductId: String, renewProductOfferId: String, lastPriceMillis: Int, regularPriceMillis: Int, renewPriceMillis: Int, currency: String, offerExpiryDate: Date?, offerRemainingCycle: Int, autoRenewEnable: Bool, isInGracePeriod: Bool, isInBillingIssue: Bool, hasPauseScheduled: Bool, isPaused: Bool, resumeDate: Date?, isExpiredOrRevoked: Bool, isManagedByThisStoreAccount: Bool, lastPlatformTxOriginalId: String?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, RenewProduct: MobilyProduct?, RenewProductOffer: MobilySubscriptionOffer?) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, productId: String, productOfferId: String?, startDate: Date, endDate: Date, platform: String, renewProductId: String?, renewProductOfferId: String?, lastPriceMillis: Int, regularPriceMillis: Int, renewPriceMillis: Int, currency: String, offerExpiryDate: Date?, offerRemainingCycle: Int, autoRenewEnable: Bool, isInGracePeriod: Bool, isInBillingIssue: Bool, hasPauseScheduled: Bool, isPaused: Bool, resumeDate: Date?, isExpiredOrRevoked: Bool, isManagedByThisStoreAccount: Bool, lastPlatformTxOriginalId: String?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, RenewProduct: MobilyProduct?, RenewProductOffer: MobilySubscriptionOffer?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -120,12 +120,12 @@ import StoreKit
             createdAt: parseDate(jsonSubscription["createdAt"] as! String),
             updatedAt: parseDate(jsonSubscription["updatedAt"] as! String),
             productId: jsonSubscription["productId"] as! String,
-            productOfferId: jsonSubscription["productOfferId"] as! String,
+            productOfferId: jsonSubscription["productOfferId"] as? String,
             startDate: parseDate(jsonSubscription["startDate"] as! String),
             endDate: parseDate(jsonSubscription["endDate"] as! String),
             platform: platform,
-            renewProductId: jsonSubscription["renewProductId"] as! String,
-            renewProductOfferId: jsonSubscription["renewProductOfferId"] as! String,
+            renewProductId: jsonSubscription["renewProductId"] as? String,
+            renewProductOfferId: jsonSubscription["renewProductOfferId"] as? String,
             lastPriceMillis: jsonSubscription["lastPriceMillis"] as! Int,
             regularPriceMillis: jsonSubscription["regularPriceMillis"] as! Int,
             renewPriceMillis: jsonSubscription["renewPriceMillis"] as! Int,

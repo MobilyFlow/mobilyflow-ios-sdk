@@ -23,16 +23,16 @@ import Foundation
     @objc public let status: String // TODO: MobilyTransactionStatus
     @objc public let refundedPercent: Double
     @objc public let productId: String
-    @objc public let subscriptionId: String
-    @objc public let itemId: String
-    @objc public let productOfferId: String
+    @objc public let subscriptionId: String?
+    @objc public let itemId: String?
+    @objc public let productOfferId: String?
     @objc public let platform: String
     @objc public let startDate: Date
     @objc public let endDate: Date
     @objc public let refundDate: Date?
     @objc public let isSandbox: Bool
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String, customerId: String, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: String, subscriptionId: String, itemId: String, productOfferId: String, platform: String, startDate: Date, endDate: Date, refundDate: Date?, isSandbox: Bool) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String, customerId: String, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: String, subscriptionId: String?, itemId: String?, productOfferId: String?, platform: String, startDate: Date, endDate: Date, refundDate: Date?, isSandbox: Bool) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -74,11 +74,11 @@ import Foundation
             convertedPriceMillis: json["convertedPriceMillis"] as! Int,
             convertedCurrency: json["convertedCurrency"] as! String,
             status: json["status"] as! String,
-            refundedPercent: json["refundedPercent"] as! Double,
+            refundedPercent: json["refundedPercent"] as? Double ?? 0.0,
             productId: json["productId"] as! String,
-            subscriptionId: json["subscriptionId"] as! String,
-            itemId: json["itemId"] as! String,
-            productOfferId: json["productOfferId"] as! String,
+            subscriptionId: json["subscriptionId"] as? String,
+            itemId: json["itemId"] as? String,
+            productOfferId: json["productOfferId"] as? String,
             platform: json["platform"] as! String,
             startDate: parseDate(json["startDate"] as! String),
             endDate: parseDate(json["endDate"] as! String),

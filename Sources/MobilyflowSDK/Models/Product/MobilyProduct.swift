@@ -198,8 +198,8 @@ import StoreKit
             currencyCode: currencyCode,
             priceFormatted: priceFormatted,
             status: status,
-            name: getTranslationValue(jsonProduct["_translations"] as! [[String: Any]], field: "name")!,
-            details: getTranslationValue(jsonProduct["_translations"] as! [[String: Any]], field: "description") ?? "",
+            name: getTranslationValue(jsonProduct["_translations"] as? [[String: Any]], field: "name") ?? "",
+            details: getTranslationValue(jsonProduct["_translations"] as? [[String: Any]], field: "description") ?? "",
             oneTime: oneTime,
             subscription: subscription,
         )

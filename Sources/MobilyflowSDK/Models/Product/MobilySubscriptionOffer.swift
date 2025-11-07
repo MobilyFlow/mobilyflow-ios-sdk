@@ -64,7 +64,7 @@ import StoreKit
         let extras = jsonOffer["extras"] as? [String: Any]
         let type = jsonOffer["type"] as! String
         let ios_offerId = jsonOffer["ios_offerId"] as? String
-        let name = getTranslationValue(jsonOffer["_translations"] as! [[String: Any]], field: "name")!
+        let name = getTranslationValue(jsonOffer["_translations"] as? [[String: Any]], field: "name") ?? ""
 
         if iosProduct != nil {
             if type == MobilyProductOfferType.FREE_TRIAL {

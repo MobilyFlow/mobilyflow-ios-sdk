@@ -15,6 +15,16 @@ import Foundation
         super.init()
     }
 
+    @objc public init(offer: MobilySubscriptionOffer? = nil) {
+        self.offer = offer
+        super.init()
+    }
+
+    @objc public init(quantity: Int) {
+        self.quantity = quantity
+        super.init()
+    }
+
     @objc public func setOffer(_ offer: MobilySubscriptionOffer?) -> PurchaseOptions {
         self.offer = offer
         return self
