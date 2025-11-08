@@ -535,7 +535,11 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 - (void)openManageSubscriptionWithCompletionHandler:(void (^ _Nonnull)(void))completionHandler;
 /// Open a refund dialog for the last transaction on the given product.
 /// Pro tips: to test declined refund in sandbox, once the dialog appear, select “other” and write “REJECT” in the text box.
-- (void)openRefundDialogWithProduct:(MobilyProduct * _Nonnull)product completionHandler:(void (^ _Nonnull)(NSString * _Nonnull))completionHandler;
+- (void)openRefundDialogForProduct:(MobilyProduct * _Nonnull)forProduct completionHandler:(void (^ _Nonnull)(NSString * _Nonnull))completionHandler;
+/// Open a refund dialog for the given transactionId.
+/// Warning: this is iOS transactionId, not MobilyFlow transactionId
+/// Pro tips: to test declined refund in sandbox, once the dialog appear, select “other” and write “REJECT” in the text box.
+- (void)openRefundDialogForTransactionId:(NSString * _Nonnull)forTransactionId completionHandler:(void (^ _Nonnull)(NSString * _Nonnull))completionHandler;
 - (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(MobilyEvent * _Nullable, NSError * _Nullable))completionHandler;
 - (void)sendDiagnostic;
 - (BOOL)isBillingAvailable SWIFT_WARN_UNUSED_RESULT;
