@@ -332,7 +332,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK25MobilyCustomerEntitlement")
 @property (nonatomic, readonly, strong) MobilyProduct * _Nonnull Product;
 @property (nonatomic, readonly, strong) MobilyItem * _Nullable Item;
 @property (nonatomic, readonly, strong) MobilySubscription * _Nullable Subscription;
-@property (nonatomic, readonly, copy) NSString * _Nonnull customerId;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull customerId;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
@@ -345,8 +345,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)STAGING SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PRODUCTION;)
 + (NSString * _Nonnull)PRODUCTION SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 @class MobilySubscriptionOffer;
@@ -356,9 +359,9 @@ SWIFT_CLASS("_TtC13MobilyflowSDK11MobilyEvent")
 @property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
-@property (nonatomic, readonly, copy) NSString * _Nullable transactionId;
-@property (nonatomic, readonly, copy) NSString * _Nullable subscriptionId;
-@property (nonatomic, readonly, copy) NSString * _Nullable itemId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable transactionId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable subscriptionId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable itemId;
 @property (nonatomic, readonly, copy) NSString * _Nonnull type;
 @property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable extras;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
@@ -405,8 +408,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)TRANSFER_OWNERSHIP_REQUEST SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TRANSFER_OWNERSHIP_ACKNOWLEDGED;)
 + (NSString * _Nonnull)TRANSFER_OWNERSHIP_ACKNOWLEDGED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK10MobilyItem")
@@ -414,7 +420,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK10MobilyItem")
 @property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
-@property (nonatomic, readonly, copy) NSString * _Nonnull productId;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull productId;
 @property (nonatomic, readonly) NSInteger quantity;
 @property (nonatomic, readonly, strong) MobilyProduct * _Nullable Product;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
@@ -427,8 +433,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)IOS SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull ANDROID;)
 + (NSString * _Nonnull)ANDROID SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 @class MobilyOneTimeProduct;
@@ -486,8 +495,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)FREE_TRIAL SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull RECURRING;)
 + (NSString * _Nonnull)RECURRING SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK19MobilyProductStatus")
@@ -498,8 +510,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)UNAVAILABLE SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull AVAILABLE;)
 + (NSString * _Nonnull)AVAILABLE SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyProductType")
@@ -508,8 +523,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)ONE_TIME SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUBSCRIPTION;)
 + (NSString * _Nonnull)SUBSCRIPTION SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 @class MobilyPurchaseSDKOptions;
@@ -566,8 +584,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)SUCCESS SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TRANSACTION_NOT_FOUND;)
 + (NSString * _Nonnull)TRANSACTION_NOT_FOUND SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK18MobilySubscription")
@@ -575,13 +596,13 @@ SWIFT_CLASS("_TtC13MobilyflowSDK18MobilySubscription")
 @property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
-@property (nonatomic, readonly, copy) NSString * _Nonnull productId;
-@property (nonatomic, readonly, copy) NSString * _Nullable productOfferId;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull productId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable productOfferId;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull startDate;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull endDate;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
-@property (nonatomic, readonly, copy) NSString * _Nullable renewProductId;
-@property (nonatomic, readonly, copy) NSString * _Nullable renewProductOfferId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable renewProductId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable renewProductOfferId;
 @property (nonatomic, readonly) NSInteger lastPriceMillis;
 @property (nonatomic, readonly) NSInteger regularPriceMillis;
 @property (nonatomic, readonly) NSInteger renewPriceMillis;
@@ -648,7 +669,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyTransaction")
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platformTxId;
 @property (nonatomic, readonly, copy) NSString * _Nullable platformTxOriginalId;
-@property (nonatomic, readonly, copy) NSString * _Nonnull customerId;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull customerId;
 @property (nonatomic, readonly) NSInteger quantity;
 @property (nonatomic, readonly, copy) NSString * _Nonnull country;
 @property (nonatomic, readonly) NSInteger priceMillis;
@@ -657,10 +678,10 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyTransaction")
 @property (nonatomic, readonly, copy) NSString * _Nonnull convertedCurrency;
 @property (nonatomic, readonly, copy) NSString * _Nonnull status;
 @property (nonatomic, readonly) double refundedPercent;
-@property (nonatomic, readonly, copy) NSString * _Nonnull productId;
-@property (nonatomic, readonly, copy) NSString * _Nullable subscriptionId;
-@property (nonatomic, readonly, copy) NSString * _Nullable itemId;
-@property (nonatomic, readonly, copy) NSString * _Nullable productOfferId;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull productId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable subscriptionId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable itemId;
+@property (nonatomic, readonly, copy) NSUUID * _Nullable productOfferId;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
 @property (nonatomic, readonly, copy) NSDate * _Nullable startDate;
 @property (nonatomic, readonly, copy) NSDate * _Nullable endDate;
@@ -678,8 +699,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)BILLING_ERROR SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REFUNDED;)
 + (NSString * _Nonnull)REFUNDED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK29MobilyTransferOwnershipStatus")
@@ -692,8 +716,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)ACKNOWLEDGED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REJECTED;)
 + (NSString * _Nonnull)REJECTED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK19MobilyWebhookStatus")
@@ -704,8 +731,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)ERROR SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUCCESS;)
 + (NSString * _Nonnull)SUCCESS SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK10PeriodUnit")
@@ -716,8 +746,11 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)MONTH SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull YEAR;)
 + (NSString * _Nonnull)YEAR SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK15PurchaseOptions")
