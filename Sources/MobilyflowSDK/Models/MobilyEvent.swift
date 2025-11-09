@@ -12,9 +12,9 @@ import StoreKit
     @objc public let id: UUID
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
-    @objc public let transactionId: String?
-    @objc public let subscriptionId: String?
-    @objc public let itemId: String?
+    @objc public let transactionId: UUID?
+    @objc public let subscriptionId: UUID?
+    @objc public let itemId: UUID?
     @objc public let type: String
     @objc public let extras: [String: Any]?
     @objc public let platform: String
@@ -27,7 +27,7 @@ import StoreKit
     @objc public let Subscription: MobilySubscription?
     @objc public let Item: MobilyItem?
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, transactionId: String?, subscriptionId: String?, itemId: String?, type: String, extras: [String: Any]?, platform: String, isSandbox: Bool, Customer: MobilyCustomer?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, Transaction: MobilyTransaction?, Subscription: MobilySubscription?, Item: MobilyItem?) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, transactionId: UUID?, subscriptionId: UUID?, itemId: UUID?, type: String, extras: [String: Any]?, platform: String, isSandbox: Bool, Customer: MobilyCustomer?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, Transaction: MobilyTransaction?, Subscription: MobilySubscription?, Item: MobilyItem?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -36,7 +36,7 @@ import StoreKit
         self.itemId = itemId
         self.type = type
         self.extras = extras
-        self.platform = platform
+        self.platform = MobilyPlatform.parse(platform)
         self.isSandbox = isSandbox
         self.Customer = Customer
         self.Product = Product
@@ -68,12 +68,12 @@ import StoreKit
         }
 
         return MobilyEvent(
-            id: UUID(uuidString: json["id"] as! String)!,
+            id: parseUUID(json["id"] as! String)!,
             createdAt: parseDate(json["createdAt"] as! String),
             updatedAt: parseDate(json["updatedAt"] as! String),
-            transactionId: json["transactionId"] as? String,
-            subscriptionId: json["subscriptionId"] as? String,
-            itemId: json["itemId"] as? String,
+            transactionId: parseUUID(json["transactionId"] as? String),
+            subscriptionId: parseUUID(json["subscriptionId"] as? String),
+            itemId: parseUUID(json["itemId"] as? String),
             type: json["type"] as! String,
             extras: json["extras"] as? [String: Any],
             platform: json["platform"] as! String,

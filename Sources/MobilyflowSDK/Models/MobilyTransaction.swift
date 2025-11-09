@@ -13,7 +13,7 @@ import Foundation
     @objc public let updatedAt: Date
     @objc public let platformTxId: String
     @objc public let platformTxOriginalId: String?
-    @objc public let customerId: String
+    @objc public let customerId: UUID
     @objc public let quantity: Int
     @objc public let country: String
     @objc public let priceMillis: Int
@@ -22,17 +22,17 @@ import Foundation
     @objc public let convertedCurrency: String
     @objc public let status: String
     @objc public let refundedPercent: Double
-    @objc public let productId: String
-    @objc public let subscriptionId: String?
-    @objc public let itemId: String?
-    @objc public let productOfferId: String?
+    @objc public let productId: UUID
+    @objc public let subscriptionId: UUID?
+    @objc public let itemId: UUID?
+    @objc public let productOfferId: UUID?
     @objc public let platform: String
     @objc public let startDate: Date?
     @objc public let endDate: Date?
     @objc public let refundDate: Date?
     @objc public let isSandbox: Bool
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String?, customerId: String, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: String, subscriptionId: String?, itemId: String?, productOfferId: String?, platform: String, startDate: Date?, endDate: Date?, refundDate: Date?, isSandbox: Bool) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String?, customerId: UUID, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: UUID, subscriptionId: UUID?, itemId: UUID?, productOfferId: UUID?, platform: String, startDate: Date?, endDate: Date?, refundDate: Date?, isSandbox: Bool) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -45,13 +45,13 @@ import Foundation
         self.currency = currency
         self.convertedPriceMillis = convertedPriceMillis
         self.convertedCurrency = convertedCurrency
-        self.status = status
+        self.status = MobilyTransactionStatus.parse(status)
         self.refundedPercent = refundedPercent
         self.productId = productId
         self.subscriptionId = subscriptionId
         self.itemId = itemId
         self.productOfferId = productOfferId
-        self.platform = platform
+        self.platform = MobilyPlatform.parse(platform)
         self.startDate = startDate
         self.endDate = endDate
         self.refundDate = refundDate
@@ -68,12 +68,12 @@ import Foundation
         }
 
         return MobilyTransaction(
-            id: UUID(uuidString: json["id"] as! String)!,
+            id: parseUUID(json["id"] as! String)!,
             createdAt: parseDate(json["createdAt"] as! String),
             updatedAt: parseDate(json["updatedAt"] as! String),
             platformTxId: json["platformTxId"] as! String,
             platformTxOriginalId: platformTxOriginalId,
-            customerId: json["customerId"] as! String,
+            customerId: parseUUID(json["customerId"] as! String)!,
             quantity: (json["quantity"] as? Int) ?? 1,
             country: json["country"] as! String,
             priceMillis: json["priceMillis"] as! Int,
@@ -82,10 +82,10 @@ import Foundation
             convertedCurrency: json["convertedCurrency"] as! String,
             status: json["status"] as! String,
             refundedPercent: json["refundedPercent"] as? Double ?? 0.0,
-            productId: json["productId"] as! String,
-            subscriptionId: json["subscriptionId"] as? String,
-            itemId: json["itemId"] as? String,
-            productOfferId: json["productOfferId"] as? String,
+            productId: parseUUID(json["productId"] as! String)!,
+            subscriptionId: parseUUID(json["subscriptionId"] as? String),
+            itemId: parseUUID(json["itemId"] as? String),
+            productOfferId: parseUUID(json["productOfferId"] as? String),
             platform: platform,
             startDate: parseDateOpt(json["startDate"] as? String),
             endDate: parseDateOpt(json["endDate"] as? String),

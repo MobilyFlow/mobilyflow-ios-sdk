@@ -1,10 +1,3 @@
-//
-//  PeriodUnit.swift
-//  MobilyPurchaseSDK
-//
-//  Created by Gregoire Taja on 25/07/2024.
-//
-
 import Foundation
 import StoreKit
 
@@ -12,9 +5,16 @@ import StoreKit
     @objc public static let WEEK = "week"
     @objc public static let MONTH = "month"
     @objc public static let YEAR = "year"
-
+	
+    @objc public static let values = [WEEK, MONTH, YEAR]
+	
     override private init() {}
-
+	
+    @objc public static func parse(_ value: String) -> String {
+        precondition(values.contains(value), "Invalid PeriodUnit: \(value)")
+        return value
+    }
+    
     static func parseSubscriptionPeriod(_ period: Product.SubscriptionPeriod) throws -> (count: Int, unit: String) {
         if period.unit == .day && period.value == 7 {
             return (1, PeriodUnit.WEEK)

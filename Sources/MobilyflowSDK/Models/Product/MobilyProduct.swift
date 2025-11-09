@@ -59,7 +59,7 @@ import StoreKit
 
         @objc init(periodCount: Int, periodUnit: String, groupLevel: Int, groupId: String, ios_groupId: String?, freeTrial: MobilySubscriptionOffer?, promotionalOffers: [MobilySubscriptionOffer]) {
             self.periodCount = periodCount
-            self.periodUnit = periodUnit
+            self.periodUnit = PeriodUnit.parse(periodUnit)
             self.groupLevel = groupLevel
             self.groupId = groupId
             self.ios_groupId = ios_groupId
@@ -81,12 +81,12 @@ import StoreKit
         self.android_sku = android_sku
         self.android_basePlanId = android_basePlanId
         self.ios_sku = ios_sku
-        self.type = type
+        self.type = MobilyProductType.parse(type)
         self.extras = extras
         self.priceMillis = priceMillis
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
-        self.status = status
+        self.status = MobilyProductStatus.parse(status)
         self.name = name
         self.details = details
         self.oneTime = oneTime
@@ -183,7 +183,7 @@ import StoreKit
         }
 
         let product = MobilyProduct(
-            id: UUID(uuidString: jsonProduct["id"] as! String)!,
+            id: parseUUID(jsonProduct["id"] as! String)!,
             createdAt: parseDate(jsonProduct["createdAt"] as! String),
             updatedAt: parseDate(jsonProduct["updatedAt"] as! String),
             identifier: jsonProduct["identifier"] as! String,

@@ -13,10 +13,10 @@ import StoreKit
     @objc public let Product: MobilyProduct
     @objc public let Item: MobilyItem?
     @objc public let Subscription: MobilySubscription?
-    @objc public let customerId: String
+    @objc public let customerId: UUID
 
-    @objc init(type: String, Product: MobilyProduct, Item: MobilyItem?, Subscription: MobilySubscription?, customerId: String) {
-        self.type = type
+    @objc init(type: String, Product: MobilyProduct, Item: MobilyItem?, Subscription: MobilySubscription?, customerId: UUID) {
+        self.type = MobilyProductType.parse(type)
         self.Product = Product
         self.Item = Item
         self.Subscription = Subscription
@@ -46,7 +46,7 @@ import StoreKit
             Product: product,
             Item: item,
             Subscription: subscription,
-            customerId: jsonEntity["customerId"] as! String,
+            customerId: parseUUID(jsonEntity["customerId"] as! String)!,
         )
     }
 }

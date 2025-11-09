@@ -232,7 +232,7 @@ class MobilyPurchaseAPI {
             let jsonResponse = res.json()["data"] as! [String: Any]
             return Product.SubscriptionOffer.Signature(
                 keyID: jsonResponse["keyID"] as! String,
-                nonce: UUID(uuidString: jsonResponse["nonce"] as! String)!,
+                nonce: parseUUID(jsonResponse["nonce"] as! String)!,
                 timestamp: jsonResponse["timestamp"] as! Int,
                 signature: Data(base64Encoded: jsonResponse["signature"] as! String)!
             )

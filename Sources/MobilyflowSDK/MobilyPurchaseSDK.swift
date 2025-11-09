@@ -32,6 +32,8 @@ import StoreKit
         environment: String,
         options: MobilyPurchaseSDKOptions? = nil
     ) {
+        MobilyEnvironment.parse(environment)
+
         self.appId = appId
         self.environment = environment
         self.API = MobilyPurchaseAPI(appId: appId, apiKey: apiKey, environment: environment, locales: getPreferredLocales(options?.locales), apiURL: options?.apiURL)

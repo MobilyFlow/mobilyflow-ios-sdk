@@ -35,7 +35,7 @@ import StoreKit
 
     static func parse(_ jsonGroup: [String: Any], onlyAvailableProducts: Bool = false) async -> MobilySubscriptionGroup {
         let group = MobilySubscriptionGroup(
-            id: UUID(uuidString: jsonGroup["id"] as! String)!,
+            id: parseUUID(jsonGroup["id"] as! String)!,
             identifier: jsonGroup["identifier"] as! String,
             referenceName: jsonGroup["referenceName"] as! String,
             name: getTranslationValue(jsonGroup["_translations"] as? [[String: Any]], field: "name") ?? "",

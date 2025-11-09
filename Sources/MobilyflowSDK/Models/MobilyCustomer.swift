@@ -25,7 +25,7 @@ import Foundation
 
     static func parse(_ jsonCustomer: [String: Any]) -> MobilyCustomer {
         return MobilyCustomer(
-            id: UUID(uuidString: jsonCustomer["id"] as! String)!,
+            id: parseUUID(jsonCustomer["id"] as! String)!,
             createdAt: parseDate(jsonCustomer["createdAt"] as! String),
             updatedAt: parseDate(jsonCustomer["updatedAt"] as! String),
             externalRef: jsonCustomer["externalRef"] as! String,

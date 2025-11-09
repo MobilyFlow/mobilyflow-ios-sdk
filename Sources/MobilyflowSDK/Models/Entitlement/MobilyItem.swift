@@ -11,11 +11,11 @@ import Foundation
     @objc public let id: UUID
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
-    @objc public let productId: String
+    @objc public let productId: UUID
     @objc public let quantity: Int
     @objc public let Product: MobilyProduct?
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, productId: String, quantity: Int, Product: MobilyProduct?) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, productId: UUID, quantity: Int, Product: MobilyProduct?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -29,10 +29,10 @@ import Foundation
         let jsonProduct = jsonItem["Product"] as? [String: Any]
 
         return MobilyItem(
-            id: UUID(uuidString: jsonItem["id"] as! String)!,
+            id: parseUUID(jsonItem["id"] as! String)!,
             createdAt: parseDate(jsonItem["createdAt"] as! String),
             updatedAt: parseDate(jsonItem["updatedAt"] as! String),
-            productId: jsonItem["productId"] as! String,
+            productId: parseUUID(jsonItem["productId"] as! String)!,
             quantity: jsonItem["quantity"] as! Int,
             Product: jsonProduct != nil ? await MobilyProduct.parse(jsonProduct!) : nil,
         )

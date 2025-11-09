@@ -34,9 +34,9 @@ import StoreKit
         self.priceMillis = priceMillis
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
-        self.type = type
+        self.type = MobilyProductOfferType.parse(type)
         self.periodCount = periodCount
-        self.periodUnit = periodUnit
+        self.periodUnit = PeriodUnit.parse(periodUnit)
         self.countBillingCycle = countBillingCycle
         self.android_offerId = android_offerId
         self.ios_offerId = ios_offerId
@@ -57,7 +57,7 @@ import StoreKit
 
         var iosOffer: Product.SubscriptionOffer?
 
-        let id = UUID(uuidString: jsonOffer["id"] as! String)!
+        let id = parseUUID(jsonOffer["id"] as! String)!
         let identifier = jsonOffer["identifier"] as! String
         let externalRef = jsonOffer["externalRef"] as? String
         let referenceName = jsonOffer["referenceName"] as! String
