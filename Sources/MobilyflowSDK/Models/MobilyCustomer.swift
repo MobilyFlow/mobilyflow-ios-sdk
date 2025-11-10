@@ -11,28 +11,25 @@ import Foundation
     @objc public let id: UUID
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
-    @objc public let externalRef: String?
-    @objc public var isForwardingEnable: Bool
+    @objc public let externalRef: String
+    @objc public var forwardNotificationEnable: Bool
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, externalRef: String?, isForwardingEnable: Bool) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, externalRef: String, forwardNotificationEnable: Bool) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.externalRef = externalRef
-        self.isForwardingEnable = isForwardingEnable
+        self.forwardNotificationEnable = forwardNotificationEnable
         super.init()
     }
 
-    static func parse(jsonCustomer: [String: Any], isForwardingEnable: Bool) -> MobilyCustomer {
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
-
+    static func parse(_ jsonCustomer: [String: Any]) -> MobilyCustomer {
         return MobilyCustomer(
-            id: UUID(uuidString: jsonCustomer["id"]! as! String)!,
-            createdAt: dateFormatter.date(from: jsonCustomer["createdAt"]! as! String)!,
-            updatedAt: dateFormatter.date(from: jsonCustomer["updatedAt"]! as! String)!,
-            externalRef: jsonCustomer["externalRef"]! as? String,
-            isForwardingEnable: isForwardingEnable,
+            id: parseUUID(jsonCustomer["id"] as! String)!,
+            createdAt: parseDate(jsonCustomer["createdAt"] as! String),
+            updatedAt: parseDate(jsonCustomer["updatedAt"] as! String),
+            externalRef: jsonCustomer["externalRef"] as! String,
+            forwardNotificationEnable: jsonCustomer["forwardNotificationEnable"] as! Bool,
         )
     }
 }

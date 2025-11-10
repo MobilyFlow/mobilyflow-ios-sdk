@@ -11,9 +11,9 @@ class StorePrice {
     let priceMillis: Int
     let currency: String
     let regionCode: String
-    let platform: Platform?
+    let platform: String
 
-    init(priceMillis: Int, currency: String, regionCode: String, platform: Platform?) {
+    init(priceMillis: Int, currency: String, regionCode: String, platform: String) {
         self.priceMillis = priceMillis
         self.currency = currency
         self.regionCode = regionCode
@@ -21,41 +21,12 @@ class StorePrice {
     }
 
     static func parse(_ storePrice: [String: Any]) -> StorePrice {
-        let platform = storePrice["platform"] as? String
         return StorePrice(
             priceMillis: storePrice["priceMillis"] as! Int,
             currency: storePrice["currency"] as! String,
             regionCode: storePrice["regionCode"] as! String,
-            platform: platform == nil ? nil : Platform.parse(platform!)
+            platform: storePrice["platform"] as! String
         )
-    }
-
-    static func getDefaultPrice(_ storePrices: [[String: Any]]?, currentRegion: String?) -> StorePrice? {
-        if let storePrices = storePrices {
-            let currentRegionPrice = storePrices.first {
-                $0["regionCode"] as? String == currentRegion && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
-            }
-            if currentRegionPrice != nil {
-                return StorePrice.parse(currentRegionPrice!)
-            }
-
-            let defaultStorePrice = storePrices.first {
-                ($0["isDefault"] as? Bool ?? false) && ($0["platform"] as? String == nil || $0["platform"] as? String == "ios")
-            }
-
-            if defaultStorePrice != nil {
-                return StorePrice.parse(defaultStorePrice!)
-            }
-
-            let firstStorePrice = storePrices.first {
-                $0["platform"] as? String == nil || $0["platform"] as? String == "ios"
-            }
-            if firstStorePrice != nil {
-                return StorePrice.parse(firstStorePrice!)
-            }
-        }
-
-        return nil
     }
 
     static func getMostRelevantRegion() async -> String? {
@@ -68,7 +39,5 @@ class StorePrice {
         } else {
             return NSLocale.current.regionCode
         }
-
-        return nil
     }
 }

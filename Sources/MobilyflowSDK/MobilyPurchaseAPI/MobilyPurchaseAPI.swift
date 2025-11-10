@@ -11,7 +11,7 @@ import StoreKit
 class MobilyPurchaseAPI {
     let appId: String
     let apiKey: String
-    let environment: MobilyEnvironment
+    let environment: String
     let locale: String
 
     let API_URL: String
@@ -20,7 +20,7 @@ class MobilyPurchaseAPI {
     init(
         appId: String,
         apiKey: String,
-        environment: MobilyEnvironment,
+        environment: String,
         locales: [String],
         apiURL: String?
     ) {
@@ -43,7 +43,12 @@ class MobilyPurchaseAPI {
      */
     public func login(externalRef: String) async throws -> LoginResponse {
         let request = ApiRequest(method: "POST", url: "/apps/me/customers/login/ios")
-        _ = request.setData(["externalRef": externalRef, "environment": environment.toString()])
+        _ = request.setData([
+            "externalRef": externalRef,
+            "environment": environment,
+            "locale": self.locale,
+            "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
+        ])
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -56,7 +61,6 @@ class MobilyPurchaseAPI {
                 customer: data["customer"] as! [String: Any],
                 entitlements: data["entitlements"] as! [[String: Any]],
                 platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String],
-                isForwardingEnable: data["isForwardingEnable"] as! Bool,
                 appleRefundRequests: data["appleRefundRequests"] as? [[String: Any]],
                 haveMonitoringRequests: data["haveMonitoringRequests"] as? Bool ?? false
             )
@@ -74,9 +78,10 @@ class MobilyPurchaseAPI {
         }
 
         let request = ApiRequest(method: "GET", url: "/apps/me/products/for-app")
-        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
+        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
 
         if identifiers != nil {
             _ = request.addParam("identifiers", identifiers!.joined(separator: ","))
@@ -102,9 +107,13 @@ class MobilyPurchaseAPI {
         }
 
         let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app")
-        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
+
+        if let region = await StorePrice.getMostRelevantRegion() {
+            _ = request.addParam("region", region)
+        }
 
         if identifiers != nil {
             _ = request.addParam("identifiers", identifiers!.joined(separator: ","))
@@ -126,9 +135,10 @@ class MobilyPurchaseAPI {
      */
     public func getSubscriptionGroupById(id: String) async throws -> [String: Any] {
         let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app/\(id)")
-        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
+        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -148,6 +158,7 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/entitlements")
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("loadProduct", "true")
+        _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -167,6 +178,7 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "POST", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/external-entitlements")
         _ = request.setData([
             "locale": self.locale,
+            "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
             "platform": "ios",
             "loadProduct": true,
             "transactions": transactions,
@@ -186,8 +198,8 @@ class MobilyPurchaseAPI {
     /**
      Get products in JSON Array format
      */
-    public func getLastTxPlatformIdForProduct(customerId: UUID, productId: String) async throws -> String {
-        let request = ApiRequest(method: "GET", url: "/apps/me/transactions/last-platform-tx-id/ios/\(productId)")
+    public func getLastTxPlatformIdForProduct(customerId: UUID, productId: UUID) async throws -> String {
+        let request = ApiRequest(method: "GET", url: "/apps/me/transactions/last-platform-tx-id/ios/\(productId.uuidString)")
         _ = request.addParam("customerId", customerId.uuidString.lowercased())
 
         guard let res = try? await self.helper.request(request) else {
@@ -220,7 +232,7 @@ class MobilyPurchaseAPI {
             let jsonResponse = res.json()["data"] as! [String: Any]
             return Product.SubscriptionOffer.Signature(
                 keyID: jsonResponse["keyID"] as! String,
-                nonce: UUID(uuidString: jsonResponse["nonce"] as! String)!,
+                nonce: parseUUID(jsonResponse["nonce"] as! String)!,
                 timestamp: jsonResponse["timestamp"] as! Int,
                 signature: Data(base64Encoded: jsonResponse["signature"] as! String)!
             )
@@ -234,9 +246,9 @@ class MobilyPurchaseAPI {
 
      Throws on error.
      */
-    public func appleOfferCode(customerId: UUID, offerId: String) async throws -> [String: Any] {
+    public func appleOfferCode(customerId: UUID, offerId: UUID) async throws -> [String: Any] {
         let request = ApiRequest(method: "POST", url: "/apps/me/products/offer-code/ios")
-        _ = request.setData(["customerId": customerId.uuidString.lowercased(), "offerId": offerId])
+        _ = request.setData(["customerId": customerId.uuidString.lowercased(), "offerId": offerId.uuidString])
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -301,7 +313,7 @@ class MobilyPurchaseAPI {
 
         let jsonResponse = res.json()
         if res.success {
-            return (jsonResponse["data"] as! [String: Any])["id"]! as! String
+            return (jsonResponse["data"] as! [String: Any])["id"] as! String
         } else {
             if let errorCode = jsonResponse["errorCode"] as? String {
                 if let error = MobilyTransferOwnershipError.parse(errorCode) {
@@ -315,7 +327,7 @@ class MobilyPurchaseAPI {
     /**
      Get transfer ownership request status from requestId
      */
-    public func getTransferRequestStatus(requestId: String) async throws -> TransferOwnershipStatus {
+    public func getTransferRequestStatus(requestId: String) async throws -> String {
         let request = ApiRequest(method: "GET", url: "/apps/me/customer-transfer-ownerships/\(requestId)/status")
 
         guard let res = try? await self.helper.request(request) else {
@@ -324,11 +336,11 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            let statusString = jsonResponse["status"] as! String
-            if statusString == "error" {
+            let status = jsonResponse["status"] as! String
+            if status == "error" {
                 throw MobilyTransferOwnershipError.webhook_failed
             }
-            return TransferOwnershipStatus.parse(statusString)!
+            return status
         } else {
             throw MobilyError.unknown_error
         }
@@ -339,10 +351,10 @@ class MobilyPurchaseAPI {
 
      type is "purchase" | "upgrade"
      */
-    public func forceWebhook(transactionId: UInt64, productId: String, isSandbox: Bool) async throws {
+    public func forceWebhook(transactionId: UInt64, productId: UUID, isSandbox: Bool) async throws {
         let request = ApiRequest(method: "POST", url: "/apps/me/platform-notifications/force-webhook/ios")
         _ = request.addData("platformTxId", String(transactionId))
-        _ = request.addData("productId", productId)
+        _ = request.addData("productId", productId.uuidString)
         _ = request.addData("isSandbox", isSandbox)
 
         guard let res = try? await self.helper.request(request) else {
@@ -357,17 +369,19 @@ class MobilyPurchaseAPI {
     /**
      Get webhook status from transactionID
      */
-    public func getWebhookStatus(transactionOriginalId: UInt64, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: String?, downgradeAfterDate: Date?) async throws -> WebhookStatus {
-        let request = ApiRequest(method: "GET", url: "/apps/me/events/webhook-status/ios")
-        _ = request.addParam("isSandbox", String(isSandbox))
-        _ = request.addParam("platformTxOriginalId", String(transactionOriginalId))
-        _ = request.addParam("platformTxId", String(transactionId))
+    public func getWebhookResult(signedTransaction: String, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterDate: Date?) async throws -> MobilyWebhookResult {
+        let request = ApiRequest(method: "POST", url: "/apps/me/events/webhook-result/ios")
+        request.setData([
+            "signedTransaction": signedTransaction,
+            "platformTxId": String(transactionId),
+            "environment": environment,
+        ])
 
         if downgradeToProductId != nil {
-            _ = request.addParam("downgradeToProductId", downgradeToProductId!)
+            _ = request.addData("downgradeToProductId", downgradeToProductId!.uuidString)
         }
         if downgradeAfterDate != nil {
-            _ = request.addParam("downgradeAfterDate", Int(downgradeAfterDate!.timeIntervalSince1970 * 1000))
+            _ = request.addData("downgradeAfterDate", String(Int(downgradeAfterDate!.timeIntervalSince1970 * 1000)))
         }
 
         guard let res = try? await self.helper.request(request) else {
@@ -376,7 +390,11 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            return WebhookStatus.parse(jsonResponse["status"] as! String)!
+
+            return MobilyWebhookResult(
+                status: jsonResponse["status"] as! String,
+                event: jsonResponse["event"] as? [String: Any]
+            )
         } else {
             throw MobilyError.unknown_error
         }
@@ -407,7 +425,7 @@ class MobilyPurchaseAPI {
         if externalRef != nil {
             _ = request.addParam("externalRef", externalRef!)
         }
-        _ = request.addParam("environment", environment.toString())
+        _ = request.addParam("environment", environment)
         _ = request.addParam("platform", "ios")
 
         guard let res = try? await self.helper.request(request) else {

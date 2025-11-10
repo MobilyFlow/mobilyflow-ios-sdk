@@ -9,14 +9,11 @@ import Foundation
 import StoreKit
 
 @objc public class MobilyPurchaseSDK: NSObject {
-    let appId: String
-    let API: MobilyPurchaseAPI
+    public let appId: String
+    public let environment: String
+    private var customer: MobilyCustomer?
 
-    let environment: MobilyEnvironment
-    var customer: MobilyCustomer?
-
-    var isStoreAvailable = true
-
+    private let API: MobilyPurchaseAPI
     private var syncer: MobilyPurchaseSDKSyncer
     private let waiter: MobilyPurchaseSDKWaiter
     private let diagnostics: MobilyPurchaseSDKDiagnostics
@@ -27,14 +24,16 @@ import StoreKit
 
     private let lifecycleManager = AppLifecycleManager()
 
-    private var productsCaches: [String: MobilyProduct] = [:]
+    private var productsCaches: [UUID: MobilyProduct] = [:]
 
     @objc public init(
         appId: String,
         apiKey: String,
-        environment: MobilyEnvironment,
+        environment: String,
         options: MobilyPurchaseSDKOptions? = nil
     ) {
+        MobilyEnvironment.parse(environment)
+
         self.appId = appId
         self.environment = environment
         self.API = MobilyPurchaseAPI(appId: appId, apiKey: apiKey, environment: environment, locales: getPreferredLocales(options?.locales), apiURL: options?.apiURL)
@@ -86,7 +85,7 @@ import StoreKit
 
         // 2. Login
         let loginResponse = try await self.API.login(externalRef: externalRef)
-        self.customer = MobilyCustomer.parse(jsonCustomer: loginResponse.customer, isForwardingEnable: loginResponse.isForwardingEnable)
+        self.customer = MobilyCustomer.parse(loginResponse.customer)
         diagnostics.customerId = self.customer?.id
         try await self.syncer.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
@@ -113,7 +112,7 @@ import StoreKit
             Task(priority: .background) {
                 // When monitoring is requested, send 10 days
                 Logger.d("Send monitoring as requested by the server")
-                await self.diagnostics.sendDiagnostic(sinceDays: 10)
+                self.diagnostics.sendDiagnostic(sinceDays: 10)
             }
         }
 
@@ -143,13 +142,11 @@ import StoreKit
         // 3. Parse to MobilyProduct
         var mobilyProducts: [MobilyProduct] = []
 
-        let currentRegion = await StorePrice.getMostRelevantRegion()
-
         for jsonProduct in jsonProducts {
-            let mobilyProduct = await MobilyProduct.parse(jsonProduct: jsonProduct, currentRegion: currentRegion)
+            let mobilyProduct = await MobilyProduct.parse(jsonProduct)
             productsCaches[mobilyProduct.id] = mobilyProduct
 
-            if !onlyAvailable || mobilyProduct.status == .available {
+            if !onlyAvailable || mobilyProduct.status == MobilyProductStatus.AVAILABLE {
                 mobilyProducts.append(mobilyProduct)
             }
         }
@@ -172,16 +169,14 @@ import StoreKit
         // 3. Parse to MobilySubscriptionGroup
         var groups: [MobilySubscriptionGroup] = []
 
-        let currentRegion = await StorePrice.getMostRelevantRegion()
-
         for jsonGroup in jsonGroups {
-            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, currentRegion: currentRegion, onlyAvailableProducts: onlyAvailable)
+            let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup, onlyAvailableProducts: onlyAvailable)
 
-            for product in mobilyGroup.products {
+            for product in mobilyGroup.Products {
                 productsCaches[product.id] = product
             }
 
-            if !onlyAvailable || mobilyGroup.products.count > 0 {
+            if !onlyAvailable || mobilyGroup.Products.count > 0 {
                 groups.append(mobilyGroup)
             }
         }
@@ -200,17 +195,16 @@ import StoreKit
         await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
 
         // 3. Parse to MobilySubscriptionGroup
-        let currentRegion = await StorePrice.getMostRelevantRegion()
-        let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup: jsonGroup, currentRegion: currentRegion, onlyAvailableProducts: false)
+        let mobilyGroup = await MobilySubscriptionGroup.parse(jsonGroup, onlyAvailableProducts: false)
 
-        for product in mobilyGroup.products {
+        for product in mobilyGroup.Products {
             productsCaches[product.id] = product
         }
 
         return mobilyGroup
     }
 
-    @objc public func getProductFromCacheWithId(id: String) -> MobilyProduct? {
+    @objc public func getProductFromCacheWithId(id: UUID) -> MobilyProduct? {
         return productsCaches[id]
     }
 
@@ -218,16 +212,29 @@ import StoreKit
     /* ************************** ENTITLEMENTS *************************** */
     /* ******************************************************************* */
 
+    private func _cacheEntitlement(_ entitlement: MobilyCustomerEntitlement?) -> MobilyCustomerEntitlement? {
+        if let entitlement = entitlement {
+            productsCaches[entitlement.Product.id] = entitlement.Product
+
+            if entitlement.Subscription?.RenewProduct != nil {
+                productsCaches[entitlement.Subscription!.RenewProduct!.id] = entitlement.Subscription!.RenewProduct
+            }
+        }
+        return entitlement
+    }
+
     @objc public func getEntitlementForSubscription(subscriptionGroupId: String) async throws -> MobilyCustomerEntitlement? {
-        return try await syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId)
+        return try self._cacheEntitlement(await syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId))
     }
 
-    @objc public func getEntitlement(productId: String) async throws -> MobilyCustomerEntitlement? {
-        return try await syncer.getEntitlement(forProductId: productId)
+    @objc public func getEntitlement(productId: UUID) async throws -> MobilyCustomerEntitlement? {
+        return try self._cacheEntitlement(await syncer.getEntitlement(forProductId: productId))
     }
 
-    @objc public func getEntitlements(productIds: [String]?) async throws -> [MobilyCustomerEntitlement] {
-        return try syncer.getEntitlements(forProductIds: productIds)
+    @objc public func getEntitlements(productIds: [UUID]?) async throws -> [MobilyCustomerEntitlement] {
+        let result = try syncer.getEntitlements(forProductIds: productIds)
+        result.forEach { _ = self._cacheEntitlement($0) }
+        return result
     }
 
     @objc public func getExternalEntitlements() async throws -> [MobilyCustomerEntitlement] {
@@ -241,9 +248,8 @@ import StoreKit
         if !transactionToClaim.isEmpty {
             let jsonEntitlements = try await self.API.getCustomerExternalEntitlements(customerId: customer!.id, transactions: transactionToClaim)
 
-            let currentRegion = await StorePrice.getMostRelevantRegion()
             for jsonEntitlement in jsonEntitlements {
-                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: storeAccountTransactions, currentRegion: currentRegion))
+                entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement, storeAccountTransactions: storeAccountTransactions))
             }
         }
 
@@ -253,7 +259,7 @@ import StoreKit
     /**
      Request transfer ownership of local device transactions.
      */
-    @objc public func requestTransferOwnership() async throws -> TransferOwnershipStatus {
+    @objc public func requestTransferOwnership() async throws -> String {
         if customer == nil {
             throw MobilyError.no_customer_logged
         }
@@ -286,44 +292,54 @@ import StoreKit
      *
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
-    @objc public func openRefundDialog(product: MobilyProduct) async -> RefundDialogResult {
-        // TODO: We may have a function openRefundDialog(transactionId: ...)
-        if product.oneTimeProduct?.isConsumable ?? false {
+    @objc public func openRefundDialog(forProduct: MobilyProduct) async -> String {
+        if forProduct.oneTime?.isConsumable ?? false {
             do {
-                let lastTxId = try await self.API.getLastTxPlatformIdForProduct(customerId: self.customer!.id, productId: product.id)
+                let lastTxId = try await self.API.getLastTxPlatformIdForProduct(customerId: self.customer!.id, productId: forProduct.id)
                 let result = try? await Transaction.beginRefundRequest(for: UInt64(lastTxId)!, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                return (result ?? .userCancelled) == .success ? .success : .cancelled
+                return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
             } catch {
-                return .transaction_not_found
+                return MobilyRefundDialogResult.TRANSACTION_NOT_FOUND
             }
         } else {
             if #available(iOS 18.4, *) {
-                for await signedTx in Transaction.currentEntitlements(for: product.ios_sku) {
+                for await signedTx in Transaction.currentEntitlements(for: forProduct.ios_sku) {
                     if case .verified(let transaction) = signedTx {
                         let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                        return (result ?? .userCancelled) == .success ? .success : .cancelled
+                        return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
                     }
                 }
             } else {
                 for await signedTx in Transaction.currentEntitlements {
                     if case .verified(let transaction) = signedTx {
-                        if transaction.productID == product.ios_sku {
+                        if transaction.productID == forProduct.ios_sku {
                             let result = try? await Transaction.beginRefundRequest(for: transaction.id, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
-                            return (result ?? .userCancelled) == .success ? .success : .cancelled
+                            return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
                         }
                     }
                 }
             }
         }
-        return .transaction_not_found
+        return MobilyRefundDialogResult.TRANSACTION_NOT_FOUND
+    }
+
+    /**
+     * Open a refund dialog for the given transactionId.
+     * Warning: this is iOS transactionId, not MobilyFlow transactionId
+     *
+     * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
+     */
+    @objc public func openRefundDialog(forTransactionId: String) async -> String {
+        let result = try? await Transaction.beginRefundRequest(for: UInt64(forTransactionId)!, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
+        return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
     }
 
     /* ******************************************************************* */
     /* **************************** PURCHASE ***************************** */
     /* ******************************************************************* */
 
-    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> WebhookStatus {
-        var resultStatus: WebhookStatus = .error
+    @objc public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> MobilyEvent {
+        var event: MobilyEvent? = nil
 
         if self.customer == nil {
             throw MobilyError.no_customer_logged
@@ -332,7 +348,7 @@ import StoreKit
         try await purchaseExecutor.executeOrFallback({
             try await self.syncer.ensureSync()
 
-            if self.customer!.isForwardingEnable {
+            if self.customer!.forwardNotificationEnable {
                 throw MobilyPurchaseError.customer_forwarded
             }
 
@@ -374,11 +390,8 @@ import StoreKit
                                 if case .verified(let transaction) = signedTx {
                                     if transaction.productID == product.ios_sku && !knownTransactionIdsForSku.contains(transaction.id) {
                                         Logger.d("[purchaseProduct] Receive Offer Code Transaction: \(transaction.id)")
-                                        if await MobilyPurchaseSDKHelper.isTransactionFinished(id: transaction.id) {
-                                            resultStatus = .success
-                                        } else {
-                                            resultStatus = await self.finishTransaction(signedTx: signedTx)
-                                        }
+                                        let isFinished = await MobilyPurchaseSDKHelper.isTransactionFinished(id: transaction.id)
+                                        event = try await self.finishTransaction(signedTx: signedTx, downgradeToProductId: nil)
                                         semaphore.signal()
                                         return
                                     }
@@ -409,10 +422,12 @@ import StoreKit
                 } catch let error as Product.PurchaseError {
                     Logger.e("[purchaseProduct] PurchaseError", error: error)
                     Logger.d("[purchaseProduct] error.localizedDescription \(error.localizedDescription)")
-                    Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription)")
-                    Logger.d("[purchaseProduct] error.failureReason \(error.failureReason ?? "nil")")
-                    Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion ?? "nil")")
-                    Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor ?? "nil")")
+                    if #available(iOS 15.4, *) {
+                        Logger.d("[purchaseProduct] error.errorDescription \(error.errorDescription ?? "nil")")
+                        Logger.d("[purchaseProduct] error.failureReason \(error.failureReason ?? "nil")")
+                        Logger.d("[purchaseProduct] error.recoverySuggestion \(error.recoverySuggestion ?? "nil")")
+                        Logger.d("[purchaseProduct] error.helpAnchor \(error.helpAnchor ?? "nil")")
+                    }
                     self.sendDiagnostic()
                     throw MobilyPurchaseError.product_unavailable
                 } catch StoreKitError.notAvailableInStorefront {
@@ -425,29 +440,7 @@ import StoreKit
                 } catch StoreKitError.systemError(let error) {
                     Logger.e("[purchaseProduct] systemError", error: error)
                     throw MobilyError.store_unavailable
-                } /* catch StoreKitError.unknown {
-                 /*
-                  There is a tricky case:
-                  - User buy the subscritpion
-                  - He disable the auto-renew
-                  - He re-open the app and try to re-purchase (his subscription is still active, but this should re-enable auto-renew)
-                  - In that case the Product.purchase method throw StoreKitError.unknown but the subscription is well re-enable (at least in sandbox, maybe it work in production).
-
-                  The error: Received error that does not have a corresponding StoreKit Error: Error Domain=ASDErrorDomain Code=825 "No transactions in response" UserInfo={NSDebugDescription=No transactions in response}
-
-                  Check this post: https://developer.apple.com/forums/thread/770662
-
-                  This case is not managed but is ready to be use by uncommenting things related to isSusbscriptionReEnable
-                  */
-                 if isSusbscriptionReEnable {
-                 Logger.d("Subscription re-enable fix -> Ignore error")
-                 return
-                 } else {
-                 Logger.d("Other error = unknown")
-                 throw MobilyPurchaseError.failed
-                 }
-                 } */
-                catch {
+                } catch {
                     Logger.e("[purchaseProduct] Other error", error: error)
                     throw MobilyPurchaseError.failed
                 }
@@ -462,11 +455,11 @@ import StoreKit
                     switch signedTx {
                     case .verified(let transaction):
                         if internalPurchaseOptions.isDowngrade {
-                            resultStatus = await self.finishTransaction(signedTx: signedTx, downgradeToProductId: product.id)
+                            event = try await self.finishTransaction(signedTx: signedTx, downgradeToProductId: product.id)
                         } else {
                             Logger.d("Force webhook for \(transaction.id) (original: \(transaction.originalID))")
                             try? await self.API.forceWebhook(transactionId: transaction.id, productId: product.id, isSandbox: isSandboxTransaction(transaction: transaction))
-                            resultStatus = await self.finishTransaction(signedTx: signedTx)
+                            event = try await self.finishTransaction(signedTx: signedTx)
                         }
                     case .unverified:
                         Logger.e("purchaseProduct unverified")
@@ -486,7 +479,11 @@ import StoreKit
             throw MobilyPurchaseError.purchase_already_pending
         })
 
-        return resultStatus
+        if event == nil {
+            throw MobilyError.unknown_error
+        }
+
+        return event!
     }
 
     /* ******************************************************************* */
@@ -501,7 +498,7 @@ import StoreKit
                 if case .verified(let tx) = signedTx {
                     if !(await MobilyPurchaseSDKHelper.isTransactionFinished(id: tx.id)) {
                         Logger.d("[startUpdateTransactionTask] finishTransaction \(tx.id)")
-                        await self.finishTransaction(signedTx: signedTx)
+                        _ = try? await self.finishTransaction(signedTx: signedTx)
                     }
                 }
             }
@@ -509,8 +506,9 @@ import StoreKit
         }
     }
 
-    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: String? = nil) async -> WebhookStatus {
-        var resultStatus: WebhookStatus = .error
+    private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil) async throws -> MobilyEvent? {
+        var event: MobilyEvent? = nil
+
         if case .verified(let transaction) = signedTx {
             Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
             await transaction.finish()
@@ -521,23 +519,17 @@ import StoreKit
                 } catch {
                     Logger.e("Map transaction error", error: error)
                 }
-                if !customer.isForwardingEnable {
-                    if transaction.purchaseDate > Date().addingTimeInterval(60.0) {
-                        /*
-                         In case of a RENEW, it can happen that the purchaseDate is in the future.
-                         We notice Transaction.updates can sometime return a RENEW 3 days before it was effective,
-                         this mean the backend won't receive RENEW info until 3 days.
-                         In that case waiting for webhook will always result in "Webhook still pending after 1 minutes"
-                         */
-                        Logger.w("finishTransaction with future purchaseDate -> skip waitWebhook")
-                    } else {
-                        resultStatus = (try? await self.waiter.waitWebhook(transaction: transaction, downgradeToProductId: downgradeToProductId)) ?? .error
+                if !customer.forwardNotificationEnable {
+                    let result = try await self.waiter.waitPurchaseWebhook(signedTx: signedTx, downgradeToProductId: downgradeToProductId)
+                    if result.event != nil {
+                        let (_, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
+                        event = await MobilyEvent.parse(result.event!, storeAccountTransactions: storeAccountTransactions)
                     }
                 }
                 try? await syncer.ensureSync(force: true)
             }
         }
-        return resultStatus
+        return event
     }
 
     /* *********************************************************** */
@@ -551,6 +543,10 @@ import StoreKit
     /* ************************************************************** */
     /* *************************** OTHERS *************************** */
     /* ************************************************************** */
+
+    @objc public func isBillingAvailable() -> Bool {
+        return AppStore.canMakePayments
+    }
 
     // TODO: onStorefrontChange
     @objc public func getStoreCountry() async -> String? {

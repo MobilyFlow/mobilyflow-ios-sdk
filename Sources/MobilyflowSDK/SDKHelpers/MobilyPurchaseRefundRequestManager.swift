@@ -47,7 +47,7 @@ class MobilyPurchaseRefundRequestManager {
                 let transactionId = UInt64(request["iosTransactionId"] as! String)!
 
                 if requestType == "refund" {
-                    try? await Transaction.beginRefundRequest(for: transactionId, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
+                    _ = try? await Transaction.beginRefundRequest(for: transactionId, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
                 } else if requestType == "cancel" {
                     try? await AppStore.showManageSubscriptions(in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
                 }

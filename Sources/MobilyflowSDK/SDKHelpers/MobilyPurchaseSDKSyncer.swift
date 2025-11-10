@@ -33,8 +33,7 @@ class MobilyPurchaseSDKSyncer {
         if self.customer != nil && jsonEntitlements != nil {
             try await syncExecutor.execute {
                 Logger.d("Sync Entitlement with login data")
-                let currentRegion = await StorePrice.getMostRelevantRegion()
-                try await self._syncEntitlements(currentRegion: currentRegion, jsonEntitlements: jsonEntitlements)
+                try await self._syncEntitlements(jsonEntitlements: jsonEntitlements)
             }
         }
         self.lastSyncTime = Date().timeIntervalSince1970
@@ -58,11 +57,11 @@ class MobilyPurchaseSDKSyncer {
 
     func ensureSync(force: Bool = false) async throws {
         try await syncExecutor.execute {
-            if self.customer != nil && self.customer!.isForwardingEnable {
+            if self.customer != nil && self.customer!.forwardNotificationEnable {
                 // If a customer is flag as forwarded, we double check if it's still the case (so if we disable forwarding
                 // on the backoffice, it's take effect instantly)
                 if let isForwardingEnable = try? await self.API.isForwardingEnable(externalRef: self.customer!.externalRef) {
-                    self.customer!.isForwardingEnable = isForwardingEnable
+                    self.customer!.forwardNotificationEnable = isForwardingEnable
                 }
             }
 
@@ -75,8 +74,7 @@ class MobilyPurchaseSDKSyncer {
                 if self.customer != nil {
                     Logger.d("Run Sync for customer \(self.customer!.id) (externalRef: \(self.customer!.externalRef ?? "null"))")
 
-                    let currentRegion = await StorePrice.getMostRelevantRegion()
-                    try await self._syncEntitlements(currentRegion: currentRegion)
+                    try await self._syncEntitlements()
                     self.lastSyncTime = Date().timeIntervalSince1970
                 } else {
                     Logger.d(" -> Sync skipped (no customer)")
@@ -98,14 +96,14 @@ class MobilyPurchaseSDKSyncer {
         self.storeAccountTransactions = storeAccountTransactions
     }
 
-    private func _syncEntitlements(currentRegion: String?, jsonEntitlements overrideJsonEntitlements: [[String: Any]]? = nil) async throws {
+    private func _syncEntitlements(jsonEntitlements overrideJsonEntitlements: [[String: Any]]? = nil) async throws {
         try await _syncStoreAccountTransactions()
 
         let jsonEntitlements = overrideJsonEntitlements != nil ? overrideJsonEntitlements! : try await self.API.getCustomerEntitlements(customerId: customer!.id)
         var entitlements: [MobilyCustomerEntitlement] = []
 
         for jsonEntitlement in jsonEntitlements {
-            entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement: jsonEntitlement, storeAccountTransactions: self.storeAccountTransactions!, currentRegion: currentRegion))
+            entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement, storeAccountTransactions: self.storeAccountTransactions!))
         }
 
         self.entitlements = entitlements
@@ -119,11 +117,11 @@ class MobilyPurchaseSDKSyncer {
         try await ensureSync()
 
         return entitlements?.first { entitlement in
-            entitlement.type == .subscription && entitlement.product.subscriptionProduct?.subscriptionGroupId == subscriptionGroupId
+            entitlement.type == MobilyProductType.SUBSCRIPTION && entitlement.Product.subscription?.groupId == subscriptionGroupId
         }
     }
 
-    func getEntitlement(forProductId productId: String) async throws -> MobilyCustomerEntitlement? {
+    func getEntitlement(forProductId productId: UUID) async throws -> MobilyCustomerEntitlement? {
         if customer == nil {
             throw MobilyError.no_customer_logged
         }
@@ -131,11 +129,11 @@ class MobilyPurchaseSDKSyncer {
         try await ensureSync()
 
         return entitlements?.first { entitlement in
-            entitlement.product.id == productId
+            entitlement.Product.id == productId
         }
     }
 
-    func getEntitlements(forProductIds productIds: [String]?) throws -> [MobilyCustomerEntitlement] {
+    func getEntitlements(forProductIds productIds: [UUID]?) throws -> [MobilyCustomerEntitlement] {
         if customer == nil {
             throw MobilyError.no_customer_logged
         }
@@ -145,7 +143,7 @@ class MobilyPurchaseSDKSyncer {
         }
 
         return entitlements?.filter { entitlement in
-            productIds!.contains(entitlement.product.id)
+            productIds!.contains(entitlement.Product.id)
         } ?? []
     }
 
@@ -161,7 +159,11 @@ class MobilyPurchaseSDKSyncer {
     /**
      Return the Storekit Transaction related to a product from a subscription group
      */
-    func getStoreAccountTransaction(forIosSubscriptionGroup subscriptionGroupId: String) -> Transaction? {
+    func getStoreAccountTransaction(forIosSubscriptionGroup subscriptionGroupId: String?) -> Transaction? {
+        if subscriptionGroupId == nil || subscriptionGroupId!.isEmpty {
+            return nil
+        }
+
         return self.storeAccountTransactions?.first { entitlement in
             if entitlement.value.subscriptionGroupID == subscriptionGroupId {
                 return true

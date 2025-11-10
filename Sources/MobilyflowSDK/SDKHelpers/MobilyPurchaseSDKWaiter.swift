@@ -23,18 +23,37 @@ class MobilyPurchaseSDKWaiter {
      *  - transaction: the transaction that refer to the webhook
      *  - downgradeToProductId: in case of a downgrade, this is the MobilyFlow productId of the renew product
      */
-    func waitWebhook(transaction: Transaction, downgradeToProductId: String? = nil) async throws -> WebhookStatus {
+    func waitPurchaseWebhook(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil) async throws -> MobilyWebhookResult {
+        guard case .verified(let transaction) = signedTx else {
+            throw MobilyError.unknown_error
+        }
+
+        if transaction.purchaseDate > Date().addingTimeInterval(60.0) {
+            /*
+             In case of a RENEW, it can happen that the purchaseDate is in the future.
+             We notice Transaction.updates can sometime return a RENEW 3 days before it was effective,
+             this mean the backend won't receive RENEW info until 3 days.
+             In that case waiting for webhook will always result in "Webhook still pending after 1 minutes"
+             */
+            Logger.w("finishTransaction with future purchaseDate -> skip waitWebhook")
+            return MobilyWebhookResult(status: MobilyWebhookStatus.SUCCESS, event: nil)
+        } else if transaction.purchaseDate < Date().addingTimeInterval(-7.0 * 24.0 * 3600.0) {
+            // In case of a PURCHASE older than 1 week, assume the webhook is already done.
+            Logger.w("finishTransaction with old purchaseDate -> skip waitWebhook")
+            return MobilyWebhookResult(status: MobilyWebhookStatus.SUCCESS, event: nil)
+        }
+
         let isSandbox = isSandboxTransaction(transaction: transaction)
 
         Logger.d("Wait webhook for \(transaction.id) (original: \(transaction.originalID))")
 
-        var result = WebhookStatus.pending
         let startTime = Date().timeIntervalSince1970
         var retry = 0
+        var result = MobilyWebhookResult(status: MobilyWebhookStatus.PENDING, event: nil)
 
-        while result == .pending {
-            result = try await self.API.getWebhookStatus(
-                transactionOriginalId: transaction.originalID,
+        while result.status == MobilyWebhookStatus.PENDING {
+            result = try await self.API.getWebhookResult(
+                signedTransaction: signedTx.jwsRepresentation,
                 transactionId: transaction.id,
                 isSandbox: isSandbox,
                 // Remove 5s to the signed date for safety
@@ -42,7 +61,7 @@ class MobilyPurchaseSDKWaiter {
                 downgradeAfterDate: downgradeToProductId == nil ? nil : transaction.signedDate.addingTimeInterval(-5.0)
             )
 
-            if result == .pending {
+            if result.status == MobilyWebhookStatus.PENDING {
                 // Exit the wait function after 1 minute
                 if startTime + 60 < Date().timeIntervalSince1970 {
                     Logger.e("Webhook still pending after 1 minutes (The user has probably paid without being credited)")
@@ -55,9 +74,9 @@ class MobilyPurchaseSDKWaiter {
             }
         }
 
-        Logger.d("Webhook wait completed (\(result))")
+        Logger.d("Webhook wait completed (\(result.status))")
 
-        if result == .error {
+        if result.status == MobilyWebhookStatus.ERROR {
             throw MobilyPurchaseError.webhook_failed
         }
 
@@ -67,15 +86,15 @@ class MobilyPurchaseSDKWaiter {
     /**
      * Wait the transfer-request to be processed.
      */
-    func waitTransferOwnershipRequest(requestId: String) async throws -> TransferOwnershipStatus {
-        var result = TransferOwnershipStatus.pending
+    func waitTransferOwnershipRequest(requestId: String) async throws -> String {
+        var result = MobilyTransferOwnershipStatus.PENDING
         let startTime = Date().timeIntervalSince1970
         var retry = 0
 
-        while result == .pending {
+        while result == MobilyTransferOwnershipStatus.PENDING {
             result = try await self.API.getTransferRequestStatus(requestId: requestId)
 
-            if result == .pending {
+            if result == MobilyTransferOwnershipStatus.PENDING {
                 // Exit the wait function after 1 minute
                 if startTime + 60 < Date().timeIntervalSince1970 {
                     throw MobilyTransferOwnershipError.webhook_not_processed
