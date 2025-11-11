@@ -18,11 +18,10 @@ class MobilyPurchaseSDKDiagnostics {
     func sendDiagnostic(sinceDays: Int = 1) {
         Task(priority: .background) {
             // 1. Write maximum info we can get
-            let bundleID = Bundle.main.bundleIdentifier
-            let versionName = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-            let versionCode = Bundle.main.infoDictionary?["CFBundleVersion"] as? String
-
-            Logger.d("App \(bundleID ?? "nil") version \(versionName ?? "nil") (\(versionCode ?? "nil"))")
+            Logger.d("[Device Info] OS = \(DeviceInfo.getOSName()) \(DeviceInfo.getOSVersion())")
+            Logger.d("[Device Info] deviceModel = \(DeviceInfo.getDeviceModelName())")
+            Logger.d("[Device Info] appBundleIdentifier = \(DeviceInfo.getAppBundleIdentifier())")
+            Logger.d("[Device Info] appVersion = \(DeviceInfo.getAppVersionName()) (\(DeviceInfo.getAppBuildNumber()))")
 
             if customerId == nil {
                 Logger.d("Not logged to a customer...")
