@@ -5,6 +5,8 @@
 //  Created by Gregoire Taja on 17/09/2025.
 //
 
+import AdSupport
+import AppTrackingTransparency
 import StoreKit
 
 class DeviceInfo {
@@ -215,5 +217,42 @@ class DeviceInfo {
 
         let buildNumber = Int(stringBuildNumber)
         return buildNumber ?? 0
+    }
+
+    static func getInstallIdentifier() -> String {
+        let defaults = UserDefaults.standard
+
+        var installIdentifier = defaults.string(forKey: "com.mobilyflow.installIdentifier")
+
+        if installIdentifier == nil {
+            installIdentifier = UUID().uuidString.lowercased()
+            defaults.set(installIdentifier, forKey: "com.mobilyflow.installIdentifier")
+        }
+
+        return installIdentifier!
+    }
+
+    static func getIdfv() -> String? {
+        let idfv = UIDevice.current.identifierForVendor
+
+        if idfv == nil || idfv == UUID(uuidString: "00000000-0000-0000-0000-000000000000")! {
+            return nil
+        }
+
+        return idfv?.uuidString.lowercased()
+    }
+
+    static func getAdid() -> String? {
+        if ATTrackingManager.trackingAuthorizationStatus == .authorized {
+            let adid = ASIdentifierManager.shared().advertisingIdentifier
+
+            if adid == UUID(uuidString: "00000000-0000-0000-0000-000000000000")! {
+                return nil
+            }
+
+            return adid.uuidString.lowercased()
+        } else {
+            return nil
+        }
     }
 }

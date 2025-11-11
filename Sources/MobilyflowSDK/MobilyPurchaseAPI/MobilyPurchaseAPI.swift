@@ -48,6 +48,16 @@ class MobilyPurchaseAPI {
             "environment": environment,
             "locale": self.locale,
             "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
+            "device": [
+                "osVersion": DeviceInfo.getOSVersion(),
+                "deviceModel": DeviceInfo.getDeviceModelName(),
+                "appVersionName": DeviceInfo.getAppVersionName(),
+                "appVersionCode": DeviceInfo.getAppBuildNumber(),
+                "sdkVersion": MobilyFlowVersion.current,
+                "installIdentifier": DeviceInfo.getInstallIdentifier(),
+                "idfv": DeviceInfo.getIdfv() ?? NSNull(),
+                "adid": DeviceInfo.getAdid() ?? NSNull(),
+            ],
         ])
 
         guard let res = try? await self.helper.request(request) else {
