@@ -419,6 +419,7 @@ class MobilyPurchaseAPI {
         if customerId != nil {
             _ = request.addData("customerId", customerId!.uuidString.lowercased())
         }
+        _ = request.addData("deviceInstallIdentifier", DeviceInfo.getInstallIdentifier())
         _ = request.addFile("logFile", file)
 
         guard let res = try? await self.helper.request(request) else {
