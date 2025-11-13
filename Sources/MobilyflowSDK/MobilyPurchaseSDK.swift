@@ -56,12 +56,6 @@ import StoreKit
 
         // Manage out-of-app purchase
         startUpdateTransactionTask()
-
-        // Log device info
-        Logger.d("[Device Info] OS = \(DeviceInfo.getOSName()) \(DeviceInfo.getOSVersion())")
-        Logger.d("[Device Info] deviceModel = \(DeviceInfo.getDeviceModelName())")
-        Logger.d("[Device Info] appBundleIdentifier = \(DeviceInfo.getAppBundleIdentifier())")
-        Logger.d("[Device Info] appVersion = \(DeviceInfo.getAppVersionName()) (\(DeviceInfo.getAppBuildNumber()))")
     }
 
     @objc public func close() {

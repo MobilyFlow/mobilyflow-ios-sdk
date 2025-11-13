@@ -48,6 +48,16 @@ class MobilyPurchaseAPI {
             "environment": environment,
             "locale": self.locale,
             "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
+            "device": [
+                "osVersion": DeviceInfo.getOSVersion(),
+                "deviceModel": DeviceInfo.getDeviceModelName(),
+                "appVersionName": DeviceInfo.getAppVersionName(),
+                "appVersionCode": DeviceInfo.getAppBuildNumber(),
+                "sdkVersion": MobilyFlowVersion.current,
+                "installIdentifier": DeviceInfo.getInstallIdentifier(),
+                "idfv": DeviceInfo.getIdfv() ?? NSNull(),
+                "adid": DeviceInfo.getAdid() ?? NSNull(),
+            ],
         ])
 
         guard let res = try? await self.helper.request(request) else {
@@ -409,6 +419,7 @@ class MobilyPurchaseAPI {
         if customerId != nil {
             _ = request.addData("customerId", customerId!.uuidString.lowercased())
         }
+        _ = request.addData("deviceInstallIdentifier", DeviceInfo.getInstallIdentifier())
         _ = request.addFile("logFile", file)
 
         guard let res = try? await self.helper.request(request) else {
