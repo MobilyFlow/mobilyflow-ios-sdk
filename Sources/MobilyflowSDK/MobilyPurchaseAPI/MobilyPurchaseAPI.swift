@@ -167,7 +167,7 @@ class MobilyPurchaseAPI {
     public func getCustomerEntitlements(customerId: UUID) async throws -> [[String: Any]] {
         let request = ApiRequest(method: "GET", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/entitlements")
         _ = request.addParam("locale", self.locale)
-        _ = request.addParam("loadProduct", "true")
+        _ = request.addParam("platform", "ios")
         _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
 
         guard let res = try? await self.helper.request(request) else {
@@ -190,7 +190,6 @@ class MobilyPurchaseAPI {
             "locale": self.locale,
             "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
             "platform": "ios",
-            "loadProduct": true,
             "transactions": transactions,
         ])
 
