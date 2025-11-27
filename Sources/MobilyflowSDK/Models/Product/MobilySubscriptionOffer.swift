@@ -17,6 +17,7 @@ import StoreKit
     @objc public let currencyCode: String
     @objc public let priceFormatted: String
     @objc public let type: String
+    @objc public let pricingMode: String
     @objc public let periodCount: Int
     @objc public let periodUnit: String
     @objc public let countBillingCycle: Int
@@ -26,7 +27,7 @@ import StoreKit
     @objc public let status: String
     @objc public let name: String?
 
-    @objc init(id: UUID, identifier: String, externalRef: String?, referenceName: String, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String, periodCount: Int, periodUnit: String, countBillingCycle: Int, android_offerId: String?, ios_offerId: String?, extras: [String: Any]? = nil, status: String, name: String) {
+    @objc init(id: UUID, identifier: String, externalRef: String?, referenceName: String, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String, pricingMode: String, periodCount: Int, periodUnit: String, countBillingCycle: Int, android_offerId: String?, ios_offerId: String?, extras: [String: Any]? = nil, status: String, name: String) {
         self.id = id
         self.identifier = identifier
         self.externalRef = externalRef
@@ -35,6 +36,7 @@ import StoreKit
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
         self.type = MobilyProductOfferType.parse(type)
+        self.pricingMode = MobilyProductOfferPricingMode.parse(pricingMode)
         self.periodCount = periodCount
         self.periodUnit = PeriodUnit.parse(periodUnit)
         self.countBillingCycle = countBillingCycle
@@ -57,17 +59,35 @@ import StoreKit
 
         var iosOffer: Product.SubscriptionOffer?
 
-        let id = parseUUID(jsonOffer["id"] as! String)!
+        let id = parseUUID(jsonOffer["id"] as? String)!
         let identifier = jsonOffer["identifier"] as! String
         let externalRef = jsonOffer["externalRef"] as? String
         let referenceName = jsonOffer["referenceName"] as! String
         let extras = jsonOffer["extras"] as? [String: Any]
-        let type = jsonOffer["type"] as! String
+
+        // TODO: Retro compatibility with old backend, remove it after API updates
+        var type: String
+        var pricingMode: String
+
+        let typeStr = jsonOffer["type"] as! String
+        if typeStr == "free_trial" {
+            type = MobilyProductOfferType.INTRODUCTORY
+            pricingMode = MobilyProductOfferPricingMode.FREE_TRIAL
+        } else if typeStr == "recurring" {
+            type = MobilyProductOfferType.DEVELOPER_DETERMINED
+            pricingMode = MobilyProductOfferPricingMode.RECURRING
+        } else {
+            type = MobilyProductOfferType.parse(typeStr)
+            pricingMode = MobilyProductOfferPricingMode.parse(jsonOffer["pricingMode"] as! String)
+        }
+        // let type = MobilyProductOfferType.parse(jsonOffer["type"] as! String)
+        // let pricingMode = MobilyProductOfferPricingMode.parse(jsonOffer["pricingMode"] as! String)
+
         let ios_offerId = jsonOffer["ios_offerId"] as? String
         let name = getTranslationValue(jsonOffer["_translations"] as? [[String: Any]], field: "name") ?? ""
 
         if iosProduct != nil {
-            if type == MobilyProductOfferType.FREE_TRIAL {
+            if type == MobilyProductOfferType.INTRODUCTORY {
                 iosOffer = iosProduct!.subscription!.introductoryOffer
             } else if ios_offerId != nil {
                 iosOffer = MobilyPurchaseRegistry.getIOSOffer(iosProduct!.id, offerId: ios_offerId!)
@@ -93,7 +113,7 @@ import StoreKit
 
             priceFormatted = formatPrice(priceMillis, currencyCode: currencyCode)
 
-            if type == MobilyProductOfferType.FREE_TRIAL {
+            if pricingMode == MobilyProductOfferPricingMode.FREE_TRIAL {
                 periodCount = jsonOffer["offerPeriodCount"] as! Int
                 periodUnit = jsonOffer["offerPeriodUnit"] as! String
                 countBillingCycle = 1
@@ -108,7 +128,7 @@ import StoreKit
             status = MobilyProductStatus.AVAILABLE
             currencyCode = iosProduct!.priceFormatStyle.currencyCode
 
-            if type == MobilyProductOfferType.FREE_TRIAL {
+            if type == MobilyProductOfferType.INTRODUCTORY {
                 if !(await iosProduct!.subscription!.isEligibleForIntroOffer) {
                     status = MobilyProductStatus.UNAVAILABLE
                 }
@@ -132,6 +152,7 @@ import StoreKit
             currencyCode: currencyCode,
             priceFormatted: priceFormatted,
             type: type,
+            pricingMode: pricingMode,
             periodCount: periodCount,
             periodUnit: periodUnit,
             countBillingCycle: countBillingCycle,

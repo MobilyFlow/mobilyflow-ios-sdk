@@ -54,16 +54,16 @@ import StoreKit
         @objc public let groupId: String
         @objc public let ios_groupId: String?
 
-        @objc public let freeTrial: MobilySubscriptionOffer?
+        @objc public let introductoryOffer: MobilySubscriptionOffer?
         @objc public let promotionalOffers: [MobilySubscriptionOffer]
 
-        @objc init(periodCount: Int, periodUnit: String, groupLevel: Int, groupId: String, ios_groupId: String?, freeTrial: MobilySubscriptionOffer?, promotionalOffers: [MobilySubscriptionOffer]) {
+        @objc init(periodCount: Int, periodUnit: String, groupLevel: Int, groupId: String, ios_groupId: String?, introductoryOffer: MobilySubscriptionOffer?, promotionalOffers: [MobilySubscriptionOffer]) {
             self.periodCount = periodCount
             self.periodUnit = PeriodUnit.parse(periodUnit)
             self.groupLevel = groupLevel
             self.groupId = groupId
             self.ios_groupId = ios_groupId
-            self.freeTrial = freeTrial
+            self.introductoryOffer = introductoryOffer
             self.promotionalOffers = promotionalOffers
             super.init()
         }
@@ -126,7 +126,7 @@ import StoreKit
         } else {
             var periodCount: Int
             var periodUnit: String
-            var freeTrial: MobilySubscriptionOffer? = nil
+            var introductoryOffer: MobilySubscriptionOffer? = nil
             var promotionalOffers: [MobilySubscriptionOffer] = []
 
             if iosProduct != nil {
@@ -151,15 +151,20 @@ import StoreKit
             for jsonOffer in jsonOffers {
                 let offer = await MobilySubscriptionOffer.parse(jsonProduct: jsonProduct, jsonOffer: jsonOffer, iosProduct: iosProduct)
 
-                if offer.type == MobilyProductOfferType.FREE_TRIAL {
-                    if freeTrial != nil {
-                        Logger.w("Offer \(iosProduct!.id)/\(offer.ios_offerId ?? "nil") is incompatible with MobilyFlow (too many free trials)")
+                if offer.type == MobilyProductOfferType.INTRODUCTORY {
+                    if introductoryOffer != nil {
+                        Logger.w("Offer \(iosProduct!.id)/\(offer.ios_offerId ?? "nil") is incompatible with MobilyFlow (too many INTRODUCTORY offers)")
                         continue
                     }
-                    freeTrial = offer
+                    introductoryOffer = offer
                 } else {
                     promotionalOffers.append(offer)
                 }
+            }
+
+            if introductoryOffer != nil && introductoryOffer?.status != MobilyProductStatus.AVAILABLE {
+                // Remove UNAVAILABLE introductoryOffer
+                introductoryOffer = nil
             }
 
             subscription = MobilySubscriptionProduct(
@@ -168,7 +173,7 @@ import StoreKit
                 groupLevel: jsonProduct["subscriptionGroupLevel"] as! Int,
                 groupId: jsonProduct["subscriptionGroupId"] as! String,
                 ios_groupId: iosProduct?.subscription?.subscriptionGroupID,
-                freeTrial: freeTrial,
+                introductoryOffer: introductoryOffer,
                 promotionalOffers: promotionalOffers,
             )
         }
@@ -183,7 +188,7 @@ import StoreKit
         }
 
         let product = MobilyProduct(
-            id: parseUUID(jsonProduct["id"] as! String)!,
+            id: parseUUID(jsonProduct["id"] as? String)!,
             createdAt: parseDate(jsonProduct["createdAt"] as! String),
             updatedAt: parseDate(jsonProduct["updatedAt"] as! String),
             identifier: jsonProduct["identifier"] as! String,
