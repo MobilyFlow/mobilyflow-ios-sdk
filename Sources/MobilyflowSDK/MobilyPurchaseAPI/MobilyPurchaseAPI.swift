@@ -72,7 +72,8 @@ class MobilyPurchaseAPI {
                 entitlements: data["entitlements"] as! [[String: Any]],
                 platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String],
                 appleRefundRequests: data["appleRefundRequests"] as? [[String: Any]],
-                haveMonitoringRequests: data["haveMonitoringRequests"] as? Bool ?? false
+                haveMonitoringRequests: data["haveMonitoringRequests"] as? Bool ?? false,
+                ForceUpdate: data["ForceUpdate"] as? [String: Any]
             )
         } else {
             throw MobilyError.unknown_error

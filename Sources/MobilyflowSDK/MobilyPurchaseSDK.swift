@@ -93,7 +93,34 @@ import StoreKit
             }
         }
 
-        // 4. Send Refund Requests Notifications
+        // 4. Force Update if required
+        if loginResponse.ForceUpdate != nil {
+            var continueUpdate = true
+            while continueUpdate {
+                await withCheckedContinuation { continuation in
+                    DispatchQueue.main.async {
+                        Logger.d("Force Update Required for version \(loginResponse.ForceUpdate!["minVersionName"]!) (\(loginResponse.ForceUpdate!["minVersionCode"]!))")
+                        let alert = UIAlertController(title: nil, message: loginResponse.ForceUpdate!["message"] as? String, preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: loginResponse.ForceUpdate!["linkText"] as? String, style: .default, handler: { _ in
+                            UIApplication.shared.open(URL(string: loginResponse.ForceUpdate!["link"] as! String)!)
+                            continuation.resume()
+                        }))
+
+                        if let topViewController = getTopViewController() {
+                            topViewController.present(alert, animated: true, completion: nil)
+                        } else {
+                            // TODO: This should not happen but we allow user to use the app if we cannot present the ViewController
+                            Logger.e("ForceUpdate doesn't find a viewController to present")
+                            self.sendDiagnostic()
+                            continueUpdate = false
+                            continuation.resume()
+                        }
+                    }
+                }
+            }
+        }
+
+        // 5. Send Refund Requests Notifications
         if let refundRequests = loginResponse.appleRefundRequests {
             Task(priority: .background) {
                 // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
@@ -101,7 +128,7 @@ import StoreKit
             }
         }
 
-        // 5. Send monitoring if requested
+        // 6. Send monitoring if requested
         if loginResponse.haveMonitoringRequests {
             Task(priority: .background) {
                 // When monitoring is requested, send 10 days
