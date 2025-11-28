@@ -481,7 +481,7 @@ SWIFT_CLASS("_TtCC13MobilyflowSDK13MobilyProduct25MobilySubscriptionProduct")
 @property (nonatomic, readonly) NSInteger periodCount;
 @property (nonatomic, readonly, copy) NSString * _Nonnull periodUnit;
 @property (nonatomic, readonly) NSInteger groupLevel;
-@property (nonatomic, readonly, copy) NSString * _Nonnull groupId;
+@property (nonatomic, readonly, copy) NSUUID * _Nonnull groupId;
 @property (nonatomic, readonly, copy) NSString * _Nullable ios_groupId;
 @property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable introductoryOffer;
 @property (nonatomic, readonly, copy) NSArray<MobilySubscriptionOffer *> * _Nonnull promotionalOffers;
@@ -541,45 +541,6 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSStri
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 + (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
-@end
-
-@class MobilyPurchaseSDKOptions;
-@class MobilySubscriptionGroup;
-@class PurchaseOptions;
-SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
-@interface MobilyPurchaseSDK : NSObject
-- (nonnull instancetype)initWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(NSString * _Nonnull)environment options:(MobilyPurchaseSDKOptions * _Nullable)options OBJC_DESIGNATED_INITIALIZER;
-- (void)close;
-- (void)loginWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
-- (void)logout;
-- (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
-- (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
-- (void)getSubscriptionGroupByIdWithId:(NSString * _Nonnull)id completionHandler:(void (^ _Nonnull)(MobilySubscriptionGroup * _Nullable, NSError * _Nullable))completionHandler;
-- (MobilyProduct * _Nullable)getProductFromCacheWithIdWithId:(NSUUID * _Nonnull)id SWIFT_WARN_UNUSED_RESULT;
-- (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSString * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
-- (void)getEntitlementWithProductId:(NSUUID * _Nonnull)productId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
-- (void)getEntitlementsWithProductIds:(NSArray<NSUUID *> * _Nullable)productIds completionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
-- (void)getExternalEntitlementsWithCompletionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
-/// Request transfer ownership of local device transactions.
-- (void)requestTransferOwnershipWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completionHandler;
-/// Open the manage subscription dialog
-- (void)openManageSubscriptionWithCompletionHandler:(void (^ _Nonnull)(void))completionHandler;
-/// Open a refund dialog for the last transaction on the given product.
-/// Pro tips: to test declined refund in sandbox, once the dialog appear, select “other” and write “REJECT” in the text box.
-- (void)openRefundDialogForProduct:(MobilyProduct * _Nonnull)forProduct completionHandler:(void (^ _Nonnull)(NSString * _Nonnull))completionHandler;
-/// Open a refund dialog for the given transactionId.
-/// Warning: this is iOS transactionId, not MobilyFlow transactionId
-/// Pro tips: to test declined refund in sandbox, once the dialog appear, select “other” and write “REJECT” in the text box.
-- (void)openRefundDialogForTransactionId:(NSString * _Nonnull)forTransactionId completionHandler:(void (^ _Nonnull)(NSString * _Nonnull))completionHandler;
-- (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(MobilyEvent * _Nullable, NSError * _Nullable))completionHandler;
-- (void)sendDiagnostic;
-- (BOOL)isBillingAvailable SWIFT_WARN_UNUSED_RESULT;
-- (void)getStoreCountryWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable))completionHandler;
-- (void)isForwardingEnableWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(BOOL, NSError * _Nullable))completionHandler;
-- (void)getCustomerWithCompletionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
-- (NSString * _Nonnull)getSDKVersion SWIFT_WARN_UNUSED_RESULT;
-- (nonnull instancetype)init SWIFT_UNAVAILABLE;
-+ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
 
 SWIFT_CLASS("_TtC13MobilyflowSDK24MobilyPurchaseSDKOptions")
