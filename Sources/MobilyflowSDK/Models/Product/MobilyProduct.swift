@@ -153,7 +153,7 @@ import StoreKit
 
                 if offer.type == MobilyProductOfferType.INTRODUCTORY {
                     if introductoryOffer != nil {
-                        Logger.w("Offer \(iosProduct!.id)/\(offer.ios_offerId ?? "nil") is incompatible with MobilyFlow (too many INTRODUCTORY offers)")
+                        Logger.w("Offer \(offer.identifier) is incompatible with MobilyFlow (too many INTRODUCTORY offers)")
                         continue
                     }
                     introductoryOffer = offer
