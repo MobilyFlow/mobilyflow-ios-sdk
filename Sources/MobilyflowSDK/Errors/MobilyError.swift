@@ -12,4 +12,5 @@ public enum MobilyError: Error {
     case server_unavailable
     case no_customer_logged
     case unknown_error
+    case sdk_not_initialized
 }

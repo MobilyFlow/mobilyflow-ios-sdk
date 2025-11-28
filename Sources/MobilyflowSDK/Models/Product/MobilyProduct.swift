@@ -51,13 +51,13 @@ import StoreKit
         @objc public let periodCount: Int
         @objc public let periodUnit: String
         @objc public let groupLevel: Int
-        @objc public let groupId: String
+        @objc public let groupId: UUID
         @objc public let ios_groupId: String?
 
         @objc public let introductoryOffer: MobilySubscriptionOffer?
         @objc public let promotionalOffers: [MobilySubscriptionOffer]
 
-        @objc init(periodCount: Int, periodUnit: String, groupLevel: Int, groupId: String, ios_groupId: String?, introductoryOffer: MobilySubscriptionOffer?, promotionalOffers: [MobilySubscriptionOffer]) {
+        @objc init(periodCount: Int, periodUnit: String, groupLevel: Int, groupId: UUID, ios_groupId: String?, introductoryOffer: MobilySubscriptionOffer?, promotionalOffers: [MobilySubscriptionOffer]) {
             self.periodCount = periodCount
             self.periodUnit = PeriodUnit.parse(periodUnit)
             self.groupLevel = groupLevel
@@ -171,7 +171,7 @@ import StoreKit
                 periodCount: periodCount,
                 periodUnit: periodUnit,
                 groupLevel: jsonProduct["subscriptionGroupLevel"] as! Int,
-                groupId: jsonProduct["subscriptionGroupId"] as! String,
+                groupId: parseUUID(jsonProduct["subscriptionGroupId"] as? String)!,
                 ios_groupId: iosProduct?.subscription?.subscriptionGroupID,
                 introductoryOffer: introductoryOffer,
                 promotionalOffers: promotionalOffers,

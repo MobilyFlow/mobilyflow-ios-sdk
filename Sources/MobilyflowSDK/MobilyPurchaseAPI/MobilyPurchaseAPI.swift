@@ -38,6 +38,25 @@ class MobilyPurchaseAPI {
     }
 
     /**
+     Get ForceUpdate data if update is required
+     */
+    public func getCheckForceUpdate() async throws -> [String: Any]? {
+        let request = ApiRequest(method: "GET", url: "/apps/me/platforms/check-force-update/ios")
+        _ = request.addParam("appVersionName", DeviceInfo.getAppVersionName())
+        _ = request.addParam("appVersionCode", String(DeviceInfo.getAppBuildNumber()))
+
+        guard let res = try? await self.helper.request(request) else {
+            throw MobilyError.server_unavailable
+        }
+
+        if res.success {
+            return res.json()["data"] as? [String: Any]
+        } else {
+            throw MobilyError.unknown_error
+        }
+    }
+
+    /**
      Log user into MobilyFlow with his externalRef and return his uuid.
      Throws on error.
      */
@@ -73,7 +92,6 @@ class MobilyPurchaseAPI {
                 platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String],
                 appleRefundRequests: data["appleRefundRequests"] as? [[String: Any]],
                 haveMonitoringRequests: data["haveMonitoringRequests"] as? Bool ?? false,
-                ForceUpdate: data["ForceUpdate"] as? [String: Any]
             )
         } else {
             throw MobilyError.unknown_error
@@ -144,8 +162,8 @@ class MobilyPurchaseAPI {
     /**
      Get products in JSON Array format
      */
-    public func getSubscriptionGroupById(id: String) async throws -> [String: Any] {
-        let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app/\(id)")
+    public func getSubscriptionGroupById(id: UUID) async throws -> [String: Any] {
+        let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app/\(id.uuidString.lowercased())")
         _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")

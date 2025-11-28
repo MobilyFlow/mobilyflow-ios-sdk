@@ -13,5 +13,4 @@ struct LoginResponse: Sendable {
     let platformOriginalTransactionIds: [String]
     let appleRefundRequests: [[String: Any]]?
     let haveMonitoringRequests: Bool
-    let ForceUpdate: [String: Any]?
 }
