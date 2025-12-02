@@ -7,7 +7,7 @@
 
 import StoreKit
 
-public final class MobilyPurchaseSDK {
+@objc public final class MobilyPurchaseSDK: NSObject {
     private static var instance: MobilyPurchaseSDKImpl?
 
     /**

@@ -543,6 +543,38 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSStri
 + (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
+@class MobilyPurchaseSDKOptions;
+@class MobilySubscriptionGroup;
+@class PurchaseOptions;
+SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
+@interface MobilyPurchaseSDK : NSObject
+/// Note: Calling init multiple times with different config will logout the current user.
++ (BOOL)initializeWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(NSString * _Nonnull)environment options:(MobilyPurchaseSDKOptions * _Nullable)options error:(NSError * _Nullable * _Nullable)error;
++ (BOOL)closeAndReturnError:(NSError * _Nullable * _Nullable)error;
++ (void)loginWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
++ (void)logout;
++ (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
++ (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
++ (void)getSubscriptionGroupByIdWithId:(NSUUID * _Nonnull)id completionHandler:(void (^ _Nonnull)(MobilySubscriptionGroup * _Nullable, NSError * _Nullable))completionHandler;
++ (MobilyProduct * _Nullable)DANGEROUS_getProductFromCacheWithIdWithId:(NSUUID * _Nonnull)id SWIFT_WARN_UNUSED_RESULT;
++ (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSUUID * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
++ (void)getEntitlementWithProductId:(NSUUID * _Nonnull)productId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
++ (void)getEntitlementsWithProductIds:(NSArray<NSUUID *> * _Nullable)productIds completionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
++ (void)getExternalEntitlementsWithCompletionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
++ (void)requestTransferOwnershipWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completionHandler;
++ (void)openManageSubscriptionWithCompletionHandler:(void (^ _Nonnull)(void))completionHandler;
++ (void)openRefundDialogForProduct:(MobilyProduct * _Nonnull)forProduct completionHandler:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completionHandler;
++ (void)openRefundDialogForTransactionId:(NSString * _Nonnull)forTransactionId completionHandler:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completionHandler;
++ (void)purchaseProduct:(MobilyProduct * _Nonnull)product options:(PurchaseOptions * _Nullable)options completionHandler:(void (^ _Nonnull)(MobilyEvent * _Nullable, NSError * _Nullable))completionHandler;
++ (BOOL)sendDiagnosticAndReturnError:(NSError * _Nullable * _Nullable)error;
++ (void)getStoreCountryWithCompletionHandler:(void (^ _Nonnull)(NSString * _Nullable, NSError * _Nullable))completionHandler;
++ (BOOL)isBillingAvailable SWIFT_WARN_UNUSED_RESULT;
++ (void)isForwardingEnableWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(BOOL, NSError * _Nullable))completionHandler;
++ (void)getCustomerWithCompletionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
++ (NSString * _Nonnull)getSDKVersion SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
+@end
+
 SWIFT_CLASS("_TtC13MobilyflowSDK24MobilyPurchaseSDKOptions")
 @interface MobilyPurchaseSDKOptions : NSObject
 - (nonnull instancetype)initWithLocales:(NSArray<NSString *> * _Nullable)locales debug:(BOOL)debug apiURL:(NSString * _Nullable)apiURL OBJC_DESIGNATED_INITIALIZER;
