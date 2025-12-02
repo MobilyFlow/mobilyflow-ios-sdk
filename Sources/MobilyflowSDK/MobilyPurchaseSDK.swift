@@ -18,7 +18,7 @@ import StoreKit
         apiKey: String,
         environment: String,
         options: MobilyPurchaseSDKOptions? = nil
-    ) throws {
+    ) {
         if let impl = instance {
             impl.reinit(appId: appId, apiKey: apiKey, environment: environment, options: options)
         } else {
@@ -41,7 +41,7 @@ import StoreKit
         return true
     }
 
-    @objc public static func close() throws {
+    @objc public static func close() {
         if try! ensureInit(checkOnly: true) {
             instance?.close()
         }
@@ -69,12 +69,12 @@ import StoreKit
         return try await instance!.getSubscriptionGroups(identifiers: identifiers, onlyAvailable: onlyAvailable)
     }
 
-    @objc public static func getSubscriptionGroupById(id: UUID) async throws -> MobilySubscriptionGroup {
+    @objc public static func getSubscriptionGroupById(_ id: UUID) async throws -> MobilySubscriptionGroup {
         _ = try ensureInit()
         return try await instance!.getSubscriptionGroupById(id: id)
     }
 
-    @objc public static func DANGEROUS_getProductFromCacheWithId(id: UUID) -> MobilyProduct? {
+    @objc public static func DANGEROUS_getProductFromCacheWithId(_ id: UUID) -> MobilyProduct? {
         if try! ensureInit(checkOnly: true) {
             return instance!.getProductFromCacheWithId(id: id)
         }

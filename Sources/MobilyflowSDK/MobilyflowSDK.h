@@ -549,14 +549,14 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSStri
 SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 @interface MobilyPurchaseSDK : NSObject
 /// Note: Calling init multiple times with different config will logout the current user.
-+ (BOOL)initializeWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(NSString * _Nonnull)environment options:(MobilyPurchaseSDKOptions * _Nullable)options error:(NSError * _Nullable * _Nullable)error;
-+ (BOOL)closeAndReturnError:(NSError * _Nullable * _Nullable)error;
++ (void)initializeWithAppId:(NSString * _Nonnull)appId apiKey:(NSString * _Nonnull)apiKey environment:(NSString * _Nonnull)environment options:(MobilyPurchaseSDKOptions * _Nullable)options;
++ (void)close;
 + (void)loginWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
 + (void)logout;
 + (void)getProductsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilyProduct *> * _Nullable, NSError * _Nullable))completionHandler;
 + (void)getSubscriptionGroupsWithIdentifiers:(NSArray<NSString *> * _Nullable)identifiers onlyAvailable:(BOOL)onlyAvailable completionHandler:(void (^ _Nonnull)(NSArray<MobilySubscriptionGroup *> * _Nullable, NSError * _Nullable))completionHandler;
-+ (void)getSubscriptionGroupByIdWithId:(NSUUID * _Nonnull)id completionHandler:(void (^ _Nonnull)(MobilySubscriptionGroup * _Nullable, NSError * _Nullable))completionHandler;
-+ (MobilyProduct * _Nullable)DANGEROUS_getProductFromCacheWithIdWithId:(NSUUID * _Nonnull)id SWIFT_WARN_UNUSED_RESULT;
++ (void)getSubscriptionGroupById:(NSUUID * _Nonnull)id completionHandler:(void (^ _Nonnull)(MobilySubscriptionGroup * _Nullable, NSError * _Nullable))completionHandler;
++ (MobilyProduct * _Nullable)DANGEROUS_getProductFromCacheWithId:(NSUUID * _Nonnull)id SWIFT_WARN_UNUSED_RESULT;
 + (void)getEntitlementForSubscriptionWithSubscriptionGroupId:(NSUUID * _Nonnull)subscriptionGroupId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
 + (void)getEntitlementWithProductId:(NSUUID * _Nonnull)productId completionHandler:(void (^ _Nonnull)(MobilyCustomerEntitlement * _Nullable, NSError * _Nullable))completionHandler;
 + (void)getEntitlementsWithProductIds:(NSArray<NSUUID *> * _Nullable)productIds completionHandler:(void (^ _Nonnull)(NSArray<MobilyCustomerEntitlement *> * _Nullable, NSError * _Nullable))completionHandler;
