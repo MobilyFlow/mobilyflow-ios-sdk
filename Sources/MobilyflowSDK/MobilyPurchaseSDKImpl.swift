@@ -70,29 +70,35 @@ import StoreKit
         self.refundRequestManager = MobilyPurchaseRefundRequestManager(API: API!)
 
         Task(priority: .high) {
-            // TODO: Check appId match the apiKey
+            // Check app bundleId, platform config & force update
+            if let appPlatform = try? await API!.getAppPlatform() {
+                if let mobilyBundleIdentifier = appPlatform["identifier"] as? String, let iosBundleIdentifier = Bundle.main.bundleIdentifier {
+                    if mobilyBundleIdentifier != iosBundleIdentifier {
+                        Logger.e("Bundle identifier is configured on MobilyFlow backoffice to  \"\(mobilyBundleIdentifier)\" (actual app have \"\(iosBundleIdentifier)\"), in-app purchase may be broken.")
+                    }
+                }
 
-            let forceUpdate = try? await API!.getCheckForceUpdate()
-            if forceUpdate != nil {
-                var continueUpdate = true
-                while continueUpdate {
-                    await withCheckedContinuation { continuation in
-                        DispatchQueue.main.async {
-                            Logger.d("Force Update Required for version \(forceUpdate!["minVersionName"]!) (\(forceUpdate!["minVersionCode"]!))")
-                            let alert = UIAlertController(title: nil, message: forceUpdate!["message"] as? String, preferredStyle: .alert)
-                            alert.addAction(UIAlertAction(title: forceUpdate!["linkText"] as? String, style: .default, handler: { _ in
-                                UIApplication.shared.open(URL(string: forceUpdate!["link"] as! String)!)
-                                continuation.resume()
-                            }))
+                if let forceUpdate = appPlatform["ForceUpdate"] as? [String: Any] {
+                    var continueUpdate = true
+                    while continueUpdate {
+                        await withCheckedContinuation { continuation in
+                            DispatchQueue.main.async {
+                                Logger.d("Force Update Required for version \(forceUpdate["minVersionName"]!) (\(forceUpdate["minVersionCode"]!))")
+                                let alert = UIAlertController(title: nil, message: forceUpdate["message"] as? String, preferredStyle: .alert)
+                                alert.addAction(UIAlertAction(title: forceUpdate["linkText"] as? String, style: .default, handler: { _ in
+                                    UIApplication.shared.open(URL(string: forceUpdate["link"] as! String)!)
+                                    continuation.resume()
+                                }))
 
-                            if let topViewController = getTopViewController() {
-                                topViewController.present(alert, animated: true, completion: nil)
-                            } else {
-                                // TODO: This should not happen but we allow user to use the app if we cannot present the ViewController
-                                Logger.e("ForceUpdate doesn't find a viewController to present")
-                                self.sendDiagnostic()
-                                continueUpdate = false
-                                continuation.resume()
+                                if let topViewController = getTopViewController() {
+                                    topViewController.present(alert, animated: true, completion: nil)
+                                } else {
+                                    // TODO: This should not happen but we allow user to use the app if we cannot present the ViewController
+                                    Logger.e("ForceUpdate doesn't find a viewController to present")
+                                    self.sendDiagnostic()
+                                    continueUpdate = false
+                                    continuation.resume()
+                                }
                             }
                         }
                     }

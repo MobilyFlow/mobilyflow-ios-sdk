@@ -38,10 +38,10 @@ class MobilyPurchaseAPI {
     }
 
     /**
-     Get ForceUpdate data if update is required
+     Get AppPlatform (with ForceUpdate data if update is required)
      */
-    public func getCheckForceUpdate() async throws -> [String: Any]? {
-        let request = ApiRequest(method: "GET", url: "/apps/me/platforms/check-force-update/ios")
+    public func getAppPlatform() async throws -> [String: Any] {
+        let request = ApiRequest(method: "GET", url: "/apps/\(self.appId)/platforms/for-app/ios")
         _ = request.addParam("appVersionName", DeviceInfo.getAppVersionName())
         _ = request.addParam("appVersionCode", String(DeviceInfo.getAppBuildNumber()))
 
@@ -50,8 +50,15 @@ class MobilyPurchaseAPI {
         }
 
         if res.success {
-            return res.json()["data"] as? [String: Any]
+            return res.json()["data"] as! [String: Any]
         } else {
+            if res.status == 403 {
+                Logger.e("Given AppId doesn't match the APIKey")
+            } else if res.status == 404 {
+                Logger.e("App isn't configured for iOS on MobilyFlow backoffice, in-app purchase will be broken.")
+            } else {
+                Logger.w("[getAppPlatform] API Error: \(res.string())")
+            }
             throw MobilyError.unknown_error
         }
     }
@@ -61,7 +68,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     public func login(externalRef: String) async throws -> LoginResponse {
-        let request = ApiRequest(method: "POST", url: "/apps/me/customers/login/ios")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/customers/login/ios")
         _ = request.setData([
             "externalRef": externalRef,
             "environment": environment,
@@ -94,6 +101,7 @@ class MobilyPurchaseAPI {
                 haveMonitoringRequests: data["haveMonitoringRequests"] as? Bool ?? false,
             )
         } else {
+            Logger.w("[login] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -106,7 +114,7 @@ class MobilyPurchaseAPI {
             return []
         }
 
-        let request = ApiRequest(method: "GET", url: "/apps/me/products/for-app")
+        let request = ApiRequest(method: "GET", url: "/apps/\(self.appId)/products/for-app")
         _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
@@ -123,6 +131,7 @@ class MobilyPurchaseAPI {
         if res.success {
             return res.json()["data"] as! [[String: Any]]
         } else {
+            Logger.w("[getProducts] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -135,7 +144,7 @@ class MobilyPurchaseAPI {
             return []
         }
 
-        let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app")
+        let request = ApiRequest(method: "GET", url: "/apps/\(self.appId)/subscription-groups/for-app")
         _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
@@ -155,6 +164,7 @@ class MobilyPurchaseAPI {
         if res.success {
             return res.json()["data"] as! [[String: Any]]
         } else {
+            Logger.w("[getSubscriptionGroups] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -163,7 +173,7 @@ class MobilyPurchaseAPI {
      Get products in JSON Array format
      */
     public func getSubscriptionGroupById(id: UUID) async throws -> [String: Any] {
-        let request = ApiRequest(method: "GET", url: "/apps/me/subscription-groups/for-app/\(id.uuidString.lowercased())")
+        let request = ApiRequest(method: "GET", url: "/apps/\(self.appId)/subscription-groups/for-app/\(id.uuidString.lowercased())")
         _ = request.addParam("environment", environment)
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
@@ -176,6 +186,7 @@ class MobilyPurchaseAPI {
         if res.success {
             return res.json()["data"] as! [String: Any]
         } else {
+            Logger.w("[getSubscriptionGroupById] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -184,7 +195,7 @@ class MobilyPurchaseAPI {
      Get entitlements
      */
     public func getCustomerEntitlements(customerId: UUID) async throws -> [[String: Any]] {
-        let request = ApiRequest(method: "GET", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/entitlements")
+        let request = ApiRequest(method: "GET", url: "/apps/\(self.appId)/customers/\(customerId.uuidString.lowercased())/entitlements")
         _ = request.addParam("locale", self.locale)
         _ = request.addParam("platform", "ios")
         _ = request.addParam("region", await StorePrice.getMostRelevantRegion())
@@ -196,6 +207,7 @@ class MobilyPurchaseAPI {
         if res.success {
             return res.json()["data"] as! [[String: Any]]
         } else {
+            Logger.w("[getCustomerEntitlements] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -204,7 +216,7 @@ class MobilyPurchaseAPI {
      Get external entitlements
      */
     public func getCustomerExternalEntitlements(customerId: UUID, transactions: [String]) async throws -> [[String: Any]] {
-        let request = ApiRequest(method: "POST", url: "/apps/me/customers/\(customerId.uuidString.lowercased())/external-entitlements")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/customers/\(customerId.uuidString.lowercased())/external-entitlements")
         _ = request.setData([
             "locale": self.locale,
             "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
@@ -219,6 +231,7 @@ class MobilyPurchaseAPI {
         if res.success {
             return res.json()["data"] as! [[String: Any]]
         } else {
+            Logger.w("[getCustomerExternalEntitlements] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -227,7 +240,7 @@ class MobilyPurchaseAPI {
      Get products in JSON Array format
      */
     public func getLastTxPlatformIdForProduct(customerId: UUID, productId: UUID) async throws -> String {
-        let request = ApiRequest(method: "GET", url: "/apps/me/transactions/last-platform-tx-id/ios/\(productId.uuidString)")
+        let request = ApiRequest(method: "GET", url: "/apps/\(self.appId)/transactions/last-platform-tx-id/ios/\(productId.uuidString)")
         _ = request.addParam("customerId", customerId.uuidString.lowercased())
 
         guard let res = try? await self.helper.request(request) else {
@@ -237,6 +250,7 @@ class MobilyPurchaseAPI {
         if res.success {
             return res.json()["data"] as! String
         } else {
+            Logger.w("[getLastTxPlatformIdForProduct] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -249,7 +263,7 @@ class MobilyPurchaseAPI {
      */
     @available(iOS 17.4, *)
     public func signOffer(customerId: UUID, offerId: String) async throws -> Product.SubscriptionOffer.Signature {
-        let request = ApiRequest(method: "POST", url: "/apps/me/products/sign-offer/ios")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/products/sign-offer/ios")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "offerId": offerId])
 
         guard let res = try? await self.helper.request(request) else {
@@ -265,6 +279,7 @@ class MobilyPurchaseAPI {
                 signature: Data(base64Encoded: jsonResponse["signature"] as! String)!
             )
         } else {
+            Logger.w("[signOffer] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -275,7 +290,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     public func appleOfferCode(customerId: UUID, offerId: UUID) async throws -> [String: Any] {
-        let request = ApiRequest(method: "POST", url: "/apps/me/products/offer-code/ios")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/products/offer-code/ios")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "offerId": offerId.uuidString])
 
         guard let res = try? await self.helper.request(request) else {
@@ -288,6 +303,7 @@ class MobilyPurchaseAPI {
             if res.status == 404 {
                 throw MobilyInternalError.no_offer_code_available
             } else {
+                Logger.w("[appleOfferCode] API Error: \(res.string())")
                 throw MobilyError.unknown_error
             }
         }
@@ -298,7 +314,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     public func mapTransactions(customerId: UUID, transactions: [String]) async throws {
-        let request = ApiRequest(method: "POST", url: "/apps/me/customers/mappings/ios")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/customers/mappings/ios")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "transactions": transactions])
 
         guard let res = try? await self.helper.request(request) else {
@@ -306,6 +322,7 @@ class MobilyPurchaseAPI {
         }
 
         if !res.success {
+            Logger.w("[mapTransactions] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -315,7 +332,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     public func flagRefundRequest(requestId: String, accepted: Bool) async throws {
-        let request = ApiRequest(method: "POST", url: "/apps/me/apple-refund-requests/\(requestId)/flag")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/apple-refund-requests/\(requestId)/flag")
         _ = request.setData(["accepted": accepted])
 
         guard let res = try? await self.helper.request(request) else {
@@ -323,6 +340,7 @@ class MobilyPurchaseAPI {
         }
 
         if !res.success {
+            Logger.w("[flagRefundRequest] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -332,7 +350,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     public func transferOwnershipRequest(customerId: UUID, transactions: [String]) async throws -> String {
-        let request = ApiRequest(method: "POST", url: "/apps/me/customer-transfer-ownerships/request/ios")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/customer-transfer-ownerships/request/ios")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "transactions": transactions])
 
         guard let res = try? await self.helper.request(request) else {
@@ -348,6 +366,7 @@ class MobilyPurchaseAPI {
                     throw error
                 }
             }
+            Logger.w("[transferOwnershipRequest] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -356,7 +375,7 @@ class MobilyPurchaseAPI {
      Get transfer ownership request status from requestId
      */
     public func getTransferRequestStatus(requestId: String) async throws -> String {
-        let request = ApiRequest(method: "GET", url: "/apps/me/customer-transfer-ownerships/\(requestId)/status")
+        let request = ApiRequest(method: "GET", url: "/apps/\(self.appId)/customer-transfer-ownerships/\(requestId)/status")
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -370,6 +389,7 @@ class MobilyPurchaseAPI {
             }
             return status
         } else {
+            Logger.w("[getTransferRequestStatus] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -380,7 +400,7 @@ class MobilyPurchaseAPI {
      type is "purchase" | "upgrade"
      */
     public func forceWebhook(transactionId: UInt64, productId: UUID, isSandbox: Bool) async throws {
-        let request = ApiRequest(method: "POST", url: "/apps/me/platform-notifications/force-webhook/ios")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/platform-notifications/force-webhook/ios")
         _ = request.addData("platformTxId", String(transactionId))
         _ = request.addData("productId", productId.uuidString)
         _ = request.addData("isSandbox", isSandbox)
@@ -390,6 +410,7 @@ class MobilyPurchaseAPI {
         }
 
         if !res.success {
+            Logger.w("[forceWebhook] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -398,7 +419,7 @@ class MobilyPurchaseAPI {
      Get webhook status from transactionID
      */
     public func getWebhookResult(signedTransaction: String, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterDate: Date?) async throws -> MobilyWebhookResult {
-        let request = ApiRequest(method: "POST", url: "/apps/me/events/webhook-result/ios")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/events/webhook-result/ios")
         request.setData([
             "signedTransaction": signedTransaction,
             "platformTxId": String(transactionId),
@@ -424,6 +445,7 @@ class MobilyPurchaseAPI {
                 event: jsonResponse["event"] as? [String: Any]
             )
         } else {
+            Logger.w("[getWebhookResult] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -432,7 +454,7 @@ class MobilyPurchaseAPI {
      Upload monitoring file
      */
     public func uploadMonitoring(customerId: UUID?, file: URL) async throws {
-        let request = ApiRequest(method: "POST", url: "/apps/me/monitoring/upload")
+        let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/monitoring/upload")
         _ = request.addData("platform", "ios")
         if customerId != nil {
             _ = request.addData("customerId", customerId!.uuidString.lowercased())
@@ -445,12 +467,13 @@ class MobilyPurchaseAPI {
         }
 
         if !res.success {
+            Logger.w("[uploadMonitoring] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
 
     public func isForwardingEnable(externalRef: String?) async throws -> Bool {
-        let request = ApiRequest(method: "GET", url: "/apps/me/customers/is-forwarding-enable")
+        let request = ApiRequest(method: "GET", url: "/apps/\(self.appId)/customers/is-forwarding-enable")
         if externalRef != nil {
             _ = request.addParam("externalRef", externalRef!)
         }
@@ -465,6 +488,7 @@ class MobilyPurchaseAPI {
             let jsonResponse = res.json()["data"] as! [String: Any]
             return jsonResponse["enable"] as! Bool
         } else {
+            Logger.w("[isForwardingEnable] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }

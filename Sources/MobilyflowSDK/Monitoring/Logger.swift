@@ -197,7 +197,7 @@ class Logger {
         
         let time = dateFormatter.string(from: Date())
         
-        if allowLogging {
+        if allowLogging || level == .error || level == .warn {
             print("\(time) [\(tag)] \(LogLevel.getIcon(level)) \(message)")
             
             if error != nil {
