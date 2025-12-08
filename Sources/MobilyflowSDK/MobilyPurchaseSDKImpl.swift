@@ -54,7 +54,7 @@ import StoreKit
         startUpdateTransactionTask()
     }
 
-    @objc public func reinit(
+    @objc func reinit(
         appId: String,
         apiKey: String,
         environment: String,
