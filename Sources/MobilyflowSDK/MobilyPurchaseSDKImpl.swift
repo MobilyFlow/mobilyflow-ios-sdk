@@ -563,7 +563,7 @@ import StoreKit
                         event = await MobilyEvent.parse(result.event!, storeAccountTransactions: storeAccountTransactions)
                     }
                 }
-                try? await syncer!.ensureSync(force: true)
+                try await syncer!.ensureSync(force: true)
             }
         }
         return event
