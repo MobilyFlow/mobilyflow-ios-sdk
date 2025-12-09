@@ -16,7 +16,7 @@ class MobilyPurchaseRefundRequestManager {
     }
 
     private func showDialog(request: [String: Any]) async -> Bool {
-        await withCheckedContinuation { continuation in
+        return await withCheckedContinuation { continuation in
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: "Information", message: request["message"] as? String, preferredStyle: .alert)
 

@@ -109,7 +109,7 @@ class MobilyPurchaseSDKSyncer {
         self.entitlements = entitlements
     }
 
-    func getEntitlement(forSubscriptionGroup subscriptionGroupId: String) async throws -> MobilyCustomerEntitlement? {
+    func getEntitlement(forSubscriptionGroup subscriptionGroupId: UUID) async throws -> MobilyCustomerEntitlement? {
         if customer == nil {
             throw MobilyError.no_customer_logged
         }

@@ -102,7 +102,7 @@ class MobilyPurchaseSDKHelper {
         var iosOffer: Product.SubscriptionOffer?
 
         if product.type == MobilyProductType.SUBSCRIPTION && options?.offer != nil {
-            if options!.offer!.type == MobilyProductOfferType.FREE_TRIAL {
+            if options!.offer!.type == MobilyProductOfferType.INTRODUCTORY {
                 iosOffer = iosProduct.subscription!.introductoryOffer
             } else if options!.offer!.ios_offerId != nil {
                 if await isEligibleForPromotionnalOffer() {
