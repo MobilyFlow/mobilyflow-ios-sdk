@@ -209,6 +209,7 @@ class Logger {
         if error != nil {
             message += "\n\t\(error!): \(error!.localizedDescription)"
         }
+        CrashlyticsLogger.log(message)
         message += "\n"
         self.fileHandle?.write(string: message)
     }
