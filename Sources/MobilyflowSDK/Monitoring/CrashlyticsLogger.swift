@@ -23,6 +23,7 @@ class CrashlyticsLogger {
         // Try to get the FIRCrashlytics class dynamically
         guard let crashlyticsClass = NSClassFromString("FIRCrashlytics") as? NSObject.Type else {
             isAvailable = false
+            print("[MobilyFlow] Firebase not detected")
             return
         }
 
@@ -30,6 +31,7 @@ class CrashlyticsLogger {
         let crashlyticsSelector = NSSelectorFromString("crashlytics")
         guard crashlyticsClass.responds(to: crashlyticsSelector) else {
             isAvailable = false
+            print("[MobilyFlow] Firebase detected but no shared crashlytics instance")
             return
         }
 
