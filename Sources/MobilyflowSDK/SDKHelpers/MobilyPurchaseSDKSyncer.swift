@@ -33,6 +33,7 @@ class MobilyPurchaseSDKSyncer {
         if self.customer != nil && jsonEntitlements != nil {
             try await syncExecutor.execute {
                 Logger.d("Sync Entitlement with login data")
+                CrashlyticsLogger.log("Sync Entitlement with login data (\(jsonEntitlements?.count ?? -1))")
                 try await self._syncEntitlements(jsonEntitlements: jsonEntitlements)
             }
         }
@@ -103,7 +104,9 @@ class MobilyPurchaseSDKSyncer {
         var entitlements: [MobilyCustomerEntitlement] = []
 
         for jsonEntitlement in jsonEntitlements {
+            CrashlyticsLogger.log("Parse Entitlement in sync (\(jsonEntitlement))")
             entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement, storeAccountTransactions: self.storeAccountTransactions!))
+            CrashlyticsLogger.log("Parse Entitlement done")
         }
 
         self.entitlements = entitlements

@@ -69,6 +69,8 @@ class MobilyPurchaseAPI {
      */
     public func login(externalRef: String) async throws -> LoginResponse {
         let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/customers/login/ios")
+
+        CrashlyticsLogger.log("Build API login request")
         _ = request.setData([
             "externalRef": externalRef,
             "environment": environment,
@@ -85,11 +87,14 @@ class MobilyPurchaseAPI {
                 "adid": DeviceInfo.getAdid() ?? NSNull(),
             ],
         ])
+        CrashlyticsLogger.log("Send API login request")
 
         guard let res = try? await self.helper.request(request) else {
+            CrashlyticsLogger.log("API login request -> Server Unavailable")
             throw MobilyError.server_unavailable
         }
 
+        CrashlyticsLogger.log("Send API login request result (\(res.success)) -> \(res.string())")
         if res.success {
             let data = res.json()["data"] as! [String: Any]
 
