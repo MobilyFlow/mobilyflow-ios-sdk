@@ -32,7 +32,7 @@ class MobilyPurchaseSDKSyncer {
         }
         if self.customer != nil && jsonEntitlements != nil {
             try await syncExecutor.execute {
-                Logger.d("Sync Entitlement with login data")
+                Logger.d("Sync Entitlement with login data (\(jsonEntitlements?.count ?? -1))")
                 try await self._syncEntitlements(jsonEntitlements: jsonEntitlements)
             }
         }

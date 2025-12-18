@@ -204,13 +204,22 @@ class Logger {
                 print("\t\(error!): \(error!.localizedDescription)")
             }
         }
-        
-        var message = "\(time) [\(LogLevel.getLabel(level))] \(message)"
-        if error != nil {
-            message += "\n\t\(error!): \(error!.localizedDescription)"
+
+        // Log message to Crashlytics
+        if CrashlyticsLogger.isCrashlyticsAvailable() {
+            var crashlitycsMessage = "[\(tag)] \(LogLevel.getLabel(level)) \(message)"
+            if error != nil {
+                crashlitycsMessage += "\n\t\(error!): \(error!.localizedDescription)"
+            }
+            CrashlyticsLogger.log(message)
         }
-        message += "\n"
-        self.fileHandle?.write(string: message)
+        
+        var logMessage = "\(time) [\(LogLevel.getLabel(level))] \(message)"
+        if error != nil {
+            logMessage += "\n\t\(error!): \(error!.localizedDescription)"
+        }
+        logMessage += "\n"
+        self.fileHandle?.write(string: logMessage)
     }
     
     static func d(_ message: String, error: Error? = nil) {

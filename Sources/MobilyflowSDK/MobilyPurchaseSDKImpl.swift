@@ -123,6 +123,8 @@ import StoreKit
     /* ******************************************************************* */
 
     @objc public func login(externalRef: String) async throws -> MobilyCustomer {
+        Logger.d("Login customer with externalRef \(externalRef)")
+
         // 1. Logout previous customer
         self.logout()
 
@@ -130,6 +132,7 @@ import StoreKit
         let loginResponse = try await self.API!.login(externalRef: externalRef)
         self.customer = MobilyCustomer.parse(loginResponse.customer)
         diagnostics.customerId = self.customer?.id
+
         try await self.syncer!.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
         // 3. Map transaction that are not known by the server
@@ -144,6 +147,7 @@ import StoreKit
 
         // 4. Send Refund Requests Notifications
         if let refundRequests = loginResponse.appleRefundRequests {
+            Logger.d("Refund request detected")
             Task(priority: .background) {
                 // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
                 await self.refundRequestManager!.manageRefundRequests(refundRequests)
@@ -152,9 +156,9 @@ import StoreKit
 
         // 5. Send monitoring if requested
         if loginResponse.haveMonitoringRequests {
+            Logger.d("Monitoring request detected")
             Task(priority: .background) {
                 // When monitoring is requested, send 10 days
-                Logger.d("Send monitoring as requested by the server")
                 self.diagnostics.sendDiagnostic(sinceDays: 10)
             }
         }
