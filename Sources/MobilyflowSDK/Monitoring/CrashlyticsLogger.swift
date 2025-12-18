@@ -23,7 +23,6 @@ class CrashlyticsLogger {
         // Try to get the FIRCrashlytics class dynamically
         guard let crashlyticsClass = NSClassFromString("FIRCrashlytics") as? NSObject.Type else {
             isAvailable = false
-            print("[MobilyFlow] Firebase not detected")
             return
         }
 
@@ -31,7 +30,6 @@ class CrashlyticsLogger {
         let crashlyticsSelector = NSSelectorFromString("crashlytics")
         guard crashlyticsClass.responds(to: crashlyticsSelector) else {
             isAvailable = false
-            print("[MobilyFlow] Firebase detected but no shared crashlytics instance")
             return
         }
 
@@ -39,7 +37,7 @@ class CrashlyticsLogger {
         isAvailable = crashlyticsInstance != nil
 
         if isAvailable {
-            print("[MobilyFlow] Firebase detected")
+            print("[MobilyFlow] Firebase Crashlytics detected")
         }
     }
 
@@ -65,16 +63,6 @@ class CrashlyticsLogger {
         let logSelector = NSSelectorFromString("log:")
         guard instance.responds(to: logSelector) else { return }
 
-        let time = dateFormatter.string(from: Date())
-        instance.perform(logSelector, with: "\(time) [MobilySDK] \(message)")
-    }
-
-    /// Log a formatted message to Firebase Crashlytics.
-    /// - Parameters:
-    ///   - format: The format string
-    ///   - args: The arguments to format
-    static func log(_ format: String, _ args: CVarArg...) {
-        let message = String(format: format, arguments: args)
-        log(message)
+        instance.perform(logSelector, with: message)
     }
 }

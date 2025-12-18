@@ -123,22 +123,19 @@ import StoreKit
     /* ******************************************************************* */
 
     @objc public func login(externalRef: String) async throws -> MobilyCustomer {
-        CrashlyticsLogger.log("Start login \(externalRef)")
+        Logger.d("Login customer with externalRef \(externalRef)")
 
         // 1. Logout previous customer
         self.logout()
 
         // 2. Login
         let loginResponse = try await self.API!.login(externalRef: externalRef)
-        CrashlyticsLogger.log("Login Response received")
         self.customer = MobilyCustomer.parse(loginResponse.customer)
         diagnostics.customerId = self.customer?.id
 
-        CrashlyticsLogger.log("Login to Syncer")
         try await self.syncer!.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
         // 3. Map transaction that are not known by the server
-        CrashlyticsLogger.log("Map transactions")
         let transactionToMap = await MobilyPurchaseSDKHelper.getTransactionToMap(loginResponse.platformOriginalTransactionIds)
         if !transactionToMap.isEmpty {
             do {
@@ -149,8 +146,8 @@ import StoreKit
         }
 
         // 4. Send Refund Requests Notifications
-        CrashlyticsLogger.log("Manage refund request")
         if let refundRequests = loginResponse.appleRefundRequests {
+            Logger.d("Refund request detected")
             Task(priority: .background) {
                 // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
                 await self.refundRequestManager!.manageRefundRequests(refundRequests)
@@ -158,11 +155,10 @@ import StoreKit
         }
 
         // 5. Send monitoring if requested
-        CrashlyticsLogger.log("Manage monitoring request")
         if loginResponse.haveMonitoringRequests {
+            Logger.d("Monitoring request detected")
             Task(priority: .background) {
                 // When monitoring is requested, send 10 days
-                Logger.d("Send monitoring as requested by the server")
                 self.diagnostics.sendDiagnostic(sinceDays: 10)
             }
         }
@@ -294,18 +290,14 @@ import StoreKit
             throw MobilyError.no_customer_logged
         }
 
-        CrashlyticsLogger.log("getExternalEntitlements -> getAllTransactionSignatures")
         let (transactionToClaim, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
-        CrashlyticsLogger.log("getExternalEntitlements -> claim \(transactionToClaim.count) transactions")
         var entitlements: [MobilyCustomerEntitlement] = []
 
         if !transactionToClaim.isEmpty {
             let jsonEntitlements = try await self.API!.getCustomerExternalEntitlements(customerId: customer!.id, transactions: transactionToClaim)
 
             for jsonEntitlement in jsonEntitlements {
-                CrashlyticsLogger.log("getExternalEntitlements -> parse entitlement \(jsonEntitlement)")
                 entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement, storeAccountTransactions: storeAccountTransactions))
-                CrashlyticsLogger.log("getExternalEntitlements -> parse done")
             }
         }
 

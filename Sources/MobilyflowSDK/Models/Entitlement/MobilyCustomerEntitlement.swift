@@ -34,14 +34,10 @@ import StoreKit
         var subscription: MobilySubscription? = nil
 
         if type == MobilyProductType.ONE_TIME {
-            CrashlyticsLogger.log("Parse ONE_TIME prodcut \(jsonEntity)")
             item = await MobilyItem.parse(jsonEntity)
             product = item!.Product!
-            CrashlyticsLogger.log("Parse ONE_TIME prodcut done")
         } else {
-            CrashlyticsLogger.log("Parse SUBSCRIPTION prodcut \(jsonEntity) with storeAccountTransactions \(storeAccountTransactions.count)")
             subscription = await MobilySubscription.parse(jsonEntity, storeAccountTransactions: storeAccountTransactions)
-            CrashlyticsLogger.log("Parse SUBSCRIPTION prodcut done")
             product = subscription!.Product!
         }
 
