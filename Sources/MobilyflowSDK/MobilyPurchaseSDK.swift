@@ -152,24 +152,4 @@ import StoreKit
     @objc public static func getSDKVersion() -> String {
         return MobilyFlowVersion.current
     }
-
-    /* ************************************************************* */
-    /* *************************** DEBUG *************************** */
-    /* ************************************************************* */
-    @objc public static func debug(skus: [String]) async throws {
-        do {
-            let storeProducts = try await Product.products(for: skus)
-            if storeProducts.isEmpty {
-                Logger.w("No products found for skus: \(skus)")
-            } else {
-                for storeProduct in storeProducts {
-                    Logger.d("Product: \(storeProduct.id) -> \(storeProduct.displayName)")
-                }
-            }
-        } catch {
-            Logger.e("Debug error: \(error.localizedDescription)")
-            Logger.e("Debug error: \(error)")
-        }
-        try MobilyPurchaseSDK.sendDiagnostic()
-    }
 }

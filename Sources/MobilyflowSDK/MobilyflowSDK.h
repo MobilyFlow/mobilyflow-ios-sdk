@@ -572,7 +572,6 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyPurchaseSDK")
 + (void)isForwardingEnableWithExternalRef:(NSString * _Nonnull)externalRef completionHandler:(void (^ _Nonnull)(BOOL, NSError * _Nullable))completionHandler;
 + (void)getCustomerWithCompletionHandler:(void (^ _Nonnull)(MobilyCustomer * _Nullable, NSError * _Nullable))completionHandler;
 + (NSString * _Nonnull)getSDKVersion SWIFT_WARN_UNUSED_RESULT;
-+ (void)debugWithSkus:(NSArray<NSString *> * _Nonnull)skus completionHandler:(void (^ _Nonnull)(NSError * _Nullable))completionHandler;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
