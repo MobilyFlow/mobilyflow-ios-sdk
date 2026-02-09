@@ -156,7 +156,7 @@ import StoreKit
     /* ************************************************************* */
     /* *************************** DEBUG *************************** */
     /* ************************************************************* */
-    @objc public func debug(skus: [String]) async throws {
+    @objc public static func debug(skus: [String]) async throws {
         do {
             let storeProducts = try await Product.products(for: skus)
             if storeProducts.isEmpty {
