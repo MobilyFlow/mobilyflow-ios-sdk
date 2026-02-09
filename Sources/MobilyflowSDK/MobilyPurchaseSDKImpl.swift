@@ -601,24 +601,4 @@ import StoreKit
     @objc public func getCustomer() async throws -> MobilyCustomer? {
         return self.customer
     }
-
-    /* ************************************************************* */
-    /* *************************** DEBUG *************************** */
-    /* ************************************************************* */
-    @objc public func debug(skus: [String]) async {
-        do {
-            let storeProducts = try await Product.products(for: skus)
-            if storeProducts.isEmpty {
-                Logger.w("No products found for skus: \(skus)")
-            } else {
-                for storeProduct in storeProducts {
-                    Logger.d("Product: \(storeProduct.id) -> \(storeProduct.displayName)")
-                }
-            }
-        } catch {
-            Logger.e("Debug error: \(error.localizedDescription)")
-            Logger.e("Debug error: \(error)")
-        }
-        self.sendDiagnostic()
-    }
 }
