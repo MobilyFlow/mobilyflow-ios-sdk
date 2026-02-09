@@ -147,7 +147,7 @@ import StoreKit
 
         // 4. Send Refund Requests Notifications
         if let refundRequests = loginResponse.appleRefundRequests {
-            Logger.d("Refund request detected")
+            Logger.d("Refund request detected (\(refundRequests.count))")
             Task(priority: .background) {
                 // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
                 await self.refundRequestManager!.manageRefundRequests(refundRequests)
@@ -163,6 +163,7 @@ import StoreKit
             }
         }
 
+        Logger.d("Customer logged successfully")
         return self.customer!
     }
 
@@ -599,5 +600,25 @@ import StoreKit
 
     @objc public func getCustomer() async throws -> MobilyCustomer? {
         return self.customer
+    }
+
+    /* ************************************************************* */
+    /* *************************** DEBUG *************************** */
+    /* ************************************************************* */
+    @objc public func debug(skus: [String]) async {
+        do {
+            let storeProducts = try await Product.products(for: skus)
+            if storeProducts.isEmpty {
+                Logger.w("No products found for skus: \(skus)")
+            } else {
+                for storeProduct in storeProducts {
+                    Logger.d("Product: \(storeProduct.id) -> \(storeProduct.displayName)")
+                }
+            }
+        } catch {
+            Logger.e("Debug error: \(error.localizedDescription)")
+            Logger.e("Debug error: \(error)")
+        }
+        self.sendDiagnostic()
     }
 }
