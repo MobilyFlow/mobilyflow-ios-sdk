@@ -182,10 +182,13 @@ import StoreKit
         try await syncer!.ensureSync()
 
         // 1. Get product from Mobily API
+        Logger.d("[getProducts] identifiers: \(identifiers)")
         let jsonProducts = try await self.API!.getProducts(identifiers: identifiers)
+        Logger.d("[getProducts] jsonProducts: \(jsonProducts)")
 
         // 2. Get product from App Store
         let iosIdentifiers = getAllIosSkuForJsonProducts(jsonProducts: jsonProducts)
+        Logger.d("[getProducts] iosIdentifiers: \(iosIdentifiers)")
         await MobilyPurchaseRegistry.registerIOSProductSkus(iosIdentifiers)
 
         // 3. Parse to MobilyProduct
@@ -194,6 +197,8 @@ import StoreKit
         for jsonProduct in jsonProducts {
             let mobilyProduct = await MobilyProduct.parse(jsonProduct)
             productsCaches[mobilyProduct.id] = mobilyProduct
+
+            Logger.d("[getProducts] product: \(mobilyProduct.id) -> \(mobilyProduct.status)")
 
             if !onlyAvailable || mobilyProduct.status == MobilyProductStatus.AVAILABLE {
                 mobilyProducts.append(mobilyProduct)

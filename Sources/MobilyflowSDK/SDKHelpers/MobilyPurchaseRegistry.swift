@@ -19,9 +19,12 @@ class MobilyPurchaseRegistry {
 
     static func registerIOSProductSkus(_ skus: [String]) async {
         let unknownSkus: [String] = skus.filter { skuToProduct[$0] == nil }
+        Logger.d("[registerIOSProductSkus] skus: \(skus)")
+        Logger.d("[registerIOSProductSkus] unknownSkus: \(unknownSkus)")
 
         if !unknownSkus.isEmpty {
             guard let storeProducts = try? await Product.products(for: unknownSkus) else {
+                Logger.d("[registerIOSProductSkus] Product.products return null")
                 return
             }
             registerIOSProducts(storeProducts)
@@ -30,6 +33,7 @@ class MobilyPurchaseRegistry {
 
     static func registerIOSProducts(_ products: [Product]) {
         for product in products {
+            Logger.d("[registerIOSProducts] \(product.id) -> \(product.displayName)")
             registerIOSProduct(product)
         }
     }
