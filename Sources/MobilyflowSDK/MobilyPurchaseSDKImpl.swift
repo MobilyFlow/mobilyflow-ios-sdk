@@ -148,13 +148,17 @@ import StoreKit
         // 4. Send Refund Requests Notifications
         if let refundRequests = loginResponse.appleRefundRequests {
             Logger.d("Refund request detected (\(refundRequests.count))")
-            Task(priority: .background) {
-                // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
-                await self.refundRequestManager!.manageRefundRequests(refundRequests)
+            if refundRequests.count > 0 {
+                Task(priority: .background) {
+                    // TODO: We may implement a system to show refund request when App foreground after 10s, not only when login
+                    await self.refundRequestManager!.manageRefundRequests(refundRequests)
+                }
             }
+            Logger.d("Refund request done")
         }
 
         // 5. Send monitoring if requested
+        Logger.d("haveMonitoringRequests: \(loginResponse.haveMonitoringRequests)")
         if loginResponse.haveMonitoringRequests {
             Logger.d("Monitoring request detected")
             Task(priority: .background) {
