@@ -99,7 +99,13 @@ class MobilyPurchaseSDKSyncer {
     private func _syncEntitlements(jsonEntitlements overrideJsonEntitlements: [[String: Any]]? = nil) async throws {
         try await _syncStoreAccountTransactions()
 
-        let jsonEntitlements = overrideJsonEntitlements != nil ? overrideJsonEntitlements! : try await self.API.getCustomerEntitlements(customerId: customer!.id)
+        guard let customer = self.customer else {
+            // TODO: this is a hotfix, customer should not be nil at this time but some race condition (login while sync) make it to be nil
+            Logger.e("_syncEntitlements with null customer")
+            return
+        }
+
+        let jsonEntitlements = overrideJsonEntitlements != nil ? overrideJsonEntitlements! : try await self.API.getCustomerEntitlements(customerId: customer.id)
         var entitlements: [MobilyCustomerEntitlement] = []
 
         for jsonEntitlement in jsonEntitlements {
