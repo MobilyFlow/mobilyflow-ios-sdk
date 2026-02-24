@@ -51,20 +51,32 @@ class MobilyPurchaseSDKWaiter {
         var retry = 0
         var result = MobilyWebhookResult(status: MobilyWebhookStatus.PENDING, event: nil)
 
+        // Remove 5s to the signed date for safety
+        var downgradeAfterDate = downgradeToProductId == nil ? nil : transaction.signedDate.addingTimeInterval(-5.0)
+
         while result.status == MobilyWebhookStatus.PENDING {
             result = try await self.API.getWebhookResult(
                 signedTransaction: signedTx.jwsRepresentation,
                 transactionId: transaction.id,
                 isSandbox: isSandbox,
-                // Remove 5s to the signed date for safety
                 downgradeToProductId: downgradeToProductId,
-                downgradeAfterDate: downgradeToProductId == nil ? nil : transaction.signedDate.addingTimeInterval(-5.0)
+                downgradeAfterDate: downgradeAfterDate
             )
 
             if result.status == MobilyWebhookStatus.PENDING {
                 // Exit the wait function after 1 minute
                 if startTime + 60 < Date().timeIntervalSince1970 {
                     Logger.e("Webhook still pending after 1 minutes (The user has probably paid without being credited)")
+                    Logger.e(" -> transaction.id: \(transaction.id)")
+                    Logger.e(" -> transaction.originalID: \(transaction.originalID)")
+                    Logger.e(" -> transaction.signedDate: \(transaction.signedDate)")
+                    Logger.e(" -> isSandbox: \(isSandbox)")
+                    Logger.e(" -> downgradeToProductId: \(downgradeToProductId)")
+                    Logger.e(" -> downgradeAfterDate: \(downgradeAfterDate)")
+                    Logger.e(" -> appStoreReceiptURL: \(Bundle.main.appStoreReceiptURL)")
+                    if #available(iOS 16.0, *) {
+                        Logger.e(" -> transaction.environment: \(transaction.environment)")
+                    }
                     diagnostics.sendDiagnostic()
                     throw MobilyPurchaseError.webhook_not_processed
                 }
