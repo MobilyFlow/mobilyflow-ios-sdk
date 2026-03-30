@@ -297,16 +297,11 @@ actor MobilyPurchaseSDKImpl {
     }
 
     public func getExternalEntitlements() async throws -> [MobilyCustomerEntitlement] {
-        // TODO: Manage it when not logged, same on Android
-        guard let customer = self.customer else {
-            throw MobilyError.no_customer_logged
-        }
-
         let (transactionToClaim, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
         var entitlements: [MobilyCustomerEntitlement] = []
 
         if !transactionToClaim.isEmpty {
-            let jsonEntitlements = try await self.API.getCustomerExternalEntitlements(customerId: customer.id, transactions: transactionToClaim)
+            let jsonEntitlements = try await self.API.getCustomerExternalEntitlements(transactions: transactionToClaim, customerId: customer?.id)
 
             for jsonEntitlement in jsonEntitlements {
                 entitlements.append(await MobilyCustomerEntitlement.parse(jsonEntitlement, storeAccountTransactions: storeAccountTransactions))
@@ -608,7 +603,7 @@ actor MobilyPurchaseSDKImpl {
     }
 
     public func isForwardingEnable(externalRef: String) async throws -> Bool {
-        return try await API.isForwardingEnable(externalRef: externalRef)
+        return try await API.isForwardingEnableByExternalRef(externalRef: externalRef)
     }
 
     public func getCustomer() async throws -> MobilyCustomer? {

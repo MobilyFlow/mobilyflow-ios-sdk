@@ -48,10 +48,9 @@ class MobilyPurchaseSDKSyncer {
         }
 
         if customer.forwardNotificationEnable {
-            // TODO: We check forwarding on externalRef while this field is optionnal, we should switch it to customerId
             // If a customer is flag as forwarded, we double check if it's still the case (so if we disable forwarding
             // on the backoffice, it's take effect instantly)
-            if let isForwardingEnable = try? await self.API.isForwardingEnable(externalRef: customer.externalRef) {
+            if let isForwardingEnable = try? await self.API.isForwardingEnableByCustomerId(customerId: customer.id) {
                 customer.forwardNotificationEnable = isForwardingEnable
             }
         }
