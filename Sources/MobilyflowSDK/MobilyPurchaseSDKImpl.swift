@@ -26,7 +26,7 @@ actor MobilyPurchaseSDKImpl {
     private var isPurchasing = false
     private var productsCaches: [UUID: MobilyProduct] = [:]
 
-    @objc public init(
+    public init(
         appId: String,
         apiKey: String,
         environment: String,
