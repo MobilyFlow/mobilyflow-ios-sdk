@@ -47,12 +47,6 @@ class CrashlyticsLogger {
         return isAvailable
     }
 
-    private static let dateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withFractionalSeconds, .withInternetDateTime]
-        return formatter
-    }()
-
     /// Log a message to Firebase Crashlytics.
     /// Messages will appear in the "Logs" tab of a crash report.
     /// - Parameter message: The message to log
