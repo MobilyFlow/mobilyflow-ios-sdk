@@ -65,23 +65,8 @@ import StoreKit
         let referenceName = jsonOffer["referenceName"] as! String
         let extras = jsonOffer["extras"] as? [String: Any]
 
-        // TODO: Retro compatibility with old backend, remove it after API updates
-        var type: String
-        var pricingMode: String
-
-        let typeStr = jsonOffer["type"] as! String
-        if typeStr == "free_trial" {
-            type = MobilyProductOfferType.INTRODUCTORY
-            pricingMode = MobilyProductOfferPricingMode.FREE_TRIAL
-        } else if typeStr == "recurring" {
-            type = MobilyProductOfferType.DEVELOPER_DETERMINED
-            pricingMode = MobilyProductOfferPricingMode.RECURRING
-        } else {
-            type = MobilyProductOfferType.parse(typeStr)
-            pricingMode = MobilyProductOfferPricingMode.parse(jsonOffer["pricingMode"] as! String)
-        }
-        // let type = MobilyProductOfferType.parse(jsonOffer["type"] as! String)
-        // let pricingMode = MobilyProductOfferPricingMode.parse(jsonOffer["pricingMode"] as! String)
+        let type = MobilyProductOfferType.parse(jsonOffer["type"] as! String)
+        let pricingMode = MobilyProductOfferPricingMode.parse(jsonOffer["pricingMode"] as! String)
 
         let ios_offerId = jsonOffer["ios_offerId"] as? String
         let name = getTranslationValue(jsonOffer["_translations"] as? [[String: Any]], field: "name") ?? ""

@@ -86,8 +86,6 @@ class MobilyPurchaseSDKSyncer {
         try await _syncStoreAccountTransactions()
 
         guard let customer = self.customer else {
-            // TODO: this is a hotfix, customer should not be nil at this time but some race condition (login while sync) make it to be nil
-            Logger.e("_syncEntitlements with null customer")
             return
         }
 
