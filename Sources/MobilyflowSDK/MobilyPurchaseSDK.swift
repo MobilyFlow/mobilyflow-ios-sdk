@@ -18,16 +18,18 @@ import StoreKit
         apiKey: String,
         environment: String,
         options: MobilyPurchaseSDKOptions? = nil
-    ) {
+    ) async {
         if let impl = instance {
-            impl.reinit(appId: appId, apiKey: apiKey, environment: environment, options: options)
+            await impl.reinit(appId: appId, apiKey: apiKey, environment: environment, options: options)
         } else {
-            instance = MobilyPurchaseSDKImpl(
+            let impl = MobilyPurchaseSDKImpl(
                 appId: appId,
                 apiKey: apiKey,
                 environment: environment,
                 options: options
             )
+            await impl.reinit(appId: appId, apiKey: apiKey, environment: environment, options: options)
+            instance = impl
         }
     }
 
@@ -41,9 +43,9 @@ import StoreKit
         return true
     }
 
-    @objc public static func close() {
+    @objc public static func close() async {
         if try! ensureInit(checkOnly: true) {
-            instance?.close()
+            await instance?.close()
         }
         instance = nil
     }
@@ -53,9 +55,9 @@ import StoreKit
         return try await instance!.login(externalRef: externalRef)
     }
 
-    @objc public static func logout() {
+    @objc public static func logout() async {
         if try! ensureInit(checkOnly: true) {
-            instance!.logout()
+            await instance!.logout()
         }
     }
 
@@ -74,9 +76,9 @@ import StoreKit
         return try await instance!.getSubscriptionGroupById(id: id)
     }
 
-    @objc public static func DANGEROUS_getProductFromCacheWithId(_ id: UUID) -> MobilyProduct? {
+    @objc public static func DANGEROUS_getProductFromCacheWithId(_ id: UUID) async -> MobilyProduct? {
         if try! ensureInit(checkOnly: true) {
-            return instance!.getProductFromCacheWithId(id: id)
+            return await instance!.getProductFromCacheWithId(id: id)
         }
         return nil
     }
@@ -125,9 +127,9 @@ import StoreKit
         return try await instance!.purchaseProduct(product, options: options)
     }
 
-    @objc public static func sendDiagnostic() throws {
+    @objc public static func sendDiagnostic() async throws {
         _ = try ensureInit()
-        instance!.sendDiagnostic()
+        await instance!.sendDiagnostic()
     }
 
     @objc public static func getStoreCountry() async throws -> String? {

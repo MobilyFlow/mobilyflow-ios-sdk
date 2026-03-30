@@ -64,17 +64,21 @@ class AppLifecycleManager {
     }
 
     func unregisterAll() {
-        if crashObserverId != nil {
-            unregisterGlobalCrashHandler(crashObserverId!)
+        if let crashObserverId = crashObserverId {
+            unregisterGlobalCrashHandler(crashObserverId)
+            self.crashObserverId = nil
         }
-        if didBecomeActiveObserver != nil {
-            NotificationCenter.default.removeObserver(self.didBecomeActiveObserver!)
+        if let didBecomeActiveObserver = didBecomeActiveObserver {
+            NotificationCenter.default.removeObserver(didBecomeActiveObserver)
+            self.didBecomeActiveObserver = nil
         }
-        if didEnterBackgroundObserver != nil {
-            NotificationCenter.default.removeObserver(self.didEnterBackgroundObserver!)
+        if let didEnterBackgroundObserver = didEnterBackgroundObserver {
+            NotificationCenter.default.removeObserver(didEnterBackgroundObserver)
+            self.didEnterBackgroundObserver = nil
         }
-        if willTerminateObserver != nil {
-            NotificationCenter.default.removeObserver(self.willTerminateObserver!)
+        if let willTerminateObserver = willTerminateObserver {
+            NotificationCenter.default.removeObserver(willTerminateObserver)
+            self.willTerminateObserver = nil
         }
     }
 

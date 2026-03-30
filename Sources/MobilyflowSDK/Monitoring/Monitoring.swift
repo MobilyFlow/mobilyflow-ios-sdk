@@ -95,7 +95,7 @@ public class Monitoring {
         sendTask = nil
     }
     
-    private static func close() {
+    static func close() {
         guard let _ = try? checkInit() else {
             return
         }

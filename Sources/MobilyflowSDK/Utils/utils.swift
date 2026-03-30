@@ -175,7 +175,11 @@ func parseDateOpt(_ dateString: String?) -> Date? {
     return parseDate(dateString!)
 }
 
-func parseUUID(_ uuidString: String?) -> UUID? {
+func parseUUID(_ uuidString: String) -> UUID {
+    return UUID(uuidString: uuidString)!
+}
+
+func parseUUIDOpt(_ uuidString: String?) -> UUID? {
     if uuidString == nil || uuidString!.isEmpty {
         return nil
     }

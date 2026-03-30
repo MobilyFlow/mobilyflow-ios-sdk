@@ -69,21 +69,28 @@ class MobilyPurchaseAPI {
      */
     public func login(externalRef: String) async throws -> LoginResponse {
         let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/customers/login/ios")
+
+        var deviceData: [String: Any] = [
+            "osVersion": DeviceInfo.getOSVersion(),
+            "deviceModel": DeviceInfo.getDeviceModelName(),
+            "appVersionName": DeviceInfo.getAppVersionName(),
+            "appVersionCode": DeviceInfo.getAppBuildNumber(),
+            "sdkVersion": MobilyFlowVersion.current,
+            "installIdentifier": DeviceInfo.getInstallIdentifier(),
+        ]
+        if let idfv = DeviceInfo.getIdfv() {
+            deviceData["idfv"] = idfv
+        }
+        if let adid = DeviceInfo.getAdid() {
+            deviceData["adid"] = adid
+        }
+
         _ = request.setData([
             "externalRef": externalRef,
             "environment": environment,
             "locale": self.locale,
             "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
-            "device": [
-                "osVersion": DeviceInfo.getOSVersion(),
-                "deviceModel": DeviceInfo.getDeviceModelName(),
-                "appVersionName": DeviceInfo.getAppVersionName(),
-                "appVersionCode": DeviceInfo.getAppBuildNumber(),
-                "sdkVersion": MobilyFlowVersion.current,
-                "installIdentifier": DeviceInfo.getInstallIdentifier(),
-                "idfv": DeviceInfo.getIdfv() ?? NSNull(),
-                "adid": DeviceInfo.getAdid() ?? NSNull(),
-            ],
+            "device": deviceData,
         ])
 
         guard let res = try? await self.helper.request(request) else {
@@ -274,7 +281,7 @@ class MobilyPurchaseAPI {
             let jsonResponse = res.json()["data"] as! [String: Any]
             return Product.SubscriptionOffer.Signature(
                 keyID: jsonResponse["keyID"] as! String,
-                nonce: parseUUID(jsonResponse["nonce"] as! String)!,
+                nonce: parseUUID(jsonResponse["nonce"] as! String),
                 timestamp: jsonResponse["timestamp"] as! Int,
                 signature: Data(base64Encoded: jsonResponse["signature"] as! String)!
             )
@@ -420,7 +427,7 @@ class MobilyPurchaseAPI {
      */
     public func getWebhookResult(signedTransaction: String, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterDate: Date?) async throws -> MobilyWebhookResult {
         let request = ApiRequest(method: "POST", url: "/apps/\(self.appId)/events/webhook-result/ios")
-        request.setData([
+        _ = request.setData([
             "signedTransaction": signedTransaction,
             "platformTxId": String(transactionId),
             "environment": environment,

@@ -59,7 +59,7 @@ import StoreKit
 
         var iosOffer: Product.SubscriptionOffer?
 
-        let id = parseUUID(jsonOffer["id"] as? String)!
+        let id = parseUUID(jsonOffer["id"] as! String)
         let identifier = jsonOffer["identifier"] as! String
         let externalRef = jsonOffer["externalRef"] as? String
         let referenceName = jsonOffer["referenceName"] as! String

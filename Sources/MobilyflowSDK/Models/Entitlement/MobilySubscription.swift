@@ -115,16 +115,16 @@ import StoreKit
         }
 
         return MobilySubscription(
-            id: parseUUID(jsonSubscription["id"] as! String)!,
+            id: parseUUID(jsonSubscription["id"] as! String),
             createdAt: parseDate(jsonSubscription["createdAt"] as! String),
             updatedAt: parseDate(jsonSubscription["updatedAt"] as! String),
-            productId: parseUUID(jsonSubscription["productId"] as! String)!,
-            productOfferId: parseUUID(jsonSubscription["productOfferId"] as? String),
+            productId: parseUUID(jsonSubscription["productId"] as! String),
+            productOfferId: parseUUIDOpt(jsonSubscription["productOfferId"] as? String),
             startDate: parseDate(jsonSubscription["startDate"] as! String),
             endDate: parseDate(jsonSubscription["endDate"] as! String),
             platform: platform,
-            renewProductId: parseUUID(jsonSubscription["renewProductId"] as? String),
-            renewProductOfferId: parseUUID(jsonSubscription["renewProductOfferId"] as? String),
+            renewProductId: parseUUIDOpt(jsonSubscription["renewProductId"] as? String),
+            renewProductOfferId: parseUUIDOpt(jsonSubscription["renewProductOfferId"] as? String),
             lastPriceMillis: jsonSubscription["lastPriceMillis"] as! Int,
             regularPriceMillis: jsonSubscription["regularPriceMillis"] as! Int,
             renewPriceMillis: jsonSubscription["renewPriceMillis"] as! Int,

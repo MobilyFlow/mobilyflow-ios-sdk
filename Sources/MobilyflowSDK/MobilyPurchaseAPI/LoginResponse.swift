@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct LoginResponse: Sendable {
+struct LoginResponse {
     let customer: [String: Any]
     let entitlements: [[String: Any]]
     let platformOriginalTransactionIds: [String]
