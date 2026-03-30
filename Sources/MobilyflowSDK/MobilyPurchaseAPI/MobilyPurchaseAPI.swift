@@ -233,7 +233,7 @@ class MobilyPurchaseAPI {
         ])
 
         if let customerId = customerId {
-            request.addData("customerId", customerId.uuidString.lowercased())
+            _ = request.addData("customerId", customerId.uuidString.lowercased())
         }
 
         guard let res = try? await self.helper.request(request) else {
