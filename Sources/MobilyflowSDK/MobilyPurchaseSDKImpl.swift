@@ -11,6 +11,7 @@ import StoreKit
 actor MobilyPurchaseSDKImpl {
     public var appId: String
     public var environment: String
+    public var options: MobilyPurchaseSDKOptions?
 
     private let diagnostics: MobilyPurchaseSDKDiagnostics
     private var updateTxTask: Task<Void, Never>?
@@ -38,6 +39,8 @@ actor MobilyPurchaseSDKImpl {
 
         self.appId = appId
         self.environment = environment
+        self.options = options
+
         self.diagnostics = MobilyPurchaseSDKDiagnostics(customerId: nil)
         self.API = MobilyPurchaseAPI(appId: appId, apiKey: apiKey, environment: environment, locales: getPreferredLocales(options?.locales), apiURL: options?.apiURL)
         self.waiter = MobilyPurchaseSDKWaiter(API: API, diagnostics: self.diagnostics)
@@ -45,27 +48,11 @@ actor MobilyPurchaseSDKImpl {
         self.refundRequestManager = MobilyPurchaseRefundRequestManager(API: API)
     }
 
-    func reinit(
-        appId: String,
-        apiKey: String,
-        environment: String,
-        options: MobilyPurchaseSDKOptions? = nil
-    ) {
-        self.close()
-        Monitoring.close()
+    func uploadMonitoring(logFile: URL) async throws {
+        try await self.API.uploadMonitoring(customerId: self.customer?.id, file: logFile)
+    }
 
-        self.appId = appId
-        self.environment = environment
-
-        self.API = MobilyPurchaseAPI(appId: appId, apiKey: apiKey, environment: environment, locales: getPreferredLocales(options?.locales), apiURL: options?.apiURL)
-        self.waiter = MobilyPurchaseSDKWaiter(API: API, diagnostics: self.diagnostics)
-        self.syncer = MobilyPurchaseSDKSyncer(API: API)
-        self.refundRequestManager = MobilyPurchaseRefundRequestManager(API: API)
-
-        Monitoring.initialize(tag: "MobilyFlow", allowLogging: options?.debug ?? false) { logFile in
-            try await self.API.uploadMonitoring(customerId: self.customer?.id, file: logFile)
-        }
-
+    func initProcedure() {
         lifecycleManager.registerCrash { _, _ in
             // TODO: This sometime crash
             Logger.fileHandle?.flush()

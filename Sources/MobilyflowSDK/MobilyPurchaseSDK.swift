@@ -18,94 +18,104 @@ import StoreKit
         apiKey: String,
         environment: String,
         options: MobilyPurchaseSDKOptions? = nil
-    ) async {
-        if let impl = instance {
-            await impl.reinit(appId: appId, apiKey: apiKey, environment: environment, options: options)
-        } else {
-            let impl = MobilyPurchaseSDKImpl(
-                appId: appId,
-                apiKey: apiKey,
-                environment: environment,
-                options: options
-            )
-            await impl.reinit(appId: appId, apiKey: apiKey, environment: environment, options: options)
-            instance = impl
+    ) {
+        if let existingInstance = instance {
+            // Close existing instance asynchronously
+            Task(priority: .high) {
+                await existingInstance.close()
+            }
         }
+
+        let impl = MobilyPurchaseSDKImpl(
+            appId: appId,
+            apiKey: apiKey,
+            environment: environment,
+            options: options
+        )
+        Monitoring.initialize(tag: "MobilyFlow", allowLogging: options?.debug ?? false) { logFile in
+            try await impl.uploadMonitoring(logFile: logFile)
+        }
+        Task(priority: .high) {
+            await impl.initProcedure()
+        }
+        instance = impl
     }
 
-    private static func ensureInit(checkOnly: Bool = false) throws -> Bool {
-        if checkOnly {
-            return instance != nil
-        }
-        guard instance != nil else {
+    private static func ensureInit() throws -> MobilyPurchaseSDKImpl {
+        guard let instance = instance else {
             throw MobilyError.sdk_not_initialized
         }
-        return true
+        return instance
     }
 
-    @objc public static func close() async {
-        if try! ensureInit(checkOnly: true) {
-            await instance?.close()
+    @objc public static func close() {
+        guard let instance = instance else {
+            return
         }
-        instance = nil
+
+        Task(priority: .high) {
+            await instance.close()
+        }
+        self.instance = nil
     }
 
     @objc public static func login(externalRef: String) async throws -> MobilyCustomer {
-        _ = try ensureInit()
-        return try await instance!.login(externalRef: externalRef)
+        let instance = try ensureInit()
+        return try await instance.login(externalRef: externalRef)
     }
 
     @objc public static func logout() async {
-        if try! ensureInit(checkOnly: true) {
-            await instance!.logout()
+        guard let instance = instance else {
+            return
         }
+        await instance.logout()
     }
 
     @objc public static func getProducts(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilyProduct] {
-        _ = try ensureInit()
-        return try await instance!.getProducts(identifiers: identifiers, onlyAvailable: onlyAvailable)
+        let instance = try ensureInit()
+        return try await instance.getProducts(identifiers: identifiers, onlyAvailable: onlyAvailable)
     }
 
     @objc public static func getSubscriptionGroups(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilySubscriptionGroup] {
-        _ = try ensureInit()
-        return try await instance!.getSubscriptionGroups(identifiers: identifiers, onlyAvailable: onlyAvailable)
+        let instance = try ensureInit()
+        return try await instance.getSubscriptionGroups(identifiers: identifiers, onlyAvailable: onlyAvailable)
     }
 
     @objc public static func getSubscriptionGroupById(_ id: UUID) async throws -> MobilySubscriptionGroup {
-        _ = try ensureInit()
-        return try await instance!.getSubscriptionGroupById(id: id)
+        let instance = try ensureInit()
+        return try await instance.getSubscriptionGroupById(id: id)
     }
 
     @objc public static func DANGEROUS_getProductFromCacheWithId(_ id: UUID) async -> MobilyProduct? {
-        if try! ensureInit(checkOnly: true) {
-            return await instance!.getProductFromCacheWithId(id: id)
+        guard let instance = instance else {
+            return nil
         }
-        return nil
+        return await instance.getProductFromCacheWithId(id: id)
     }
 
     @objc public static func getEntitlementForSubscription(subscriptionGroupId: UUID) async throws -> MobilyCustomerEntitlement? {
-        _ = try ensureInit()
-        return try await instance!.getEntitlementForSubscription(subscriptionGroupId: subscriptionGroupId)
+        let instance = try ensureInit()
+        return try await instance.getEntitlementForSubscription(subscriptionGroupId: subscriptionGroupId)
     }
 
     @objc public static func getEntitlement(productId: UUID) async throws -> MobilyCustomerEntitlement? {
-        _ = try ensureInit()
-        return try await instance!.getEntitlement(productId: productId)
+        let instance = try ensureInit()
+        return try await instance.getEntitlement(productId: productId)
     }
 
     @objc public static func getEntitlements(productIds: [UUID]?) async throws -> [MobilyCustomerEntitlement] {
-        _ = try ensureInit()
-        return try await instance!.getEntitlements(productIds: productIds)
+        let instance = try ensureInit()
+        return try await instance.getEntitlements(productIds: productIds)
     }
 
     @objc public static func getExternalEntitlements() async throws -> [MobilyCustomerEntitlement] {
-        _ = try ensureInit()
-        return try await instance!.getExternalEntitlements()
+        let instance = try ensureInit()
+        return try await instance.getExternalEntitlements()
     }
 
     @objc public static func requestTransferOwnership() async throws -> String {
-        _ = try ensureInit()
-        return try await instance!.requestTransferOwnership()
+        let instance = try ensureInit()
+        return try await instance.requestTransferOwnership()
     }
 
     @objc public static func openManageSubscription() async {
@@ -113,28 +123,28 @@ import StoreKit
     }
 
     @objc public static func openRefundDialog(forProduct: MobilyProduct) async throws -> String {
-        _ = try ensureInit()
-        return await instance!.openRefundDialog(forProduct: forProduct)
+        let instance = try ensureInit()
+        return await instance.openRefundDialog(forProduct: forProduct)
     }
 
     @objc public static func openRefundDialog(forTransactionId: String) async throws -> String {
-        _ = try ensureInit()
-        return await instance!.openRefundDialog(forTransactionId: forTransactionId)
+        let instance = try ensureInit()
+        return await instance.openRefundDialog(forTransactionId: forTransactionId)
     }
 
     @objc public static func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> MobilyEvent {
-        _ = try ensureInit()
-        return try await instance!.purchaseProduct(product, options: options)
+        let instance = try ensureInit()
+        return try await instance.purchaseProduct(product, options: options)
     }
 
     @objc public static func sendDiagnostic() async throws {
-        _ = try ensureInit()
-        await instance!.sendDiagnostic()
+        let instance = try ensureInit()
+        await instance.sendDiagnostic()
     }
 
     @objc public static func getStoreCountry() async throws -> String? {
-        _ = try ensureInit()
-        return await instance!.getStoreCountry()
+        let instance = try ensureInit()
+        return await instance.getStoreCountry()
     }
 
     @objc public static func isBillingAvailable() -> Bool {
@@ -142,13 +152,13 @@ import StoreKit
     }
 
     @objc public static func isForwardingEnable(externalRef: String) async throws -> Bool {
-        _ = try ensureInit()
-        return try await instance!.isForwardingEnable(externalRef: externalRef)
+        let instance = try ensureInit()
+        return try await instance.isForwardingEnable(externalRef: externalRef)
     }
 
     @objc public static func getCustomer() async throws -> MobilyCustomer? {
-        _ = try ensureInit()
-        return try await instance!.getCustomer()
+        let instance = try ensureInit()
+        return try await instance.getCustomer()
     }
 
     @objc public static func getSDKVersion() -> String {
