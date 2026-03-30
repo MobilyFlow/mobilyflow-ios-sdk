@@ -562,6 +562,7 @@ actor MobilyPurchaseSDKImpl {
         if case .verified(let transaction) = signedTx {
             Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
             await transaction.finish()
+            FirebaseAnalyticsWrapper.logTransaction(transaction)
 
             if let customer = self.customer {
                 do {
