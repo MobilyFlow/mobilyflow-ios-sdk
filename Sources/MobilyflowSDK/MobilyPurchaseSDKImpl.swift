@@ -26,6 +26,8 @@ actor MobilyPurchaseSDKImpl {
     private var isPurchasing = false
     private var productsCaches: [UUID: MobilyProduct] = [:]
 
+    private var finishTransactionTasks: [UInt64: Task<MobilyEvent?, any Error>] = [:]
+
     public init(
         appId: String,
         apiKey: String,
@@ -557,30 +559,43 @@ actor MobilyPurchaseSDKImpl {
     }
 
     private func finishTransaction(signedTx: VerificationResult<Transaction>, downgradeToProductId: UUID? = nil) async throws -> MobilyEvent? {
-        var event: MobilyEvent?
-
         if case .verified(let transaction) = signedTx {
             Logger.d("Finish transaction: \(transaction.id) (\(transaction.productID))")
-            await transaction.finish()
-            FirebaseAnalyticsWrapper.logTransaction(transaction)
 
-            if let customer = self.customer {
-                do {
-                    try await API.mapTransactions(customerId: customer.id, transactions: [signedTx.jwsRepresentation])
-                } catch {
-                    Logger.e("Map transaction error", error: error)
-                }
-                if !customer.forwardNotificationEnable {
-                    let result = try await self.waiter.waitPurchaseWebhook(signedTx: signedTx, downgradeToProductId: downgradeToProductId)
-                    if result.event != nil {
-                        let (_, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
-                        event = await MobilyEvent.parse(result.event!, storeAccountTransactions: storeAccountTransactions)
+            if let existingTask = self.finishTransactionTasks.removeValue(forKey: transaction.id) {
+                // Avoid multiple parallel call to finishTransaction caused by the updateTxTask
+                Logger.d("Finish transaction already pending wait for previous call")
+                return try await existingTask.value
+            } else {
+                let newTask = Task(priority: .high) {
+                    var event: MobilyEvent?
+
+                    await transaction.finish()
+                    FirebaseAnalyticsWrapper.logTransaction(transaction)
+
+                    if let customer = self.customer {
+                        do {
+                            try await API.mapTransactions(customerId: customer.id, transactions: [signedTx.jwsRepresentation])
+                        } catch {
+                            Logger.e("Map transaction error", error: error)
+                        }
+                        if !customer.forwardNotificationEnable {
+                            let result = try await self.waiter.waitPurchaseWebhook(signedTx: signedTx, downgradeToProductId: downgradeToProductId)
+                            if result.event != nil {
+                                let (_, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
+                                event = await MobilyEvent.parse(result.event!, storeAccountTransactions: storeAccountTransactions)
+                            }
+                        }
+                        try await syncer.ensureSync(force: true)
                     }
+                    return event
                 }
-                try await syncer.ensureSync(force: true)
+                self.finishTransactionTasks[transaction.id] = newTask
+                defer { self.finishTransactionTasks.removeValue(forKey: transaction.id) }
+                return try await newTask.value
             }
         }
-        return event
+        return nil
     }
 
     /* *********************************************************** */
