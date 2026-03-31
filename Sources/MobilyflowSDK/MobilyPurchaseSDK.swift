@@ -37,9 +37,7 @@ import StoreKit
             try await impl.uploadMonitoring(logFile: logFile)
         }
         Task(priority: .high) {
-            await impl.setOnTransactionFinishedListener { transaction in
-                self._onTransactionFinishedListener?(transaction)
-            }
+            await impl.setOnTransactionFinishedListener(_onTransactionFinishedListener)
             await impl.initProcedure()
         }
         instance = impl
@@ -47,6 +45,11 @@ import StoreKit
 
     public static func setOnTransactionFinishedListener(_ callback: ((Transaction) -> Void)?) {
         _onTransactionFinishedListener = callback
+        if let instance = self.instance {
+            Task(priority: .high) {
+                await instance.setOnTransactionFinishedListener(_onTransactionFinishedListener)
+            }
+        }
     }
 
     private static func ensureInit() throws -> MobilyPurchaseSDKImpl {
