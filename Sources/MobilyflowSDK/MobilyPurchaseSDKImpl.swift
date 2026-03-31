@@ -557,8 +557,8 @@ actor MobilyPurchaseSDKImpl {
                 let newTask = Task(priority: .high) {
                     var event: MobilyEvent?
 
-                    await transaction.finish()
                     FirebaseAnalyticsWrapper.logTransaction(transaction)
+                    await transaction.finish()
 
                     if let customer = self.customer {
                         do {
