@@ -8,11 +8,12 @@
 import Foundation
 import StoreKit
 
+#if canImport(FirebaseAnalytics)
+import FirebaseAnalytics
+#endif
+
 /// Utility class to log transactions to Firebase Analytics if available in the host app.
-/// This uses Objective-C runtime to dynamically call Analytics methods without
-/// requiring Firebase as a dependency.
 class FirebaseAnalyticsWrapper {
-    private static var analyticsClass: NSObject.Type?
     private static var isInitialized = false
     private static var isAvailable = false
 
@@ -21,23 +22,13 @@ class FirebaseAnalyticsWrapper {
         guard !isInitialized else { return }
         isInitialized = true
 
-        // Try to get the FIRAnalytics class dynamically
-        guard let firAnalyticsClass = NSClassFromString("FIRAnalytics") as? NSObject.Type else {
-            isAvailable = false
-            return
-        }
-
-        // Verify the class responds to logTransaction:
-        let logTransactionSelector = NSSelectorFromString("logTransaction:")
-        guard firAnalyticsClass.responds(to: logTransactionSelector) else {
-            isAvailable = false
-            return
-        }
-
-        analyticsClass = firAnalyticsClass
+        #if canImport(FirebaseAnalytics)
         isAvailable = true
+        #endif
 
-        print("[MobilyFlow] Firebase Analytics detected")
+        if isAvailable {
+            print("[MobilyFlow] Firebase Analytics detected")
+        }
     }
 
     /// Check if Firebase Analytics is available in the host app
@@ -51,13 +42,13 @@ class FirebaseAnalyticsWrapper {
     /// - Parameter transaction: The StoreKit transaction to log
     static func logTransaction(_ transaction: Transaction) {
         initialize()
-        guard let analyticsClass = analyticsClass else { return }
 
-        let logTransactionSelector = NSSelectorFromString("logTransaction:")
-        guard analyticsClass.responds(to: logTransactionSelector) else { return }
-
-        Logger.d("Log iOS transaction to Firebase Analytics")
-        analyticsClass.perform(logTransactionSelector, with: transaction)
-        Logger.d("Transaction logged to Firebase Analytics")
+        if isAvailable {
+            #if canImport(FirebaseAnalytics)
+            Logger.d("Log iOS transaction to Firebase Analytics")
+            Analytics.logTransaction(transaction)
+            Logger.d("Transaction logged to Firebase Analytics")
+            #endif
+        }
     }
 }
