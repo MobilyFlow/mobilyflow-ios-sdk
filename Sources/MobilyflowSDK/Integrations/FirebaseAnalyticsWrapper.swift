@@ -56,6 +56,8 @@ class FirebaseAnalyticsWrapper {
         let logTransactionSelector = NSSelectorFromString("logTransaction:")
         guard analyticsClass.responds(to: logTransactionSelector) else { return }
 
+        Logger.d("Log iOS transaction to Firebase Analytics")
         analyticsClass.perform(logTransactionSelector, with: transaction)
+        Logger.d("Transaction logged to Firebase Analytics")
     }
 }
