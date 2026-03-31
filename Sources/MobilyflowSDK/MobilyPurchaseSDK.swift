@@ -9,6 +9,7 @@ import StoreKit
 
 @objc public final class MobilyPurchaseSDK: NSObject {
     private static var instance: MobilyPurchaseSDKImpl?
+    private static var _onTransactionFinishedListener: ((Transaction) -> Void)?
 
     /**
      Note: Calling init multiple times with different config will logout the current user.
@@ -36,9 +37,16 @@ import StoreKit
             try await impl.uploadMonitoring(logFile: logFile)
         }
         Task(priority: .high) {
+            await impl.setOnTransactionFinishedListener { transaction in
+                self._onTransactionFinishedListener?(transaction)
+            }
             await impl.initProcedure()
         }
         instance = impl
+    }
+
+    public static func setOnTransactionFinishedListener(_ callback: ((Transaction) -> Void)?) {
+        _onTransactionFinishedListener = callback
     }
 
     private static func ensureInit() throws -> MobilyPurchaseSDKImpl {

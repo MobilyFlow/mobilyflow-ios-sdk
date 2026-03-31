@@ -28,6 +28,7 @@ actor MobilyPurchaseSDKImpl {
     private var productsCaches: [UUID: MobilyProduct] = [:]
 
     private var finishTransactionTasks: [UInt64: Task<MobilyEvent?, any Error>] = [:]
+    private var _onTransactionFinishedListener: ((Transaction) -> Void)?
 
     public init(
         appId: String,
@@ -103,6 +104,10 @@ actor MobilyPurchaseSDKImpl {
                 }
             }
         }
+    }
+
+    func setOnTransactionFinishedListener(_ callback: ((Transaction) -> Void)?) {
+        self._onTransactionFinishedListener = callback
     }
 
     public func close() {
@@ -557,7 +562,7 @@ actor MobilyPurchaseSDKImpl {
                 let newTask = Task(priority: .high) {
                     var event: MobilyEvent?
 
-                    FirebaseAnalyticsWrapper.logTransaction(transaction)
+                    self._onTransactionFinishedListener?(transaction)
                     await transaction.finish()
 
                     if let customer = self.customer {
