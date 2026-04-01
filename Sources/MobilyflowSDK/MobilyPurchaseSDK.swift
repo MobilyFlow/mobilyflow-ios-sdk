@@ -34,7 +34,11 @@ import StoreKit
             options: options
         )
         Monitoring.initialize(tag: "MobilyFlow", allowLogging: options?.debug ?? false) { logFile in
-            try await impl.uploadMonitoring(logFile: logFile)
+            do {
+                try await impl.uploadMonitoring(logFile: logFile)
+            } catch {
+                Logger.e("uploadMonitoring error: \(error.localizedDescription)")
+            }
         }
         Task(priority: .high) {
             await impl.setOnTransactionFinishedListener(_onTransactionFinishedListener)
