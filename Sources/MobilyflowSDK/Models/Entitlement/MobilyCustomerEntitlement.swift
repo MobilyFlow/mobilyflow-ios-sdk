@@ -46,7 +46,7 @@ import StoreKit
             Product: product,
             Item: item,
             Subscription: subscription,
-            customerId: parseUUID(jsonEntity["customerId"] as! String)!,
+            customerId: parseUUID(jsonEntity["customerId"] as! String),
         )
     }
 }

@@ -16,35 +16,6 @@ public class Monitoring {
     public static func initialize(tag: String, allowLogging: Bool, sendHandler: @escaping ((URL) async throws -> Void)) {
         self.sendHandler = sendHandler
         Logger.initialize(tag: tag, allowLogging: allowLogging)
-        
-        // TODO: This should be removed and is here for retro-compatibility
-        
-        // Move old log to new structure
-        do {
-            let baseLogFolder = try Logger.getLogFolder(type: nil)
-            let rawLogFolder = try Logger.getLogFolder(type: .RAW_LOGS)
-            
-            let listFiles = try FileManager.default.contentsOfDirectory(at: baseLogFolder, includingPropertiesForKeys: nil)
-            for oldFile in listFiles {
-                if FileManager.default.isReadableFile(atPath: oldFile.path) && oldFile.path.hasSuffix(".log") {
-                    let newFile = rawLogFolder.appendingPathComponent(oldFile.lastPathComponent)
-                    
-                    if FileManager.default.fileExists(atPath: newFile.path) {
-                        // New file already exists, remove the old one
-                        Logger.d("Remove old log file \(oldFile.path)")
-                        try FileManager.default.removeItem(at: oldFile)
-                    } else {
-                        Logger.d("Move old log file \(oldFile.path) to \(newFile.path)")
-                        try FileManager.default.moveItem(at: oldFile, to: newFile)
-                    }
-                }
-            }
-        } catch {
-            Logger.e("Can't move log to new structure", error: error)
-        }
-        
-        // ----------------------------------------------------------------
-        
         startSendTask()
     }
     
@@ -95,7 +66,7 @@ public class Monitoring {
         sendTask = nil
     }
     
-    private static func close() {
+    static func close() {
         guard let _ = try? checkInit() else {
             return
         }

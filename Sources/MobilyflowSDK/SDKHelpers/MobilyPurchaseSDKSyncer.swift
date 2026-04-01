@@ -18,73 +18,58 @@ class MobilyPurchaseSDKSyncer {
     private var storeAccountTransactions: [UInt64: Transaction]? // originalTxId -> Transaction
 
     private var lastSyncTime: Double?
-    private let syncExecutor = AsyncDispatchQueue(label: "mobilyflow-sync")
 
     init(API: MobilyPurchaseAPI) {
         self.API = API
     }
 
     func login(customer: MobilyCustomer?, jsonEntitlements: [[String: Any]]?) async throws {
-        syncExecutor.sync {
-            self.customer = customer
-            self.entitlements = nil
-            self.lastSyncTime = nil
-        }
+        self.customer = customer
+        self.entitlements = nil
+        self.lastSyncTime = nil
+
         if self.customer != nil && jsonEntitlements != nil {
-            try await syncExecutor.execute {
-                Logger.d("Sync Entitlement with login data (\(jsonEntitlements?.count ?? -1))")
-                try await self._syncEntitlements(jsonEntitlements: jsonEntitlements)
-            }
+            Logger.d("Sync Entitlement with login data (\(jsonEntitlements?.count ?? -1))")
+            try await self._syncEntitlements(jsonEntitlements: jsonEntitlements)
         }
         self.lastSyncTime = Date().timeIntervalSince1970
     }
 
-    func logout() {
-        syncExecutor.sync {
-            self.customer = nil
-            self.entitlements = nil
-            self.lastSyncTime = nil
-        }
-    }
-
     func close() {
-        syncExecutor.sync {
-            self.customer = nil
-            self.entitlements = nil
-        }
-        syncExecutor.cancel()
+        self.customer = nil
+        self.entitlements = nil
+        self.lastSyncTime = nil
     }
 
     func ensureSync(force: Bool = false) async throws {
-        try await syncExecutor.execute {
-            if self.customer != nil && self.customer!.forwardNotificationEnable {
-                // If a customer is flag as forwarded, we double check if it's still the case (so if we disable forwarding
-                // on the backoffice, it's take effect instantly)
-                if let isForwardingEnable = try? await self.API.isForwardingEnable(externalRef: self.customer!.externalRef) {
-                    self.customer!.forwardNotificationEnable = isForwardingEnable
-                }
-            }
+        guard let customer = self.customer else {
+            Logger.d("Sync skipped (no customer)")
+            return
+        }
 
-            if
-                force ||
-                self.lastSyncTime == nil ||
-                (self.lastSyncTime! + self.CACHE_DURATION_SEC) < Date().timeIntervalSince1970
-            {
-                Logger.d("Run Sync expected...")
-                if self.customer != nil {
-                    Logger.d("Run Sync for customer \(self.customer!.id) (externalRef: \(self.customer!.externalRef ?? "null"))")
-
-                    try await self._syncEntitlements()
-                    self.lastSyncTime = Date().timeIntervalSince1970
-                } else {
-                    Logger.d(" -> Sync skipped (no customer)")
-                }
-                Logger.d("End Sync")
+        if customer.forwardNotificationEnable {
+            // If a customer is flag as forwarded, we double check if it's still the case (so if we disable forwarding
+            // on the backoffice, it's take effect instantly)
+            if let isForwardingEnable = try? await self.API.isForwardingEnableByCustomerId(customerId: customer.id) {
+                customer.forwardNotificationEnable = isForwardingEnable
             }
+        }
+
+        if
+            force ||
+            self.lastSyncTime == nil ||
+            (self.lastSyncTime! + self.CACHE_DURATION_SEC) < Date().timeIntervalSince1970
+        {
+            Logger.d("Run Sync for customer \(customer.id) (externalRef: \(customer.externalRef))")
+
+            try await self._syncEntitlements()
+            self.lastSyncTime = Date().timeIntervalSince1970
+
+            Logger.d("End Sync")
         }
     }
 
-    private func _syncStoreAccountTransactions() async throws {
+    private func _syncStoreAccountTransactions() async {
         var storeAccountTransactions: [UInt64: Transaction] = [:]
 
         for await signedTx in Transaction.currentEntitlements {
@@ -97,11 +82,9 @@ class MobilyPurchaseSDKSyncer {
     }
 
     private func _syncEntitlements(jsonEntitlements overrideJsonEntitlements: [[String: Any]]? = nil) async throws {
-        try await _syncStoreAccountTransactions()
+        await _syncStoreAccountTransactions()
 
         guard let customer = self.customer else {
-            // TODO: this is a hotfix, customer should not be nil at this time but some race condition (login while sync) make it to be nil
-            Logger.e("_syncEntitlements with null customer")
             return
         }
 

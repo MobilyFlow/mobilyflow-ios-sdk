@@ -52,7 +52,7 @@ class MobilyPurchaseSDKWaiter {
         var result = MobilyWebhookResult(status: MobilyWebhookStatus.PENDING, event: nil)
 
         // Remove 5s to the signed date for safety
-        var downgradeAfterDate = downgradeToProductId == nil ? nil : transaction.signedDate.addingTimeInterval(-5.0)
+        let downgradeAfterDate = downgradeToProductId == nil ? nil : transaction.signedDate.addingTimeInterval(-5.0)
 
         while result.status == MobilyWebhookStatus.PENDING {
             result = try await self.API.getWebhookResult(
@@ -71,9 +71,9 @@ class MobilyPurchaseSDKWaiter {
                     Logger.e(" -> transaction.originalID: \(transaction.originalID)")
                     Logger.e(" -> transaction.signedDate: \(transaction.signedDate)")
                     Logger.e(" -> isSandbox: \(isSandbox)")
-                    Logger.e(" -> downgradeToProductId: \(downgradeToProductId)")
-                    Logger.e(" -> downgradeAfterDate: \(downgradeAfterDate)")
-                    Logger.e(" -> appStoreReceiptURL: \(Bundle.main.appStoreReceiptURL)")
+                    Logger.e(" -> downgradeToProductId: \(String(describing: downgradeToProductId))")
+                    Logger.e(" -> downgradeAfterDate: \(String(describing: downgradeAfterDate))")
+                    Logger.e(" -> appStoreReceiptURL: \(String(describing: Bundle.main.appStoreReceiptURL))")
                     if #available(iOS 16.0, *) {
                         Logger.e(" -> transaction.environment: \(transaction.environment)")
                     }

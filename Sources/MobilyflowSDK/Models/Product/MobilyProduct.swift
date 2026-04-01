@@ -171,7 +171,7 @@ import StoreKit
                 periodCount: periodCount,
                 periodUnit: periodUnit,
                 groupLevel: jsonProduct["subscriptionGroupLevel"] as! Int,
-                groupId: parseUUID(jsonProduct["subscriptionGroupId"] as? String)!,
+                groupId: parseUUID(jsonProduct["subscriptionGroupId"] as! String),
                 ios_groupId: iosProduct?.subscription?.subscriptionGroupID,
                 introductoryOffer: introductoryOffer,
                 promotionalOffers: promotionalOffers,
@@ -188,7 +188,7 @@ import StoreKit
         }
 
         let product = MobilyProduct(
-            id: parseUUID(jsonProduct["id"] as? String)!,
+            id: parseUUID(jsonProduct["id"] as! String),
             createdAt: parseDate(jsonProduct["createdAt"] as! String),
             updatedAt: parseDate(jsonProduct["updatedAt"] as! String),
             identifier: jsonProduct["identifier"] as! String,

@@ -31,7 +31,7 @@ class InternalPurchaseOptions {
         return self.redeemUrl != nil
     }
     
-    func getReeemUrl() -> URL {
+    func getRedeemUrl() -> URL {
         return self.redeemUrl!
     }
     
