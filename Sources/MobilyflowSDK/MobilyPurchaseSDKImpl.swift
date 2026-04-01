@@ -318,6 +318,7 @@ actor MobilyPurchaseSDKImpl {
         if !transactionToClaim.isEmpty {
             let requestId = try await self.API.transferOwnershipRequest(customerId: customer.id, transactions: transactionToClaim)
             let status = try await self.waiter.waitTransferOwnershipRequest(requestId: requestId)
+            try await self.syncer.ensureSync(force: true)
             Logger.d("Request ownership transfer complete with status \(status)")
             return status
         } else {

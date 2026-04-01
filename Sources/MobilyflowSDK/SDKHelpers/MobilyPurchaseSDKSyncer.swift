@@ -69,7 +69,7 @@ class MobilyPurchaseSDKSyncer {
         }
     }
 
-    private func _syncStoreAccountTransactions() async throws {
+    private func _syncStoreAccountTransactions() async {
         var storeAccountTransactions: [UInt64: Transaction] = [:]
 
         for await signedTx in Transaction.currentEntitlements {
@@ -82,7 +82,7 @@ class MobilyPurchaseSDKSyncer {
     }
 
     private func _syncEntitlements(jsonEntitlements overrideJsonEntitlements: [[String: Any]]? = nil) async throws {
-        try await _syncStoreAccountTransactions()
+        await _syncStoreAccountTransactions()
 
         guard let customer = self.customer else {
             return
