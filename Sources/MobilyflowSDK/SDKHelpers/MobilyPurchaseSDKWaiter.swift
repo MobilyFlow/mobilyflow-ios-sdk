@@ -114,6 +114,8 @@ class MobilyPurchaseSDKWaiter {
 
                 usleep(calcWaitWebhookTime(retry)) // 2 seconds
                 retry += 1
+            } else if result == MobilyTransferOwnershipStatus.ERROR {
+                throw MobilyTransferOwnershipError.webhook_failed
             }
         }
         Logger.d("Transfer Ownership wait completed (\(result))")

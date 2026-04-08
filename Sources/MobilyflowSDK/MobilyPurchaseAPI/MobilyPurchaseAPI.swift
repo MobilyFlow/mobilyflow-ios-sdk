@@ -395,11 +395,7 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            let status = MobilyTransferOwnershipStatus.parse(jsonResponse["status"] as! String)
-            if status == MobilyTransferOwnershipStatus.ERROR {
-                throw MobilyTransferOwnershipError.webhook_failed
-            }
-            return status
+            return MobilyTransferOwnershipStatus.parse(jsonResponse["status"] as! String)
         } else {
             Logger.w("[getTransferRequestStatus] API Error: \(res.string())")
             throw MobilyError.unknown_error
