@@ -49,12 +49,12 @@ class MobilyPurchaseSDKWaiter {
 
         let startTime = Date().timeIntervalSince1970
         var retry = 0
-        var result = MobilyWebhookResult(status: MobilyWebhookStatus.PENDING, event: nil)
+        var result = MobilyWebhookResult(status: MobilyWebhookStatus.NOT_SENT, event: nil)
 
         // Remove 5s to the signed date for safety
         let downgradeAfterDate = downgradeToProductId == nil ? nil : transaction.signedDate.addingTimeInterval(-5.0)
 
-        while result.status == MobilyWebhookStatus.PENDING {
+        while result.status == MobilyWebhookStatus.NOT_SENT {
             result = try await self.API.getWebhookResult(
                 signedTransaction: signedTx.jwsRepresentation,
                 transactionId: transaction.id,
@@ -63,7 +63,7 @@ class MobilyPurchaseSDKWaiter {
                 downgradeAfterDate: downgradeAfterDate
             )
 
-            if result.status == MobilyWebhookStatus.PENDING {
+            if result.status == MobilyWebhookStatus.NOT_SENT {
                 // Exit the wait function after 1 minute
                 if startTime + 60 < Date().timeIntervalSince1970 {
                     Logger.e("Webhook still pending after 1 minutes (The user has probably paid without being credited)")
@@ -88,7 +88,7 @@ class MobilyPurchaseSDKWaiter {
 
         Logger.d("Webhook wait completed (\(result.status))")
 
-        if result.status == MobilyWebhookStatus.ERROR {
+        if result.status == MobilyWebhookStatus.FAILED {
             throw MobilyPurchaseError.webhook_failed
         }
 

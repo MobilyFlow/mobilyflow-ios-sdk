@@ -395,8 +395,8 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            let status = jsonResponse["status"] as! String
-            if status == "error" {
+            let status = MobilyTransferOwnershipStatus.parse(jsonResponse["status"] as! String)
+            if status == MobilyTransferOwnershipStatus.ERROR {
                 throw MobilyTransferOwnershipError.webhook_failed
             }
             return status
@@ -453,7 +453,7 @@ class MobilyPurchaseAPI {
             let jsonResponse = res.json()["data"] as! [String: Any]
 
             return MobilyWebhookResult(
-                status: jsonResponse["status"] as! String,
+                status: MobilyWebhookStatus.parse(jsonResponse["status"] as! String),
                 event: jsonResponse["event"] as? [String: Any]
             )
         } else {

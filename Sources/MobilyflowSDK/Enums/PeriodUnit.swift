@@ -24,7 +24,7 @@ import StoreKit
         case .week: return (period.value, PeriodUnit.WEEK)
         case .month: return (period.value, PeriodUnit.MONTH)
         case .year: return (period.value, PeriodUnit.YEAR)
-        default: fatalError("fromSubscriptionPeriodUnit -> Bad unit \(period.value) \(period.unit)")
+        default: preconditionFailure("parseSubscriptionPeriod -> Bad unit \(period.value) \(period.unit)")
         }
     }
 }
