@@ -1,17 +1,17 @@
 import Foundation
 
 @objc public class MobilyWebhookStatus: NSObject {
-    @objc public static let NOT_SENT = "NOT_SENT"
+    @objc public static let PENDING = "PENDING"
     @objc public static let FAILED = "FAILED"
     @objc public static let IGNORED = "IGNORED"
     @objc public static let SUCCESS = "SUCCESS"
 
-    @objc public static let values = [NOT_SENT, FAILED, IGNORED, SUCCESS]
+    @objc public static let values = [PENDING, FAILED, IGNORED, SUCCESS]
 
     // TODO: Retro-compatibility mapping
     private static let legacyMap: [String: String] = [
-        "not-sent": NOT_SENT,
-        "pending": NOT_SENT,
+        "not-sent": PENDING,
+        "pending": PENDING,
         "failed": FAILED,
         "error": FAILED,
         "ignored": IGNORED,
