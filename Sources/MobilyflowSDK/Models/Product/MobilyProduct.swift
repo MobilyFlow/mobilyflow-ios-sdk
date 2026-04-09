@@ -96,7 +96,7 @@ import StoreKit
 
     static func parse(_ jsonProduct: [String: Any]) async -> MobilyProduct {
         let ios_sku = jsonProduct["ios_sku"] as! String
-        let type = jsonProduct["type"] as! String
+        let type = MobilyProductType.parse(jsonProduct["type"] as! String)
 
         var status: String
         var priceMillis = 0
