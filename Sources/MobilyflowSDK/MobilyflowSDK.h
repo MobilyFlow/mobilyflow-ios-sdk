@@ -369,6 +369,19 @@ extern "C" {
 #if defined(__OBJC__)
 
 @class NSString;
+SWIFT_CLASS("_TtC13MobilyflowSDK28MobilyAppleRefundRequestType")
+@interface MobilyAppleRefundRequestType : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REFUND;)
++ (NSString * _Nonnull)REFUND SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CANCEL;)
++ (NSString * _Nonnull)CANCEL SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
+@end
+
 SWIFT_CLASS("_TtC13MobilyflowSDK12Serializable")
 @interface Serializable : NSObject
 - (NSDictionary<NSString *, id> * _Nonnull)toDictionary SWIFT_WARN_UNUSED_RESULT;
