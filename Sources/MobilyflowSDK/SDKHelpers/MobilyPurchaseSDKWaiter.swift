@@ -88,7 +88,7 @@ class MobilyPurchaseSDKWaiter {
 
         Logger.d("Webhook wait completed (\(result.status))")
 
-        if result.status == MobilyWebhookStatus.ERROR {
+        if result.status == MobilyWebhookStatus.FAILED {
             throw MobilyPurchaseError.webhook_failed
         }
 
@@ -99,14 +99,14 @@ class MobilyPurchaseSDKWaiter {
      * Wait the transfer-request to be processed.
      */
     func waitTransferOwnershipRequest(requestId: String) async throws -> String {
-        var result = MobilyTransferOwnershipStatus.PENDING
+        var status = MobilyTransferOwnershipStatus.PENDING
         let startTime = Date().timeIntervalSince1970
         var retry = 0
 
-        while result == MobilyTransferOwnershipStatus.PENDING {
-            result = try await self.API.getTransferRequestStatus(requestId: requestId)
+        while status == MobilyTransferOwnershipStatus.PENDING {
+            status = try await self.API.getTransferRequestStatus(requestId: requestId)
 
-            if result == MobilyTransferOwnershipStatus.PENDING {
+            if status == MobilyTransferOwnershipStatus.PENDING {
                 // Exit the wait function after 1 minute
                 if startTime + 60 < Date().timeIntervalSince1970 {
                     throw MobilyTransferOwnershipError.webhook_not_processed
@@ -116,8 +116,12 @@ class MobilyPurchaseSDKWaiter {
                 retry += 1
             }
         }
-        Logger.d("Transfer Ownership wait completed (\(result))")
+        Logger.d("Transfer Ownership wait completed (\(status))")
 
-        return result
+        if status == MobilyTransferOwnershipStatus.ERROR {
+            throw MobilyTransferOwnershipError.webhook_failed
+        }
+
+        return status
     }
 }

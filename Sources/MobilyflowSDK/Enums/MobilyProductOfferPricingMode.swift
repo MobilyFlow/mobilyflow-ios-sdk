@@ -9,7 +9,7 @@ import Foundation
     override private init() {}
 	
     @objc public static func parse(_ value: String) -> String {
-        precondition(values.contains(value), "Invalid MobilyProductOfferType: \(value)")
+        precondition(values.contains(value), "Invalid MobilyProductOfferPricingMode: \(value)")
         return value
     }
 }

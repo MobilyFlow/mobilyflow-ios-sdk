@@ -369,6 +369,19 @@ extern "C" {
 #if defined(__OBJC__)
 
 @class NSString;
+SWIFT_CLASS("_TtC13MobilyflowSDK28MobilyAppleRefundRequestType")
+@interface MobilyAppleRefundRequestType : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REFUND;)
++ (NSString * _Nonnull)REFUND SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CANCEL;)
++ (NSString * _Nonnull)CANCEL SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
+@end
+
 SWIFT_CLASS("_TtC13MobilyflowSDK12Serializable")
 @interface Serializable : NSObject
 - (NSDictionary<NSString *, id> * _Nonnull)toDictionary SWIFT_WARN_UNUSED_RESULT;
@@ -445,32 +458,32 @@ SWIFT_CLASS("_TtC13MobilyflowSDK15MobilyEventType")
 @interface MobilyEventType : NSObject
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TEST;)
 + (NSString * _Nonnull)TEST SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PURCHASE;)
-+ (NSString * _Nonnull)PURCHASE SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PURCHASED;)
++ (NSString * _Nonnull)PURCHASED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CONSUMED;)
 + (NSString * _Nonnull)CONSUMED SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull RENEW;)
-+ (NSString * _Nonnull)RENEW SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull RENEWED;)
++ (NSString * _Nonnull)RENEWED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull EXPIRED;)
 + (NSString * _Nonnull)EXPIRED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REVOKED;)
 + (NSString * _Nonnull)REVOKED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REFUNDED;)
 + (NSString * _Nonnull)REFUNDED SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUBSCRIPTION_CHANGE_RENEW_PRODUCT;)
-+ (NSString * _Nonnull)SUBSCRIPTION_CHANGE_RENEW_PRODUCT SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUBSCRIPTION_UPGRADE;)
-+ (NSString * _Nonnull)SUBSCRIPTION_UPGRADE SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUBSCRIPTION_EXTENDED;)
-+ (NSString * _Nonnull)SUBSCRIPTION_EXTENDED SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CHANGE_AUTO_RENEW;)
-+ (NSString * _Nonnull)CHANGE_AUTO_RENEW SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull CHANGE_PAUSE_STATUS;)
-+ (NSString * _Nonnull)CHANGE_PAUSE_STATUS SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull RENEW_PRODUCT_CHANGED;)
++ (NSString * _Nonnull)RENEW_PRODUCT_CHANGED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull UPGRADED;)
++ (NSString * _Nonnull)UPGRADED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull EXTENDED;)
++ (NSString * _Nonnull)EXTENDED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull AUTO_RENEW_CHANGED;)
++ (NSString * _Nonnull)AUTO_RENEW_CHANGED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PAUSE_STATUS_CHANGED;)
++ (NSString * _Nonnull)PAUSE_STATUS_CHANGED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull GRACE_PERIOD_RESOLVED;)
 + (NSString * _Nonnull)GRACE_PERIOD_RESOLVED SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TRANSFER_OWNERSHIP_REQUEST;)
-+ (NSString * _Nonnull)TRANSFER_OWNERSHIP_REQUEST SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TRANSFER_OWNERSHIP_REQUESTED;)
++ (NSString * _Nonnull)TRANSFER_OWNERSHIP_REQUESTED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull TRANSFER_OWNERSHIP_ACKNOWLEDGED;)
 + (NSString * _Nonnull)TRANSFER_OWNERSHIP_ACKNOWLEDGED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
@@ -788,6 +801,8 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _No
 + (NSString * _Nonnull)ACKNOWLEDGED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull REJECTED;)
 + (NSString * _Nonnull)REJECTED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull ERROR;)
++ (NSString * _Nonnull)ERROR SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
 + (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
@@ -799,8 +814,10 @@ SWIFT_CLASS("_TtC13MobilyflowSDK19MobilyWebhookStatus")
 @interface MobilyWebhookStatus : NSObject
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PENDING;)
 + (NSString * _Nonnull)PENDING SWIFT_WARN_UNUSED_RESULT;
-SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull ERROR;)
-+ (NSString * _Nonnull)ERROR SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull FAILED;)
++ (NSString * _Nonnull)FAILED SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull IGNORED;)
++ (NSString * _Nonnull)IGNORED SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull SUCCESS;)
 + (NSString * _Nonnull)SUCCESS SWIFT_WARN_UNUSED_RESULT;
 SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)

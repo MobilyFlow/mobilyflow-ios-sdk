@@ -74,7 +74,7 @@ import StoreKit
             transactionId: parseUUIDOpt(json["transactionId"] as? String),
             subscriptionId: parseUUIDOpt(json["subscriptionId"] as? String),
             itemId: parseUUIDOpt(json["itemId"] as? String),
-            type: json["type"] as! String,
+            type: MobilyEventType.parse(json["type"] as! String),
             extras: json["extras"] as? [String: Any],
             platform: json["platform"] as! String,
             isSandbox: json["isSandbox"] as! Bool,

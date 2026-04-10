@@ -80,7 +80,7 @@ import Foundation
             currency: json["currency"] as! String,
             convertedPriceMillis: json["convertedPriceMillis"] as! Int,
             convertedCurrency: json["convertedCurrency"] as! String,
-            status: json["status"] as! String,
+            status: MobilyTransactionStatus.parse(json["status"] as! String),
             refundedPercent: json["refundedPercent"] as? Double ?? 0.0,
             productId: parseUUID(json["productId"] as! String),
             subscriptionId: parseUUIDOpt(json["subscriptionId"] as? String),
