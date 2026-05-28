@@ -37,3 +37,8 @@ git push --tags
 
 # 5. Upload pod
 pod trunk push MobilyflowSDK.podspec --allow-warnings
+
+# Note: Pod can take 30 min (sometime hours) to propagate, we can follow the propagation in:
+# https://cdn.cocoapods.org/all_pods_versions_2_a_8.txt
+# The 2_a_8 correspond of the pod name md5 hash 3 characters,
+# ie `echo -n "MobilyflowSDK" | md5` -> 2a8c0fa54fd4c0a4a4dc2154445858cc
