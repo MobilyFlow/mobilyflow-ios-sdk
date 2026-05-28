@@ -9,9 +9,9 @@ import Foundation
 import StoreKit
 
 actor MobilyPurchaseSDKImpl {
-    public var appId: String
-    public var environment: String
-    public var options: MobilyPurchaseSDKOptions?
+    var appId: String
+    var environment: String
+    var options: MobilyPurchaseSDKOptions?
 
     private let diagnostics: MobilyPurchaseSDKDiagnostics
     private var updateTxTask: Task<Void, Never>?
@@ -30,7 +30,7 @@ actor MobilyPurchaseSDKImpl {
     private var finishTransactionTasks: [UInt64: Task<MobilyEvent?, any Error>] = [:]
     private var _onTransactionFinishedListener: ((Transaction) -> Void)?
 
-    public init(
+    init(
         appId: String,
         apiKey: String,
         environment: String,
@@ -110,7 +110,7 @@ actor MobilyPurchaseSDKImpl {
         self._onTransactionFinishedListener = callback
     }
 
-    public func close() {
+    func close() {
         self.logout()
         self.syncer.close()
         self.lifecycleManager.unregisterAll()
@@ -121,7 +121,7 @@ actor MobilyPurchaseSDKImpl {
     /* ****************************** LOGIN ****************************** */
     /* ******************************************************************* */
 
-    public func login(externalRef: String) async throws -> MobilyCustomer {
+    func login(externalRef: String) async throws -> MobilyCustomer {
         Logger.d("Login customer with externalRef \(externalRef)")
 
         // 1. Logout previous customer
@@ -171,7 +171,7 @@ actor MobilyPurchaseSDKImpl {
         return customer
     }
 
-    public func logout() {
+    func logout() {
         self.customer = nil
         diagnostics.customerId = nil
         productsCaches = [:]
@@ -182,7 +182,7 @@ actor MobilyPurchaseSDKImpl {
     /* **************************** PRODUCTS ***************************** */
     /* ******************************************************************* */
 
-    public func getProducts(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilyProduct] {
+    func getProducts(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilyProduct] {
         try await syncer.ensureSync()
 
         // 1. Get product from Mobily API
@@ -207,7 +207,7 @@ actor MobilyPurchaseSDKImpl {
         return mobilyProducts
     }
 
-    public func getSubscriptionGroups(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilySubscriptionGroup] {
+    func getSubscriptionGroups(identifiers: [String]?, onlyAvailable: Bool) async throws -> [MobilySubscriptionGroup] {
         try await syncer.ensureSync()
 
         // 1. Get groups from Mobily API
@@ -237,7 +237,7 @@ actor MobilyPurchaseSDKImpl {
         return groups
     }
 
-    public func getSubscriptionGroupById(id: UUID) async throws -> MobilySubscriptionGroup {
+    func getSubscriptionGroupById(id: UUID) async throws -> MobilySubscriptionGroup {
         try await syncer.ensureSync()
 
         // 1. Get groups from Mobily API
@@ -257,7 +257,7 @@ actor MobilyPurchaseSDKImpl {
         return mobilyGroup
     }
 
-    public func getProductFromCacheWithId(id: UUID) -> MobilyProduct? {
+    func getProductFromCacheWithId(id: UUID) -> MobilyProduct? {
         return productsCaches[id]
     }
 
@@ -276,21 +276,21 @@ actor MobilyPurchaseSDKImpl {
         return entitlement
     }
 
-    public func getEntitlementForSubscription(subscriptionGroupId: UUID) async throws -> MobilyCustomerEntitlement? {
+    func getEntitlementForSubscription(subscriptionGroupId: UUID) async throws -> MobilyCustomerEntitlement? {
         return try self._cacheEntitlement(await syncer.getEntitlement(forSubscriptionGroup: subscriptionGroupId))
     }
 
-    public func getEntitlement(productId: UUID) async throws -> MobilyCustomerEntitlement? {
+    func getEntitlement(productId: UUID) async throws -> MobilyCustomerEntitlement? {
         return try self._cacheEntitlement(await syncer.getEntitlement(forProductId: productId))
     }
 
-    public func getEntitlements(productIds: [UUID]?) async throws -> [MobilyCustomerEntitlement] {
+    func getEntitlements(productIds: [UUID]?) async throws -> [MobilyCustomerEntitlement] {
         let result = try syncer.getEntitlements(forProductIds: productIds)
         result.forEach { _ = self._cacheEntitlement($0) }
         return result
     }
 
-    public func getExternalEntitlements() async throws -> [MobilyCustomerEntitlement] {
+    func getExternalEntitlements() async throws -> [MobilyCustomerEntitlement] {
         let (transactionToClaim, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
         var entitlements: [MobilyCustomerEntitlement] = []
 
@@ -308,7 +308,7 @@ actor MobilyPurchaseSDKImpl {
     /**
      Request transfer ownership of local device transactions.
      */
-    public func requestTransferOwnership() async throws -> String {
+    func requestTransferOwnership() async throws -> String {
         guard let customer = self.customer else {
             throw MobilyError.no_customer_logged
         }
@@ -335,7 +335,7 @@ actor MobilyPurchaseSDKImpl {
      *
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
-    public func openRefundDialog(forProduct: MobilyProduct) async -> String {
+    func openRefundDialog(forProduct: MobilyProduct) async -> String {
         if forProduct.oneTime?.isConsumable ?? false {
             do {
                 if let customer = self.customer {
@@ -376,7 +376,7 @@ actor MobilyPurchaseSDKImpl {
      *
      * Pro tips: to test declined refund in sandbox, once the dialog appear, select "other" and write "REJECT" in the text box.
      */
-    public func openRefundDialog(forTransactionId: String) async -> String {
+    func openRefundDialog(forTransactionId: String) async -> String {
         let result = try? await Transaction.beginRefundRequest(for: UInt64(forTransactionId)!, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
         return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
     }
@@ -385,7 +385,7 @@ actor MobilyPurchaseSDKImpl {
     /* **************************** PURCHASE ***************************** */
     /* ******************************************************************* */
 
-    public func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> MobilyEvent {
+    func purchaseProduct(_ product: MobilyProduct, options: PurchaseOptions? = nil) async throws -> MobilyEvent {
         if isPurchasing {
             throw MobilyPurchaseError.purchase_already_pending
         }
@@ -595,7 +595,7 @@ actor MobilyPurchaseSDKImpl {
     /* *********************** DIAGNOSTICS *********************** */
     /* *********************************************************** */
 
-    public func sendDiagnostic() {
+    func sendDiagnostic() {
         diagnostics.sendDiagnostic()
     }
 
@@ -604,18 +604,18 @@ actor MobilyPurchaseSDKImpl {
     /* ************************************************************** */
 
     // TODO: onStorefrontChange
-    public func getStoreCountry() async -> String? {
+    func getStoreCountry() async -> String? {
         if let alpha3 = (await Storefront.current)?.countryCode {
             return CountryCodes.alpha3ToAlpha2(alpha3)
         }
         return nil
     }
 
-    public func isForwardingEnable(externalRef: String) async throws -> Bool {
+    func isForwardingEnable(externalRef: String) async throws -> Bool {
         return try await API.isForwardingEnableByExternalRef(externalRef: externalRef)
     }
 
-    public func getCustomer() async throws -> MobilyCustomer? {
+    func getCustomer() async throws -> MobilyCustomer? {
         return self.customer
     }
 }

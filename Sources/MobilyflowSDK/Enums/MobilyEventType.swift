@@ -19,36 +19,9 @@ import Foundation
 
     @objc public static let values = [TEST, PURCHASED, CONSUMED, RENEWED, EXPIRED, REVOKED, REFUNDED, RENEW_PRODUCT_CHANGED, UPGRADED, EXTENDED, AUTO_RENEW_CHANGED, PAUSE_STATUS_CHANGED, GRACE_PERIOD_RESOLVED, TRANSFER_OWNERSHIP_REQUESTED, TRANSFER_OWNERSHIP_ACKNOWLEDGED]
 
-    // TODO: Retro-compatibility mapping
-    private static let legacyMap: [String: String] = [
-        "test": TEST,
-        "purchase": PURCHASED,
-        "consumed": CONSUMED,
-        "renew": RENEWED,
-        "expired": EXPIRED,
-        "revoked": REVOKED,
-        "refunded": REFUNDED,
-        "subscription-change-renew-product": RENEW_PRODUCT_CHANGED,
-        "subscription-upgrade": UPGRADED,
-        "subscription-extended": EXTENDED,
-        "change-auto-renew": AUTO_RENEW_CHANGED,
-        "change-pause-status": PAUSE_STATUS_CHANGED,
-        "grace-period-resolved": GRACE_PERIOD_RESOLVED,
-        "transfer-ownership-request": TRANSFER_OWNERSHIP_REQUESTED,
-        "transfer-ownership-acknowledged": TRANSFER_OWNERSHIP_ACKNOWLEDGED,
-    ]
-
     override private init() {}
 
     @objc public static func parse(_ value: String) -> String {
-        // TODO: Retro-compatibility mapping
-        if values.contains(value) {
-            return value
-        }
-        if let legacy = legacyMap[value] {
-            return legacy
-        }
-        // ---------------------------------
         precondition(values.contains(value), "Invalid MobilyEventType: \(value)")
         return value
     }
