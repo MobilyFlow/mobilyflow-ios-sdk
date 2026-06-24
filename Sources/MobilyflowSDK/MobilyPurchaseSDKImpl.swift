@@ -402,13 +402,14 @@ actor MobilyPurchaseSDKImpl {
         var event: MobilyEvent? = nil
         try await self.syncer.ensureSync()
 
-        let internalPurchaseOptions = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: syncer, API: API, customerId: customer.id, product: product, options: options)
+        let internalPurchaseOptions = try await MobilyPurchaseSDKHelper.createPurchaseOptions(syncer: syncer, API: API, customer: customer, product: product, options: options)
 
-        if internalPurchaseOptions.isRedeemURL() {
+        if internalPurchaseOptions.isOfferCode() {
             var error: MobilyPurchaseError?
             let offerCodeLifecycleManager = AppLifecycleManager()
             let knownTransactionIdsForSku = await MobilyPurchaseSDKHelper.getKnownTransactionIdsForSku(product.ios_sku)
             let openTime = Date().timeIntervalSince1970
+            let offerCode = internalPurchaseOptions.getOfferCode()
             let redeemURL = internalPurchaseOptions.getRedeemUrl()
 
             await withCheckedContinuation { continuation in
@@ -452,7 +453,19 @@ actor MobilyPurchaseSDKImpl {
                 }
 
                 Task(priority: .high) { @MainActor in
-                    await UIApplication.shared.open(redeemURL)
+                    if redeemURL != nil {
+                        await UIApplication.shared.open(redeemURL!)
+                    } else {
+                        let alert = UIAlertController(title: nil, message: "Offer Code: \(offerCode)", preferredStyle: .alert)
+                        alert.addAction(UIAlertAction(title: "Copy & Continue", style: .default, handler: { _ in
+                            UIPasteboard.general.string = offerCode
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        }))
+
+                        if let topViewController = getTopViewController() {
+                            topViewController.present(alert, animated: true, completion: nil)
+                        }
+                    }
                 }
             }
 

@@ -67,8 +67,12 @@ class MobilyPurchaseSDKHelper {
         return (transactionSignatures, storeAccountTransactions)
     }
 
-    static func isEligibleForPromotionnalOffer() async -> Bool {
-        // TODO: We should find a way to force it to false in production for testing purpose
+    static func isEligibleForPromotionnalOffer(_ customer: MobilyCustomer) async -> Bool {
+        if customer.testOfferCodeMode != nil {
+            // Customer is in test offer code mode, return false (non-eligible to promotionnal offer to force offer code)
+            return false
+        }
+
         if #available(iOS 17.4, *) {
             for await signedTx in Transaction.all {
                 switch signedTx {
@@ -90,7 +94,7 @@ class MobilyPurchaseSDKHelper {
      */
     static func createPurchaseOptions(
         syncer: MobilyPurchaseSDKSyncer, API: MobilyPurchaseAPI,
-        customerId: UUID, product: MobilyProduct, options: PurchaseOptions?
+        customer: MobilyCustomer, product: MobilyProduct, options: PurchaseOptions?
     ) async throws -> InternalPurchaseOptions {
         guard let iosProduct = MobilyPurchaseRegistry.getIOSProduct(product.ios_sku) else {
             // Probably store_unavavaible but no way to check...
@@ -98,14 +102,15 @@ class MobilyPurchaseSDKHelper {
         }
 
         var isDowngrade = false
-        var redeemUrl: URL?
+        var redeemUrl: URL? = nil
+        var offerCode: String?
         var iosOffer: Product.SubscriptionOffer?
 
         if product.type == MobilyProductType.SUBSCRIPTION && options?.offer != nil {
             if options!.offer!.type == MobilyProductOfferType.INTRODUCTORY {
                 iosOffer = iosProduct.subscription!.introductoryOffer
             } else if options!.offer!.ios_offerId != nil {
-                if await isEligibleForPromotionnalOffer() {
+                if await isEligibleForPromotionnalOffer(customer) {
                     iosOffer = MobilyPurchaseRegistry.getIOSOffer(product.ios_sku, offerId: options!.offer!.ios_offerId!)
 
                     if iosOffer == nil {
@@ -114,8 +119,16 @@ class MobilyPurchaseSDKHelper {
                 } else {
                     // Promotional Offer not available, use offerCode instead
                     do {
-                        let offerCode = try await API.appleOfferCode(customerId: customerId, offerId: options!.offer!.id)
-                        redeemUrl = URL(string: offerCode["redeemUrl"] as! String)!
+                        let offerCodeResult = try await API.appleOfferCode(
+                            customerId: customer.id,
+                            offerId: options!.offer!.id,
+                            isSandbox: customer.testOfferCodeMode != nil && customer.testOfferCodeMode == "sandbox"
+                        )
+
+                        if let redeemUrlString = offerCodeResult["redeemUrl"] as? String {
+                            redeemUrl = URL(string: redeemUrlString)!
+                        }
+                        offerCode = offerCodeResult["token"] as! String
                     } catch {
                         Logger.e("Can't get appleOfferCode", error: error)
                     }
@@ -177,12 +190,12 @@ class MobilyPurchaseSDKHelper {
             }
         }
 
-        if redeemUrl != nil {
-            return InternalPurchaseOptions(redeemUrl: redeemUrl!, isDowngrade: isDowngrade)
+        if offerCode != nil {
+            return InternalPurchaseOptions(offerCode: offerCode!, redeemUrl: redeemUrl, isDowngrade: isDowngrade)
         }
 
         var iosOptions = Set<Product.PurchaseOption>()
-        iosOptions.insert(Product.PurchaseOption.appAccountToken(customerId))
+        iosOptions.insert(Product.PurchaseOption.appAccountToken(customer.id))
 
         iosOptions.insert(Product.PurchaseOption.onStorefrontChange(shouldContinuePurchase: { _ in
             // TODO: In case storefront change, notify developer to refetch product
@@ -191,7 +204,7 @@ class MobilyPurchaseSDKHelper {
 
         if #available(iOS 17.4, *) {
             if options?.offer?.ios_offerId != nil && iosOffer != nil {
-                let signature = try await API.signOffer(customerId: customerId, offerId: options!.offer!.id.uuidString)
+                let signature = try await API.signOffer(customerId: customer.id, offerId: options!.offer!.id.uuidString)
                 iosOptions.insert(Product.PurchaseOption.promotionalOffer(offerID: options!.offer!.ios_offerId!, signature: signature))
             }
         }
