@@ -397,6 +397,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK14MobilyCustomer")
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
 @property (nonatomic, readonly, copy) NSString * _Nonnull externalRef;
 @property (nonatomic) BOOL forwardNotificationEnable;
+@property (nonatomic, copy) NSString * _Nullable testOfferCodeMode;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end
