@@ -16,7 +16,7 @@ import StoreKit
     @objc public let subscriptionId: UUID?
     @objc public let itemId: UUID?
     @objc public let type: String
-    @objc public let extras: [String: Any]?
+    @objc public let details: [String: Any]?
     @objc public let platform: String
     @objc public let isSandbox: Bool
 
@@ -27,7 +27,7 @@ import StoreKit
     @objc public let Subscription: MobilySubscription?
     @objc public let Item: MobilyItem?
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, transactionId: UUID?, subscriptionId: UUID?, itemId: UUID?, type: String, extras: [String: Any]?, platform: String, isSandbox: Bool, Customer: MobilyCustomer?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, Transaction: MobilyTransaction?, Subscription: MobilySubscription?, Item: MobilyItem?) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, transactionId: UUID?, subscriptionId: UUID?, itemId: UUID?, type: String, details: [String: Any]?, platform: String, isSandbox: Bool, Customer: MobilyCustomer?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, Transaction: MobilyTransaction?, Subscription: MobilySubscription?, Item: MobilyItem?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -35,7 +35,7 @@ import StoreKit
         self.subscriptionId = subscriptionId
         self.itemId = itemId
         self.type = type
-        self.extras = extras
+        self.details = details
         self.platform = MobilyPlatform.parse(platform)
         self.isSandbox = isSandbox
         self.Customer = Customer
@@ -75,7 +75,7 @@ import StoreKit
             subscriptionId: parseUUIDOpt(json["subscriptionId"] as? String),
             itemId: parseUUIDOpt(json["itemId"] as? String),
             type: MobilyEventType.parse(json["type"] as! String),
-            extras: json["extras"] as? [String: Any],
+            details: json["details"] as? [String: Any],
             platform: json["platform"] as! String,
             isSandbox: json["isSandbox"] as! Bool,
 

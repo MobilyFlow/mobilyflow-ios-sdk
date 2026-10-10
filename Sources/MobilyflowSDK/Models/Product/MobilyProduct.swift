@@ -21,7 +21,7 @@ import StoreKit
     @objc public let ios_sku: String
 
     @objc public let type: String
-    @objc public let extras: [String: Any]?
+    @objc public let metadata: [String: Any]?
 
     @objc public let priceMillis: Int
     @objc public let currencyCode: String
@@ -70,7 +70,7 @@ import StoreKit
     }
 
     @objc init(
-        id: UUID, createdAt: Date, updatedAt: Date, identifier: String, referenceName: String, externalRef: String?, android_sku: String?, android_basePlanId: String?, ios_sku: String, type: String, extras: [String: Any]?, priceMillis: Int, currencyCode: String, priceFormatted: String, status: String, name: String, details: String, oneTime: MobilyOneTimeProduct?, subscription: MobilySubscriptionProduct?,
+        id: UUID, createdAt: Date, updatedAt: Date, identifier: String, referenceName: String, externalRef: String?, android_sku: String?, android_basePlanId: String?, ios_sku: String, type: String, metadata: [String: Any]?, priceMillis: Int, currencyCode: String, priceFormatted: String, status: String, name: String, details: String, oneTime: MobilyOneTimeProduct?, subscription: MobilySubscriptionProduct?,
     ) {
         self.id = id
         self.createdAt = createdAt
@@ -82,7 +82,7 @@ import StoreKit
         self.android_basePlanId = android_basePlanId
         self.ios_sku = ios_sku
         self.type = MobilyProductType.parse(type)
-        self.extras = extras
+        self.metadata = metadata
         self.priceMillis = priceMillis
         self.currencyCode = currencyCode
         self.priceFormatted = priceFormatted
@@ -198,7 +198,7 @@ import StoreKit
             android_basePlanId: jsonProduct["android_basePlanId"] as? String,
             ios_sku: ios_sku,
             type: type,
-            extras: jsonProduct["extras"] as! [String: Any]?,
+            metadata: jsonProduct["metadata"] as! [String: Any]?,
             priceMillis: priceMillis,
             currencyCode: currencyCode,
             priceFormatted: priceFormatted,

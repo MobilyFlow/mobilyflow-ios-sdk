@@ -10,7 +10,7 @@ import StoreKit
 class InternalPurchaseOptions {
     private let product: Product?
     private let options: Set<Product.PurchaseOption>?
-    private let redeemUrl: URL?
+    private let redeemURL: URL?
     private let offerCode: String?
     let isDowngrade: Bool
     
@@ -19,15 +19,15 @@ class InternalPurchaseOptions {
         self.isDowngrade = isDowngrade
         self.options = options
         self.offerCode = nil
-        self.redeemUrl = nil
+        self.redeemURL = nil
     }
     
-    init(offerCode: String, redeemUrl: URL?, isDowngrade: Bool) {
+    init(offerCode: String, redeemURL: URL?, isDowngrade: Bool) {
         self.product = nil
         self.isDowngrade = isDowngrade
         self.options = nil
         self.offerCode = offerCode
-        self.redeemUrl = redeemUrl
+        self.redeemURL = redeemURL
     }
     
     func isOfferCode() -> Bool {
@@ -35,7 +35,7 @@ class InternalPurchaseOptions {
     }
     
     func getRedeemUrl() -> URL? {
-        return self.redeemUrl
+        return self.redeemURL
     }
     
     func getOfferCode() -> String {

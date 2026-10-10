@@ -12,5 +12,5 @@ struct LoginResponse {
     let entitlements: [[String: Any]]
     let platformOriginalTransactionIds: [String]
     let appleRefundRequests: [[String: Any]]?
-    let haveMonitoringRequests: Bool
+    let hasMonitoringRequests: Bool
 }

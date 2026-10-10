@@ -27,12 +27,12 @@ import Foundation
     @objc public let itemId: UUID?
     @objc public let productOfferId: UUID?
     @objc public let platform: String
-    @objc public let startDate: Date?
-    @objc public let endDate: Date?
-    @objc public let refundDate: Date?
+    @objc public let startsAt: Date?
+    @objc public let endsAt: Date?
+    @objc public let refundedAt: Date?
     @objc public let isSandbox: Bool
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String?, customerId: UUID, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: UUID, subscriptionId: UUID?, itemId: UUID?, productOfferId: UUID?, platform: String, startDate: Date?, endDate: Date?, refundDate: Date?, isSandbox: Bool) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, platformTxId: String, platformTxOriginalId: String?, customerId: UUID, quantity: Int, country: String, priceMillis: Int, currency: String, convertedPriceMillis: Int, convertedCurrency: String, status: String, refundedPercent: Double, productId: UUID, subscriptionId: UUID?, itemId: UUID?, productOfferId: UUID?, platform: String, startsAt: Date?, endsAt: Date?, refundedAt: Date?, isSandbox: Bool) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -52,9 +52,9 @@ import Foundation
         self.itemId = itemId
         self.productOfferId = productOfferId
         self.platform = MobilyPlatform.parse(platform)
-        self.startDate = startDate
-        self.endDate = endDate
-        self.refundDate = refundDate
+        self.startsAt = startsAt
+        self.endsAt = endsAt
+        self.refundedAt = refundedAt
         self.isSandbox = isSandbox
         super.init()
     }
@@ -87,9 +87,9 @@ import Foundation
             itemId: parseUUIDOpt(json["itemId"] as? String),
             productOfferId: parseUUIDOpt(json["productOfferId"] as? String),
             platform: platform,
-            startDate: parseDateOpt(json["startDate"] as? String),
-            endDate: parseDateOpt(json["endDate"] as? String),
-            refundDate: parseDateOpt(json["refundDate"] as? String),
+            startsAt: parseDateOpt(json["startsAt"] as? String),
+            endsAt: parseDateOpt(json["endsAt"] as? String),
+            refundedAt: parseDateOpt(json["refundedAt"] as? String),
             isSandbox: json["isSandbox"] as! Bool,
         )
     }

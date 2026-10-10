@@ -105,7 +105,7 @@ class MobilyPurchaseAPI {
                 entitlements: data["entitlements"] as! [[String: Any]],
                 platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String],
                 appleRefundRequests: data["appleRefundRequests"] as? [[String: Any]],
-                haveMonitoringRequests: data["haveMonitoringRequests"] as? Bool ?? false
+                hasMonitoringRequests: data["hasMonitoringRequests"] as? Bool ?? false
             )
         } else {
             Logger.w("[login] API Error: \(res.string())")
@@ -347,9 +347,9 @@ class MobilyPurchaseAPI {
      Flag a refund request.
      Throws on error.
      */
-    func flagRefundRequest(requestId: String, accepted: Bool) async throws {
+    func flagRefundRequest(requestId: String, isAccepted: Bool) async throws {
         let request = ApiRequest(method: "POST", url: "/sdk/apple-refund-requests/\(requestId)/flag")
-        _ = request.setData(["accepted": accepted])
+        _ = request.setData(["isAccepted": isAccepted])
 
         guard let res = try? await self.helper.request(request) else {
             throw MobilyError.server_unavailable
@@ -430,7 +430,7 @@ class MobilyPurchaseAPI {
     /**
      Get webhook status from transactionID
      */
-    func getWebhookResult(signedTransaction: String, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterDate: Date?) async throws -> MobilyWebhookResult {
+    func getWebhookResult(signedTransaction: String, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterAt: Date?) async throws -> MobilyWebhookResult {
         let request = ApiRequest(method: "POST", url: "/sdk/events/webhook-result/ios")
         _ = request.setData([
             "signedTransaction": signedTransaction,
@@ -441,8 +441,8 @@ class MobilyPurchaseAPI {
         if downgradeToProductId != nil {
             _ = request.addData("downgradeToProductId", downgradeToProductId!.uuidString)
         }
-        if downgradeAfterDate != nil {
-            _ = request.addData("downgradeAfterDate", String(Int(downgradeAfterDate!.timeIntervalSince1970 * 1000)))
+        if downgradeAfterAt != nil {
+            _ = request.addData("downgradeAfterAt", String(Int(downgradeAfterAt!.timeIntervalSince1970 * 1000)))
         }
 
         guard let res = try? await self.helper.request(request) else {
@@ -484,7 +484,7 @@ class MobilyPurchaseAPI {
         }
     }
 
-    func isForwardingEnableByCustomerId(customerId: UUID) async throws -> Bool {
+    func isForwardingEnabledByCustomerId(customerId: UUID) async throws -> Bool {
         let request = ApiRequest(method: "GET", url: "/sdk/customers/is-forwarding-enable")
         _ = request.addParam("customerId", customerId.uuidString.lowercased())
         _ = request.addParam("platform", "ios")
@@ -495,9 +495,9 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            return jsonResponse["enable"] as! Bool
+            return jsonResponse["isEnabled"] as! Bool
         } else {
-            Logger.w("[isForwardingEnable] API Error: \(res.string())")
+            Logger.w("[isForwardingEnabled] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -514,9 +514,9 @@ class MobilyPurchaseAPI {
 
         if res.success {
             let jsonResponse = res.json()["data"] as! [String: Any]
-            return jsonResponse["enable"] as! Bool
+            return jsonResponse["isEnabled"] as! Bool
         } else {
-            Logger.w("[isForwardingEnable] API Error: \(res.string())")
+            Logger.w("[isForwardingEnabled] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }

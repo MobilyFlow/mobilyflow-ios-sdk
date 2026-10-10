@@ -12,15 +12,15 @@ import Foundation
     @objc public let createdAt: Date
     @objc public let updatedAt: Date
     @objc public let externalRef: String
-    @objc public var forwardNotificationEnable: Bool
+    @objc public var hasForwardingEnabled: Bool
     @objc public var testOfferCodeMode: String?
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, externalRef: String, forwardNotificationEnable: Bool, testOfferCodeMode: String?) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, externalRef: String, hasForwardingEnabled: Bool, testOfferCodeMode: String?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.externalRef = externalRef
-        self.forwardNotificationEnable = forwardNotificationEnable
+        self.hasForwardingEnabled = hasForwardingEnabled
         self.testOfferCodeMode = testOfferCodeMode
         super.init()
     }
@@ -31,7 +31,7 @@ import Foundation
             createdAt: parseDate(jsonCustomer["createdAt"] as! String),
             updatedAt: parseDate(jsonCustomer["updatedAt"] as! String),
             externalRef: jsonCustomer["externalRef"] as! String,
-            forwardNotificationEnable: jsonCustomer["forwardNotificationEnable"] as! Bool,
+            hasForwardingEnabled: jsonCustomer["hasForwardingEnabled"] as! Bool,
             testOfferCodeMode: jsonCustomer["testOfferCodeMode"] as? String
         )
     }

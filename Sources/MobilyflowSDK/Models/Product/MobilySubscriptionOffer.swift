@@ -23,11 +23,11 @@ import StoreKit
     @objc public let countBillingCycle: Int
     @objc public let android_offerId: String?
     @objc public let ios_offerId: String?
-    @objc public let extras: [String: Any]?
+    @objc public let metadata: [String: Any]?
     @objc public let status: String
     @objc public let name: String?
 
-    @objc init(id: UUID, identifier: String, externalRef: String?, referenceName: String, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String, pricingMode: String, periodCount: Int, periodUnit: String, countBillingCycle: Int, android_offerId: String?, ios_offerId: String?, extras: [String: Any]? = nil, status: String, name: String) {
+    @objc init(id: UUID, identifier: String, externalRef: String?, referenceName: String, priceMillis: Int, currencyCode: String, priceFormatted: String, type: String, pricingMode: String, periodCount: Int, periodUnit: String, countBillingCycle: Int, android_offerId: String?, ios_offerId: String?, metadata: [String: Any]? = nil, status: String, name: String) {
         self.id = id
         self.identifier = identifier
         self.externalRef = externalRef
@@ -42,7 +42,7 @@ import StoreKit
         self.countBillingCycle = countBillingCycle
         self.android_offerId = android_offerId
         self.ios_offerId = ios_offerId
-        self.extras = extras
+        self.metadata = metadata
         self.status = status
         self.name = name
         super.init()
@@ -63,7 +63,7 @@ import StoreKit
         let identifier = jsonOffer["identifier"] as! String
         let externalRef = jsonOffer["externalRef"] as? String
         let referenceName = jsonOffer["referenceName"] as! String
-        let extras = jsonOffer["extras"] as? [String: Any]
+        let metadata = jsonOffer["metadata"] as? [String: Any]
 
         let type = MobilyProductOfferType.parse(jsonOffer["type"] as! String)
         let pricingMode = MobilyProductOfferPricingMode.parse(jsonOffer["pricingMode"] as! String)
@@ -143,7 +143,7 @@ import StoreKit
             countBillingCycle: countBillingCycle,
             android_offerId: jsonOffer["android_offerId"] as? String,
             ios_offerId: ios_offerId,
-            extras: extras,
+            metadata: metadata,
             status: status,
             name: name
         )

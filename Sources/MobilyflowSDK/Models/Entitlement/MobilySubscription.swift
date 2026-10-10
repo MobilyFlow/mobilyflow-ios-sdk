@@ -14,8 +14,8 @@ import StoreKit
     @objc public let updatedAt: Date
     @objc public let productId: UUID
     @objc public let productOfferId: UUID?
-    @objc public let startDate: Date
-    @objc public let endDate: Date
+    @objc public let startsAt: Date
+    @objc public let endsAt: Date
     @objc public let platform: String
     @objc public let renewProductId: UUID?
     @objc public let renewProductOfferId: UUID?
@@ -23,14 +23,14 @@ import StoreKit
     @objc public let regularPriceMillis: Int
     @objc public let renewPriceMillis: Int
     @objc public let currency: String
-    @objc public let offerExpiryDate: Date?
+    @objc public let offerExpiresAt: Date?
     @objc public let offerRemainingCycle: Int
-    @objc public let autoRenewEnable: Bool
+    @objc public let isAutoRenewing: Bool
     @objc public let isInGracePeriod: Bool
     @objc public let isInBillingIssue: Bool
     @objc public let hasPauseScheduled: Bool
     @objc public let isPaused: Bool
-    @objc public let resumeDate: Date?
+    @objc public let resumesAt: Date?
     @objc public let isExpiredOrRevoked: Bool
     @objc public let isManagedByThisStoreAccount: Bool
     @objc public let lastPlatformTxOriginalId: String?
@@ -39,14 +39,14 @@ import StoreKit
     @objc public let RenewProduct: MobilyProduct?
     @objc public let RenewProductOffer: MobilySubscriptionOffer?
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, productId: UUID, productOfferId: UUID?, startDate: Date, endDate: Date, platform: String, renewProductId: UUID?, renewProductOfferId: UUID?, lastPriceMillis: Int, regularPriceMillis: Int, renewPriceMillis: Int, currency: String, offerExpiryDate: Date?, offerRemainingCycle: Int, autoRenewEnable: Bool, isInGracePeriod: Bool, isInBillingIssue: Bool, hasPauseScheduled: Bool, isPaused: Bool, resumeDate: Date?, isExpiredOrRevoked: Bool, isManagedByThisStoreAccount: Bool, lastPlatformTxOriginalId: String?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, RenewProduct: MobilyProduct?, RenewProductOffer: MobilySubscriptionOffer?) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, productId: UUID, productOfferId: UUID?, startsAt: Date, endsAt: Date, platform: String, renewProductId: UUID?, renewProductOfferId: UUID?, lastPriceMillis: Int, regularPriceMillis: Int, renewPriceMillis: Int, currency: String, offerExpiresAt: Date?, offerRemainingCycle: Int, isAutoRenewing: Bool, isInGracePeriod: Bool, isInBillingIssue: Bool, hasPauseScheduled: Bool, isPaused: Bool, resumesAt: Date?, isExpiredOrRevoked: Bool, isManagedByThisStoreAccount: Bool, lastPlatformTxOriginalId: String?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, RenewProduct: MobilyProduct?, RenewProductOffer: MobilySubscriptionOffer?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
         self.productId = productId
         self.productOfferId = productOfferId
-        self.startDate = startDate
-        self.endDate = endDate
+        self.startsAt = startsAt
+        self.endsAt = endsAt
         self.platform = MobilyPlatform.parse(platform)
         self.renewProductId = renewProductId
         self.renewProductOfferId = renewProductOfferId
@@ -54,14 +54,14 @@ import StoreKit
         self.regularPriceMillis = regularPriceMillis
         self.renewPriceMillis = renewPriceMillis
         self.currency = currency
-        self.offerExpiryDate = offerExpiryDate
+        self.offerExpiresAt = offerExpiresAt
         self.offerRemainingCycle = offerRemainingCycle
-        self.autoRenewEnable = autoRenewEnable
+        self.isAutoRenewing = isAutoRenewing
         self.isInGracePeriod = isInGracePeriod
         self.isInBillingIssue = isInBillingIssue
         self.hasPauseScheduled = hasPauseScheduled
         self.isPaused = isPaused
-        self.resumeDate = resumeDate
+        self.resumesAt = resumesAt
         self.isExpiredOrRevoked = isExpiredOrRevoked
         self.isManagedByThisStoreAccount = isManagedByThisStoreAccount
         self.lastPlatformTxOriginalId = lastPlatformTxOriginalId
@@ -74,7 +74,7 @@ import StoreKit
 
     static func parse(_ jsonSubscription: [String: Any], storeAccountTransactions: [UInt64: Transaction]) async -> MobilySubscription {
         let platform = jsonSubscription["platform"] as! String
-        var autoRenewEnable = jsonSubscription["autoRenewEnable"] as! Bool
+        var isAutoRenewing = jsonSubscription["isAutoRenewing"] as! Bool
 
         var lastPlatformTxOriginalId = jsonSubscription["lastPlatformTxOriginalId"] as? String
         var storeAccountTx: Transaction?
@@ -83,7 +83,7 @@ import StoreKit
             storeAccountTx = storeAccountTransactions[UInt64(lastPlatformTxOriginalId!)!]
 
             if storeAccountTx != nil {
-                autoRenewEnable = (await getRenewalInfo(tx: storeAccountTx!))?.willAutoRenew ?? autoRenewEnable
+                isAutoRenewing = (await getRenewalInfo(tx: storeAccountTx!))?.willAutoRenew ?? isAutoRenewing
             }
         } else if platform == MobilyPlatform.ANDROID {
             lastPlatformTxOriginalId = nil
@@ -120,8 +120,8 @@ import StoreKit
             updatedAt: parseDate(jsonSubscription["updatedAt"] as! String),
             productId: parseUUID(jsonSubscription["productId"] as! String),
             productOfferId: parseUUIDOpt(jsonSubscription["productOfferId"] as? String),
-            startDate: parseDate(jsonSubscription["startDate"] as! String),
-            endDate: parseDate(jsonSubscription["endDate"] as! String),
+            startsAt: parseDate(jsonSubscription["startsAt"] as! String),
+            endsAt: parseDate(jsonSubscription["endsAt"] as! String),
             platform: platform,
             renewProductId: parseUUIDOpt(jsonSubscription["renewProductId"] as? String),
             renewProductOfferId: parseUUIDOpt(jsonSubscription["renewProductOfferId"] as? String),
@@ -129,14 +129,14 @@ import StoreKit
             regularPriceMillis: jsonSubscription["regularPriceMillis"] as! Int,
             renewPriceMillis: jsonSubscription["renewPriceMillis"] as! Int,
             currency: jsonSubscription["currency"] as! String,
-            offerExpiryDate: parseDateOpt(jsonSubscription["offerExpiryDate"] as? String),
+            offerExpiresAt: parseDateOpt(jsonSubscription["offerExpiresAt"] as? String),
             offerRemainingCycle: jsonSubscription["offerRemainingCycle"] as! Int,
-            autoRenewEnable: autoRenewEnable,
+            isAutoRenewing: isAutoRenewing,
             isInGracePeriod: jsonSubscription["isInGracePeriod"] as! Bool,
             isInBillingIssue: jsonSubscription["isInBillingIssue"] as! Bool,
             hasPauseScheduled: jsonSubscription["hasPauseScheduled"] as! Bool,
             isPaused: jsonSubscription["isPaused"] as! Bool,
-            resumeDate: parseDateOpt(jsonSubscription["resumeDate"] as? String),
+            resumesAt: parseDateOpt(jsonSubscription["resumesAt"] as? String),
             isExpiredOrRevoked: jsonSubscription["isExpiredOrRevoked"] as! Bool,
             isManagedByThisStoreAccount: storeAccountTx != nil,
             lastPlatformTxOriginalId: lastPlatformTxOriginalId,

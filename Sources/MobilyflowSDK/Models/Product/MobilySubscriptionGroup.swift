@@ -16,18 +16,18 @@ import StoreKit
     @objc public let details: String
 
     @objc public let ios_groupId: String
-    @objc public let extras: [String: Any]?
+    @objc public let metadata: [String: Any]?
 
     @objc public var Products: [MobilyProduct]
 
-    @objc init(id: UUID, identifier: String, referenceName: String, name: String, details: String, ios_groupId: String, extras: [String: Any]? = nil) {
+    @objc init(id: UUID, identifier: String, referenceName: String, name: String, details: String, ios_groupId: String, metadata: [String: Any]? = nil) {
         self.id = id
         self.identifier = identifier
         self.referenceName = referenceName
         self.name = name
         self.details = details
         self.ios_groupId = ios_groupId
-        self.extras = extras
+        self.metadata = metadata
         self.Products = []
 
         super.init()
@@ -41,7 +41,7 @@ import StoreKit
             name: getTranslationValue(jsonGroup["_translations"] as? [[String: Any]], field: "name") ?? "",
             details: getTranslationValue(jsonGroup["_translations"] as? [[String: Any]], field: "description") ?? "",
             ios_groupId: jsonGroup["ios_groupId"] as! String,
-            extras: jsonGroup["extras"] as? [String: Any]
+            metadata: jsonGroup["metadata"] as? [String: Any]
         )
 
         if let jsonProducts = jsonGroup["Products"] as? [[String: Any]] {

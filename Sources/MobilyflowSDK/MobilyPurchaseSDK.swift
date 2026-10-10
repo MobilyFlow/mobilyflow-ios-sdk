@@ -166,9 +166,9 @@ import StoreKit
         return AppStore.canMakePayments
     }
 
-    @objc public static func isForwardingEnable(externalRef: String) async throws -> Bool {
+    @objc public static func isForwardingEnabled(externalRef: String) async throws -> Bool {
         let instance = try ensureInit()
-        return try await instance.isForwardingEnable(externalRef: externalRef)
+        return try await instance.isForwardingEnabled(externalRef: externalRef)
     }
 
     @objc public static func getCustomer() async throws -> MobilyCustomer? {

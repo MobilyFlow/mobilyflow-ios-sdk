@@ -102,7 +102,7 @@ class MobilyPurchaseSDKHelper {
         }
 
         var isDowngrade = false
-        var redeemUrl: URL? = nil
+        var redeemURL: URL? = nil
         var offerCode: String?
         var iosOffer: Product.SubscriptionOffer?
 
@@ -125,8 +125,8 @@ class MobilyPurchaseSDKHelper {
                             isSandbox: customer.testOfferCodeMode != nil && customer.testOfferCodeMode == "sandbox"
                         )
 
-                        if let redeemUrlString = offerCodeResult["redeemUrl"] as? String {
-                            redeemUrl = URL(string: redeemUrlString)!
+                        if let redeemURLString = offerCodeResult["redeemURL"] as? String {
+                            redeemURL = URL(string: redeemURLString)!
                         }
                         offerCode = offerCodeResult["token"] as! String
                     } catch {
@@ -164,7 +164,7 @@ class MobilyPurchaseSDKHelper {
                 }
 
                 // If auto-renew is disabled, allow re-purchase in app
-                if entitlement!.Subscription!.autoRenewEnable {
+                if entitlement!.Subscription!.isAutoRenewing {
                     let currentRenewProduct = entitlement!.Subscription!.RenewProduct ?? entitlement!.Product
                     let currentRenewSku = currentRenewProduct.ios_sku
 
@@ -191,7 +191,7 @@ class MobilyPurchaseSDKHelper {
         }
 
         if offerCode != nil {
-            return InternalPurchaseOptions(offerCode: offerCode!, redeemUrl: redeemUrl, isDowngrade: isDowngrade)
+            return InternalPurchaseOptions(offerCode: offerCode!, redeemURL: redeemURL, isDowngrade: isDowngrade)
         }
 
         var iosOptions = Set<Product.PurchaseOption>()

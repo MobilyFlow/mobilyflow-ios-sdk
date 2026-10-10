@@ -158,8 +158,8 @@ actor MobilyPurchaseSDKImpl {
         }
 
         // 5. Send monitoring if requested
-        Logger.d("haveMonitoringRequests: \(loginResponse.haveMonitoringRequests)")
-        if loginResponse.haveMonitoringRequests {
+        Logger.d("hasMonitoringRequests: \(loginResponse.hasMonitoringRequests)")
+        if loginResponse.hasMonitoringRequests {
             Logger.d("Monitoring request detected")
             Task(priority: .background) {
                 // When monitoring is requested, send 10 days
@@ -395,7 +395,7 @@ actor MobilyPurchaseSDKImpl {
         guard let customer = self.customer else {
             throw MobilyError.no_customer_logged
         }
-        if customer.forwardNotificationEnable {
+        if customer.hasForwardingEnabled {
             throw MobilyPurchaseError.customer_forwarded
         }
 
@@ -585,7 +585,7 @@ actor MobilyPurchaseSDKImpl {
                         } catch {
                             Logger.e("Map transaction error", error: error)
                         }
-                        if !customer.forwardNotificationEnable {
+                        if !customer.hasForwardingEnabled {
                             let result = try await self.waiter.waitPurchaseWebhook(signedTx: signedTx, downgradeToProductId: downgradeToProductId)
                             if result.event != nil {
                                 let (_, storeAccountTransactions) = await MobilyPurchaseSDKHelper.getAllTransactionSignatures()
@@ -624,7 +624,7 @@ actor MobilyPurchaseSDKImpl {
         return nil
     }
 
-    func isForwardingEnable(externalRef: String) async throws -> Bool {
+    func isForwardingEnabled(externalRef: String) async throws -> Bool {
         return try await API.isForwardingEnableByExternalRef(externalRef: externalRef)
     }
 

@@ -52,7 +52,7 @@ class MobilyPurchaseRefundRequestManager {
                     try? await AppStore.showManageSubscriptions(in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
                 }
             }
-            try? await self.API.flagRefundRequest(requestId: request["id"] as! String, accepted: result)
+            try? await self.API.flagRefundRequest(requestId: request["id"] as! String, isAccepted: result)
         }
     }
 }
