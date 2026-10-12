@@ -445,6 +445,8 @@ SWIFT_CLASS("_TtC13MobilyflowSDK11MobilyEvent")
 @property (nonatomic, readonly, copy) NSString * _Nonnull type;
 @property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable details;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+/// Store where the purchase was made (<code>MobilyStore</code>), whereas <code>platform</code> is the OS of the device.
+/// nil for purchases made before this field existed, until the backend backfill runs.
 @property (nonatomic, readonly, copy) NSString * _Nullable store;
 @property (nonatomic, readonly) BOOL isSandbox;
 @property (nonatomic, readonly, strong) MobilyCustomer * _Nullable Customer;
@@ -688,6 +690,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSStri
 + (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
+/// Returns nil for nil or an unknown store (new stores may be added backend-side; never crash on them).
 + (NSString * _Nullable)parse:(NSString * _Nullable)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
@@ -701,6 +704,8 @@ SWIFT_CLASS("_TtC13MobilyflowSDK18MobilySubscription")
 @property (nonatomic, readonly, copy) NSDate * _Nonnull startsAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull endsAt;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+/// Store where the purchase was made (<code>MobilyStore</code>), whereas <code>platform</code> is the OS of the device.
+/// nil for purchases made before this field existed, until the backend backfill runs.
 @property (nonatomic, readonly, copy) NSString * _Nullable store;
 @property (nonatomic, readonly, copy) NSUUID * _Nullable renewProductId;
 @property (nonatomic, readonly, copy) NSUUID * _Nullable renewProductOfferId;
@@ -785,6 +790,8 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyTransaction")
 @property (nonatomic, readonly, copy) NSUUID * _Nullable itemId;
 @property (nonatomic, readonly, copy) NSUUID * _Nullable productOfferId;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+/// Store where the purchase was made (<code>MobilyStore</code>), whereas <code>platform</code> is the OS of the device.
+/// nil for purchases made before this field existed, until the backend backfill runs.
 @property (nonatomic, readonly, copy) NSString * _Nullable store;
 @property (nonatomic, readonly, copy) NSDate * _Nullable startsAt;
 @property (nonatomic, readonly, copy) NSDate * _Nullable endsAt;
