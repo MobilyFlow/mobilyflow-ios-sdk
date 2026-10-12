@@ -136,7 +136,7 @@ actor MobilyPurchaseSDKImpl {
         try await self.syncer.login(customer: customer, jsonEntitlements: loginResponse.entitlements)
 
         // 3. Map transaction that are not known by the server
-        let transactionToMap = await MobilyPurchaseSDKHelper.getTransactionToMap(loginResponse.platformOriginalTransactionIds)
+        let transactionToMap = await MobilyPurchaseSDKHelper.getTransactionToMap(loginResponse.storeOriginalTransactionIds)
         if !transactionToMap.isEmpty {
             do {
                 try await self.API.mapTransactions(customerId: customer.id, transactions: transactionToMap)

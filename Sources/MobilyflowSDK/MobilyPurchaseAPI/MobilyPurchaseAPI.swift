@@ -103,7 +103,7 @@ class MobilyPurchaseAPI {
             return LoginResponse(
                 customer: data["customer"] as! [String: Any],
                 entitlements: data["entitlements"] as! [[String: Any]],
-                platformOriginalTransactionIds: data["platformOriginalTransactionIds"] as! [String],
+                storeOriginalTransactionIds: data["storeOriginalTransactionIds"] as! [String],
                 appleRefundRequests: data["appleRefundRequests"] as? [[String: Any]],
                 hasMonitoringRequests: data["hasMonitoringRequests"] as? Bool ?? false
             )
@@ -413,7 +413,7 @@ class MobilyPurchaseAPI {
      */
     func forceWebhook(transactionId: UInt64, productId: UUID, isSandbox: Bool) async throws {
         let request = ApiRequest(method: "POST", url: "/sdk/platform-notifications/force-webhook/ios")
-        _ = request.addData("platformTxId", String(transactionId))
+        _ = request.addData("storeId", String(transactionId))
         _ = request.addData("productId", productId.uuidString)
         _ = request.addData("isSandbox", isSandbox)
 
@@ -434,7 +434,7 @@ class MobilyPurchaseAPI {
         let request = ApiRequest(method: "POST", url: "/sdk/events/webhook-result/ios")
         _ = request.setData([
             "signedTransaction": signedTransaction,
-            "platformTxId": String(transactionId),
+            "storeId": String(transactionId),
             "environment": environment,
         ])
 

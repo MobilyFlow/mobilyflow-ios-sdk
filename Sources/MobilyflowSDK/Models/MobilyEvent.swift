@@ -18,6 +18,9 @@ import StoreKit
     @objc public let type: String
     @objc public let details: [String: Any]?
     @objc public let platform: String
+    /// Store where the purchase was made (`MobilyStore`), whereas `platform` is the OS of the device.
+    /// nil for purchases made before this field existed, until the backend backfill runs.
+    @objc public let store: String?
     @objc public let isSandbox: Bool
 
     @objc public let Customer: MobilyCustomer?
@@ -27,7 +30,7 @@ import StoreKit
     @objc public let Subscription: MobilySubscription?
     @objc public let Item: MobilyItem?
 
-    @objc init(id: UUID, createdAt: Date, updatedAt: Date, transactionId: UUID?, subscriptionId: UUID?, itemId: UUID?, type: String, details: [String: Any]?, platform: String, isSandbox: Bool, Customer: MobilyCustomer?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, Transaction: MobilyTransaction?, Subscription: MobilySubscription?, Item: MobilyItem?) {
+    @objc init(id: UUID, createdAt: Date, updatedAt: Date, transactionId: UUID?, subscriptionId: UUID?, itemId: UUID?, type: String, details: [String: Any]?, platform: String, store: String?, isSandbox: Bool, Customer: MobilyCustomer?, Product: MobilyProduct?, ProductOffer: MobilySubscriptionOffer?, Transaction: MobilyTransaction?, Subscription: MobilySubscription?, Item: MobilyItem?) {
         self.id = id
         self.createdAt = createdAt
         self.updatedAt = updatedAt
@@ -37,6 +40,7 @@ import StoreKit
         self.type = type
         self.details = details
         self.platform = MobilyPlatform.parse(platform)
+        self.store = MobilyStore.parse(store)
         self.isSandbox = isSandbox
         self.Customer = Customer
         self.Product = Product
@@ -77,6 +81,7 @@ import StoreKit
             type: MobilyEventType.parse(json["type"] as! String),
             details: json["details"] as? [String: Any],
             platform: json["platform"] as! String,
+            store: json["store"] as? String,
             isSandbox: json["isSandbox"] as! Bool,
 
             Customer: jsonCustomer != nil ? MobilyCustomer.parse(jsonCustomer!) : nil,

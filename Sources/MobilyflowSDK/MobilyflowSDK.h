@@ -445,6 +445,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK11MobilyEvent")
 @property (nonatomic, readonly, copy) NSString * _Nonnull type;
 @property (nonatomic, readonly, copy) NSDictionary<NSString *, id> * _Nullable details;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+@property (nonatomic, readonly, copy) NSString * _Nullable store;
 @property (nonatomic, readonly) BOOL isSandbox;
 @property (nonatomic, readonly, strong) MobilyCustomer * _Nullable Customer;
 @property (nonatomic, readonly, strong) MobilyProduct * _Nullable Product;
@@ -677,6 +678,19 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSStri
 + (NSString * _Nonnull)parse:(NSString * _Nonnull)value SWIFT_WARN_UNUSED_RESULT;
 @end
 
+SWIFT_CLASS("_TtC13MobilyflowSDK11MobilyStore")
+@interface MobilyStore : NSObject
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull APP_STORE;)
++ (NSString * _Nonnull)APP_STORE SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSString * _Nonnull PLAY_STORE;)
++ (NSString * _Nonnull)PLAY_STORE SWIFT_WARN_UNUSED_RESULT;
+SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, copy) NSArray<NSString *> * _Nonnull values;)
++ (NSArray<NSString *> * _Nonnull)values SWIFT_WARN_UNUSED_RESULT;
+- (nonnull instancetype)init SWIFT_UNAVAILABLE;
++ (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
++ (NSString * _Nullable)parse:(NSString * _Nullable)value SWIFT_WARN_UNUSED_RESULT;
+@end
+
 SWIFT_CLASS("_TtC13MobilyflowSDK18MobilySubscription")
 @interface MobilySubscription : Serializable
 @property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
@@ -687,6 +701,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK18MobilySubscription")
 @property (nonatomic, readonly, copy) NSDate * _Nonnull startsAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull endsAt;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+@property (nonatomic, readonly, copy) NSString * _Nullable store;
 @property (nonatomic, readonly, copy) NSUUID * _Nullable renewProductId;
 @property (nonatomic, readonly, copy) NSUUID * _Nullable renewProductOfferId;
 @property (nonatomic, readonly) NSInteger lastPriceMillis;
@@ -703,7 +718,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK18MobilySubscription")
 @property (nonatomic, readonly, copy) NSDate * _Nullable resumesAt;
 @property (nonatomic, readonly) BOOL isExpiredOrRevoked;
 @property (nonatomic, readonly) BOOL isManagedByThisStoreAccount;
-@property (nonatomic, readonly, copy) NSString * _Nullable lastPlatformTxOriginalId;
+@property (nonatomic, readonly, copy) NSString * _Nullable lastStoreOriginalTransactionId;
 @property (nonatomic, readonly, strong) MobilyProduct * _Nullable Product;
 @property (nonatomic, readonly, strong) MobilySubscriptionOffer * _Nullable ProductOffer;
 @property (nonatomic, readonly, strong) MobilyProduct * _Nullable RenewProduct;
@@ -754,8 +769,8 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyTransaction")
 @property (nonatomic, readonly, copy) NSUUID * _Nonnull id;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull createdAt;
 @property (nonatomic, readonly, copy) NSDate * _Nonnull updatedAt;
-@property (nonatomic, readonly, copy) NSString * _Nonnull platformTxId;
-@property (nonatomic, readonly, copy) NSString * _Nullable platformTxOriginalId;
+@property (nonatomic, readonly, copy) NSString * _Nonnull storeId;
+@property (nonatomic, readonly, copy) NSString * _Nullable storeOriginalId;
 @property (nonatomic, readonly, copy) NSUUID * _Nonnull customerId;
 @property (nonatomic, readonly) NSInteger quantity;
 @property (nonatomic, readonly, copy) NSString * _Nonnull country;
@@ -770,6 +785,7 @@ SWIFT_CLASS("_TtC13MobilyflowSDK17MobilyTransaction")
 @property (nonatomic, readonly, copy) NSUUID * _Nullable itemId;
 @property (nonatomic, readonly, copy) NSUUID * _Nullable productOfferId;
 @property (nonatomic, readonly, copy) NSString * _Nonnull platform;
+@property (nonatomic, readonly, copy) NSString * _Nullable store;
 @property (nonatomic, readonly, copy) NSDate * _Nullable startsAt;
 @property (nonatomic, readonly, copy) NSDate * _Nullable endsAt;
 @property (nonatomic, readonly, copy) NSDate * _Nullable refundedAt;

@@ -10,7 +10,7 @@ import Foundation
 struct LoginResponse {
     let customer: [String: Any]
     let entitlements: [[String: Any]]
-    let platformOriginalTransactionIds: [String]
+    let storeOriginalTransactionIds: [String]
     let appleRefundRequests: [[String: Any]]?
     let hasMonitoringRequests: Bool
 }
