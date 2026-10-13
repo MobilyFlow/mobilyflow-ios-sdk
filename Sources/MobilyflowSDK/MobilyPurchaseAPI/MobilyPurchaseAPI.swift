@@ -249,10 +249,10 @@ class MobilyPurchaseAPI {
     }
 
     /**
-     Get products in JSON Array format
+     Get the store id of the customer's last App Store transaction on a product
      */
-    func getLastTxPlatformIdForProduct(customerId: UUID, productId: UUID) async throws -> String {
-        let request = ApiRequest(method: "GET", url: "/sdk/transactions/last-platform-tx-id/ios/\(productId.uuidString)")
+    func getLastStoreTransactionIdForProduct(customerId: UUID, productId: UUID) async throws -> String {
+        let request = ApiRequest(method: "GET", url: "/sdk/transactions/last-store-transaction-id/app-store/\(productId.uuidString)")
         _ = request.addParam("customerId", customerId.uuidString.lowercased())
 
         guard let res = try? await self.helper.request(request) else {
@@ -262,7 +262,7 @@ class MobilyPurchaseAPI {
         if res.success {
             return res.json()["data"] as! String
         } else {
-            Logger.w("[getLastTxPlatformIdForProduct] API Error: \(res.string())")
+            Logger.w("[getLastStoreTransactionIdForProduct] API Error: \(res.string())")
             throw MobilyError.unknown_error
         }
     }
@@ -431,7 +431,7 @@ class MobilyPurchaseAPI {
      Get webhook status from transactionID
      */
     func getWebhookResult(signedTransaction: String, transactionId: UInt64, isSandbox: Bool, downgradeToProductId: UUID?, downgradeAfterAt: Date?) async throws -> MobilyWebhookResult {
-        let request = ApiRequest(method: "POST", url: "/sdk/events/webhook-result/ios")
+        let request = ApiRequest(method: "POST", url: "/sdk/events/webhook-result/app-store")
         _ = request.setData([
             "signedTransaction": signedTransaction,
             "storeId": String(transactionId),

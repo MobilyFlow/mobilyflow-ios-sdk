@@ -339,7 +339,7 @@ actor MobilyPurchaseSDKImpl {
         if forProduct.oneTime?.isConsumable ?? false {
             do {
                 if let customer = self.customer {
-                    let lastTxId = try await API.getLastTxPlatformIdForProduct(customerId: customer.id, productId: forProduct.id)
+                    let lastTxId = try await API.getLastStoreTransactionIdForProduct(customerId: customer.id, productId: forProduct.id)
                     let result = try? await Transaction.beginRefundRequest(for: UInt64(lastTxId)!, in: UIApplication.shared.connectedScenes.first as! UIWindowScene)
                     return (result ?? .userCancelled) == .success ? MobilyRefundDialogResult.SUCCESS : MobilyRefundDialogResult.CANCELLED
                 } else {
