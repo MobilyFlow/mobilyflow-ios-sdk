@@ -88,6 +88,7 @@ class MobilyPurchaseAPI {
         _ = request.setData([
             "externalRef": externalRef,
             "environment": environment,
+            "store": "app-store",
             "locale": self.locale,
             "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
             "device": deviceData,
@@ -227,7 +228,7 @@ class MobilyPurchaseAPI {
         _ = request.setData([
             "locale": self.locale,
             "region": await StorePrice.getMostRelevantRegion() ?? NSNull(),
-            "platform": "ios",
+            "store": "app-store",
             "transactions": transactions,
             "environment": environment,
         ])
@@ -275,7 +276,7 @@ class MobilyPurchaseAPI {
      */
     @available(iOS 17.4, *)
     func signOffer(customerId: UUID, offerId: String) async throws -> Product.SubscriptionOffer.Signature {
-        let request = ApiRequest(method: "POST", url: "/sdk/products/sign-offer/ios")
+        let request = ApiRequest(method: "POST", url: "/sdk/products/sign-offer/app-store")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "offerId": offerId])
 
         guard let res = try? await self.helper.request(request) else {
@@ -302,7 +303,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     func appleOfferCode(customerId: UUID, offerId: UUID, isSandbox: Bool) async throws -> [String: Any] {
-        let request = ApiRequest(method: "POST", url: "/sdk/products/offer-code/ios")
+        let request = ApiRequest(method: "POST", url: "/sdk/products/offer-code/app-store")
         _ = request.setData([
             "customerId": customerId.uuidString.lowercased(),
             "offerId": offerId.uuidString,
@@ -330,7 +331,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     func mapTransactions(customerId: UUID, transactions: [String]) async throws {
-        let request = ApiRequest(method: "POST", url: "/sdk/customer-mappings/ios")
+        let request = ApiRequest(method: "POST", url: "/sdk/customer-mappings/app-store")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "transactions": transactions])
 
         guard let res = try? await self.helper.request(request) else {
@@ -366,7 +367,7 @@ class MobilyPurchaseAPI {
      Throws on error.
      */
     func transferOwnershipRequest(customerId: UUID, transactions: [String]) async throws -> String {
-        let request = ApiRequest(method: "POST", url: "/sdk/customer-transfer-ownerships/ios")
+        let request = ApiRequest(method: "POST", url: "/sdk/customer-transfer-ownerships/app-store")
         _ = request.setData(["customerId": customerId.uuidString.lowercased(), "transactions": transactions])
 
         guard let res = try? await self.helper.request(request) else {
@@ -412,7 +413,7 @@ class MobilyPurchaseAPI {
      type is "purchase" | "upgrade"
      */
     func forceWebhook(transactionId: UInt64, productId: UUID, isSandbox: Bool) async throws {
-        let request = ApiRequest(method: "POST", url: "/sdk/platform-notifications/force-webhook/ios")
+        let request = ApiRequest(method: "POST", url: "/sdk/platform-notifications/force-webhook/app-store")
         _ = request.addData("storeId", String(transactionId))
         _ = request.addData("productId", productId.uuidString)
         _ = request.addData("isSandbox", isSandbox)
