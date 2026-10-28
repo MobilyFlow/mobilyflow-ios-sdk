@@ -1,0 +1,19 @@
+Sources/MobilyflowSDK/MobilyPurchaseAPI/MobilyPurchaseAPI.swift
+  s_6f5752280f13bc::t_201333c0385784 91,231,279,306,334,370,416
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "76cf3b3f924e2bfbe1f5dda837da805015c35108",
+  "prompts": {},
+  "sessions": {
+    "s_6f5752280f13bc": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "3a78258a-fb44-41c8-bc5e-beafea824b18",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "LaGregance <gregoire.taja@gmail.com>"
+    }
+  }
+}
