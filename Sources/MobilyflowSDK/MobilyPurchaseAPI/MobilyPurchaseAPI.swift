@@ -413,7 +413,7 @@ class MobilyPurchaseAPI {
      type is "purchase" | "upgrade"
      */
     func forceWebhook(transactionId: UInt64, productId: UUID, isSandbox: Bool) async throws {
-        let request = ApiRequest(method: "POST", url: "/sdk/platform-notifications/force-webhook/app-store")
+        let request = ApiRequest(method: "POST", url: "/sdk/store-notifications/force-webhook/app-store")
         _ = request.addData("storeId", String(transactionId))
         _ = request.addData("productId", productId.uuidString)
         _ = request.addData("isSandbox", isSandbox)
