@@ -1,0 +1,16 @@
+MobilyflowSDK.podspec
+  h_c12f6e934b9ef0 12
+Sources/MobilyflowSDK/version.swift
+  h_c12f6e934b9ef0 2
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "5ce94f97023912b1b6ea39cf0e1a6b6e5d62b1c9",
+  "prompts": {},
+  "humans": {
+    "h_c12f6e934b9ef0": {
+      "author": "LaGregance <gregoire.taja@gmail.com>"
+    }
+  }
+}
